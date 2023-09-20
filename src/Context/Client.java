@@ -14,11 +14,47 @@ public class Client {
         this.telephoneNumber = telephoneNumber;
         this.id = id;
         this.points = 0;
-        this.isPremium = false;
+        this.isPremium = 0;
         this.reservationManager = reservationManager;
     }
 
-    void setPremium(boolean isPremium) {
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getisPremium() {
+        return isPremium;
+    }
+
+    public ReservationManager getReservationManager() {
+        return reservationManager;
+    }
+
+    void setPremium(int isPremium) {
         this.isPremium = isPremium;
     }
 
@@ -45,7 +81,7 @@ public class Client {
     private int telephoneNumber;
     private int id;
     private int points;
-    private boolean isPremium;
+    private int isPremium;
     private ReservationManager reservationManager;
     Map<Integer, Reservation> reservations;
 }
