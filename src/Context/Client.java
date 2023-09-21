@@ -10,9 +10,6 @@ public class Client {
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.wallet = new Wallet();
-        this.telephoneNumber = telephoneNumber;
-        this.id = id;
         this.points = 0;
         this.isPremium = 0;
         this.reservationManager = reservationManager;
@@ -24,6 +21,10 @@ public class Client {
 
     public String getSurname() {
         return surname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getEmail() {

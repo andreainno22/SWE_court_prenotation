@@ -1,6 +1,7 @@
 package Database;
 
 import Context.Client;
+import Context.Wallet;
 
 import java.sql.*;
 
@@ -56,13 +57,62 @@ public class Database_management {
 
     }
 
-    public void insertClient(Client client) {
+    public Client getClient(String email, String password) {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getisPremium() + "')");
+            ResultSet rs = stmt.executeQuery("select * from client where email = '" + email + "' and password = '" + password + "'");
+            if(!rs.next()){
+                System.err.println("Wrong email or password");
+                disconnect();
+                return null;
+            }
+            rs.next();
             disconnect();
+            return new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5),
+                    rs.getInt(6), rs.getInt(7),
+                    rs.getInt(8), getWallet(rs.getInt(1)));
         } catch (SQLException e) {
+            e.printStackTrace();
+            disconnect();
+        }
+        return null;
+    }
+
+    Wallet getWallet(int id){
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
+            rs.next();
+            disconnect();
+            return new Wallet(rs.getInt(1), rs.getInt(2));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            disconnect();
+        }
+        return null;
+    }
+
+    public int insertClient(Client client) {
+        Statement stmt = connect();
+        assert stmt != null;
+        try{
+            stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getisPremium() + "')");
+            String user = client.getEmail();
+            ResultSet rs = stmt.executeQuery("select id from client where email = '" + user + "'");
+            rs.next();
+            int client_id = rs.getInt(1);
+            stmt.executeUpdate("INSERT INTO wallet (id, balance, client) VALUES ('" + client_id + "', '" + client.getWallet().getBalance() + "', '" + client_id + "')");
+            stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
+            disconnect();
+            return 0;
+        }catch (SQLIntegrityConstraintViolationException e1){
+            System.err.println("Email already used");
+            disconnect();
+            return -1;
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -89,12 +139,17 @@ public class Database_management {
         }
     }
 
+    public void insertReservation(){
+
+
+
+    }
+
     public static void main(String[] args) {
         System.out.println("Connecting to a selected database...");
         // Open a connection
         Database_management db = new Database_management();
         db.printAllClient();
-
-
     }
+
 }
