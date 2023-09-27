@@ -4,6 +4,8 @@ import Management.ReservationManager;
 
 import java.util.Map;
 
+import java.sql.Date;
+
 public class Client {
     public Client(String name, String surname, String email, String password, int telephoneNumber, int id, ReservationManager reservationManager) {
         this.name = name;

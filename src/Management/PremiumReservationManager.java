@@ -1,10 +1,13 @@
 package Management;
 
 import Context.Court;
-import Context.Date;
 import Context.RentingKit;
 import Context.Reservation;
 import Context.Client;
+import Database.Database_management;
+import Database.TimeSlot;
+
+import java.sql.Date;
 
 public class PremiumReservationManager extends ReservationManager {
 
@@ -28,6 +31,15 @@ public class PremiumReservationManager extends ReservationManager {
 
     public boolean deleteReservation(Reservation reservation) {
         return false;
+    }
+
+    @Override
+    public void getTimeSlots(Date date) {
+        Database_management db = new Database_management();
+        TimeSlot[] time_slots = db.getTimeSlots(date);
+        for (TimeSlot timeSlot : time_slots) {
+            System.out.println(timeSlot.toString());
+        }
     }
 
 }

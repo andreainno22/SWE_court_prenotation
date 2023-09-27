@@ -1,5 +1,6 @@
 package Management;
 import Context.*;
+import java.sql.Date;
 
 public abstract class ReservationManager {
 
@@ -12,4 +13,6 @@ public abstract class ReservationManager {
     public void editReservation(Reservation reservation){};
 
     public void getAllReservation(Client client){};
+
+    public void getTimeSlots(Date date){};
 }

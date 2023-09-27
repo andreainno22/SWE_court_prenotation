@@ -3,6 +3,7 @@ package Database;
 import Context.Client;
 import Context.Wallet;
 
+import javax.management.Query;
 import java.sql.*;
 
 public class Database_management {
@@ -62,17 +63,18 @@ public class Database_management {
             Statement stmt = connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from client where email = '" + email + "' and password = '" + password + "'");
-            if(!rs.next()){
+            if (!rs.next()) {
                 System.err.println("Wrong email or password");
                 disconnect();
                 return null;
             }
-            rs.next();
-            disconnect();
-            return new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
+            //rs.next();
+            Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
                     rs.getString(4), rs.getString(5),
                     rs.getInt(6), rs.getInt(7),
                     rs.getInt(8), getWallet(rs.getInt(1)));
+            disconnect();
+            return client;
         } catch (SQLException e) {
             e.printStackTrace();
             disconnect();
@@ -80,14 +82,15 @@ public class Database_management {
         return null;
     }
 
-    Wallet getWallet(int id){
+    Wallet getWallet(int id) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
+            Wallet wallet = new Wallet(rs.getInt(1), rs.getInt(2));
             disconnect();
-            return new Wallet(rs.getInt(1), rs.getInt(2));
+            return wallet;
         } catch (SQLException e) {
             e.printStackTrace();
             disconnect();
@@ -98,7 +101,7 @@ public class Database_management {
     public int insertClient(Client client) {
         Statement stmt = connect();
         assert stmt != null;
-        try{
+        try {
             stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getisPremium() + "')");
             String user = client.getEmail();
             ResultSet rs = stmt.executeQuery("select id from client where email = '" + user + "'");
@@ -108,11 +111,11 @@ public class Database_management {
             stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
             disconnect();
             return 0;
-        }catch (SQLIntegrityConstraintViolationException e1){
+        } catch (SQLIntegrityConstraintViolationException e1) {
             System.err.println("Email already used");
             disconnect();
             return -1;
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -139,9 +142,27 @@ public class Database_management {
         }
     }
 
-    public void insertReservation(){
+    public TimeSlot[] getTimeSlots(Date date) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            String query1 = "WITH booked as (SELECT court, date, time_slot FROM reservation WHERE court = 1 )";
+            String query2 = "SELECT all_things.court, start_hour, finish_hour, all_things.ts FROM (SELECT court.id as court, start_hour, finish_hour, booked.time_slot, time_slots.id as ts";
+            String query3 = "FROM (court CROSS JOIN time_slots) LEFT JOIN booked ON booked.court = court.id and time_slots.id = booked.time_slot";
+            String query4 = "WHERE court.id = 1) as all_things WHERE all_things.time_slot IS NULL";
+            ResultSet rs = stmt.executeQuery( query1 + query2 + query3 + query4);
+            rs.next();
 
+            TimeSlot[] timeSlots = new TimeSlot[rs.getFetchSize()];
+            disconnect();
+            return timeSlots;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    public void insertReservation() {
 
     }
 
@@ -151,5 +172,6 @@ public class Database_management {
         Database_management db = new Database_management();
         db.printAllClient();
     }
+
 
 }

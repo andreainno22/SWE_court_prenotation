@@ -1,4 +1,5 @@
 package Context;
+import java.sql.Date;
 
 public class Reservation {
     public Reservation(int id, Court court, Date date, Client client, RentingKit rentingKit) {
