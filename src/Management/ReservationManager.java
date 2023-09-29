@@ -14,5 +14,7 @@ public abstract class ReservationManager {
 
     public void getAllReservation(Client client){};
 
-    public void getTimeSlots(Date date){};
+    public void getTimeSlots(Date date, int court){};
+
+    public void getCourt(){};
 }

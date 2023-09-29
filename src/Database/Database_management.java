@@ -5,22 +5,27 @@ import Context.Wallet;
 
 import javax.management.Query;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database_management {
 
     static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
-    static final String PASS = "Ginoqwerty1234";
+    static final String PASS = "";
 
     Connection conn = null;
 
     private Statement connect() {
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
             return stmt;
         } catch (SQLException e) {
             System.err.println("Error during connection: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -29,7 +34,7 @@ public class Database_management {
         try {
             if (conn != null) {
                 conn.close();
-                System.out.println("Connection closed.");
+                //System.out.println("Connection closed.");
             }
         } catch (SQLException e) {
             System.err.println("Error during disconnection: " + e.getMessage());
@@ -107,7 +112,7 @@ public class Database_management {
             ResultSet rs = stmt.executeQuery("select id from client where email = '" + user + "'");
             rs.next();
             int client_id = rs.getInt(1);
-            stmt.executeUpdate("INSERT INTO wallet (id, balance, client) VALUES ('" + client_id + "', '" + client.getWallet().getBalance() + "', '" + client_id + "')");
+            stmt.executeUpdate("INSERT INTO wallet (id, balance, client) VALUES ('" + client_id + "', '" + 0 + "', '" + client_id + "')");
             stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
             disconnect();
             return 0;
@@ -117,6 +122,8 @@ public class Database_management {
             return -1;
         } catch (SQLException e) {
             e.printStackTrace();
+            disconnect();
+            return -2;
         }
     }
 
@@ -131,7 +138,7 @@ public class Database_management {
         }
     }
 
-    public void insertWallet(Client client) {
+    public void modifyBalance(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -142,18 +149,32 @@ public class Database_management {
         }
     }
 
-    public TimeSlot[] getTimeSlots(Date date) {
+    public List<Court_type_price> getCourt() {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            String query1 = "WITH booked as (SELECT court, date, time_slot FROM reservation WHERE court = 1 )";
-            String query2 = "SELECT all_things.court, start_hour, finish_hour, all_things.ts FROM (SELECT court.id as court, start_hour, finish_hour, booked.time_slot, time_slots.id as ts";
-            String query3 = "FROM (court CROSS JOIN time_slots) LEFT JOIN booked ON booked.court = court.id and time_slots.id = booked.time_slot";
-            String query4 = "WHERE court.id = 1) as all_things WHERE all_things.time_slot IS NULL";
-            ResultSet rs = stmt.executeQuery( query1 + query2 + query3 + query4);
-            rs.next();
+            ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price\n FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
+            List<Court_type_price> court_type_prices = new ArrayList<>();
+            while (rs.next()) {
+                court_type_prices.add(new Court_type_price(rs.getInt(1), rs.getString(2), rs.getFloat(3)));
+            }
+            disconnect();
+            return court_type_prices;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-            TimeSlot[] timeSlots = new TimeSlot[rs.getFetchSize()];
+    public List<TimeSlot> getTimeSlots(Date date, int court_id) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("SELECT * FROM time_slots WHERE time_slots.id NOT IN(SELECT time_slots.id as ts FROM court JOIN reservation ON reservation.court = court.id JOIN time_slots ON time_slots.id = reservation.time_slot WHERE court.id = '" + court_id + "' AND reservation.date = '" + date + "')");
+            List<TimeSlot> timeSlots = new ArrayList<>();
+            while (rs.next()) {
+                timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
             disconnect();
             return timeSlots;
         } catch (SQLException e) {

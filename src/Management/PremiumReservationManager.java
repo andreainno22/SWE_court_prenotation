@@ -8,6 +8,7 @@ import Database.Database_management;
 import Database.TimeSlot;
 
 import java.sql.Date;
+import java.util.List;
 
 public class PremiumReservationManager extends ReservationManager {
 
@@ -34,11 +35,11 @@ public class PremiumReservationManager extends ReservationManager {
     }
 
     @Override
-    public void getTimeSlots(Date date) {
+    public void getTimeSlots(Date date, int court) {
         Database_management db = new Database_management();
-        TimeSlot[] time_slots = db.getTimeSlots(date);
+        List<TimeSlot> time_slots = db.getTimeSlots(date, court);
         for (TimeSlot timeSlot : time_slots) {
-            System.out.println(timeSlot.toString());
+            timeSlot.printAllTimeSlots();
         }
     }
 
