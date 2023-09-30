@@ -1,5 +1,7 @@
 package Database;
 
+import java.util.Formatter;
+
 public class TimeSlot {
     String start_hour;
     String finish_hour;
@@ -15,7 +17,8 @@ public class TimeSlot {
         return ts;
     }
 
-    public void printAllTimeSlots() {
-        System.out.println(start_hour + " - " + finish_hour);
+    public void printAllTimeSlots(Formatter fmt) {
+        fmt.format("%-15d%-15s%-15s\n", ts, start_hour, finish_hour);
+        //System.out.println(start_hour + " - " + finish_hour);
     }
 }

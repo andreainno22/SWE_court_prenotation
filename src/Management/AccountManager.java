@@ -119,48 +119,53 @@ public class AccountManager {
                     System.err.println("Wrong date format.");
                     break;
                 }
-                boolean back = false;
-                while (!back) {
+                boolean court_selection = true;
+                while (court_selection) {
                     client.getReservationManager().getCourt();
-                    System.out.println("Court: ");
+                    System.out.println("Select a Court [0 = Back to Main Menu]: ");
                     try {
                         court = sc.nextInt();
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong court format.");
                         break;
                     }
-                    client.getReservationManager().getTimeSlots(date, court);
-                    System.out.println("1. back\n2. Choose a time slot\n");
+                    if (court == 0) {
+                        break;
+                    }
+                    boolean[] available_slots = client.getReservationManager().getTimeSlots(date, court);
+                    System.out.println("1. Back to Courts\n2. Choose a time slot for this Court\n");
                     int choice2 = sc.nextInt();
                     switch (choice2) {
                         case 1:
-                            back = true;
+                            //back = true;
                             break;
                         case 2:
-                            int startTime;
-                            int endTime;
-                            System.out.println("Start time: ");
-                            try {
-                                startTime = sc.nextInt();
-                            } catch (InputMismatchException e) {
-                                System.err.println("Wrong start time format.");
-                                break;
+                            int slot;
+                            System.out.println("ID of desired Time Slot: ");
+                            boolean valid = false;
+                            while(!valid) {
+                                try {
+                                    slot = sc.nextInt();
+                                    valid = true;
+                                    while (!available_slots[slot - 1]) {
+                                        System.err.println("Given Time Slot is wrong or not available. Retry.");
+                                        System.out.println("ID of desired Time Slot: ");
+                                        slot = sc.nextInt();
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.err.println("Wrong input format. Retry");
+                                    break;
+                                }
                             }
-                            System.out.println("End time: ");
-                            try {
-                                endTime = sc.nextInt();
-                            } catch (InputMismatchException e) {
-                                System.err.println("Wrong end time format.");
-                                break;
-                            }
-
                             //TODO: fare la prenotazione
+                            court_selection = false;
                             break;
                         default:
                             System.err.println("Wrong choice.");
                             break;
                     }
                 }
+                break;
             default: {
                 System.err.println("Wrong choice.");
                 break;

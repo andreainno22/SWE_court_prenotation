@@ -1,7 +1,6 @@
 package Context;
 
 public class Wallet {
-    static int globalId = 0;
     private int id;
     private float balance;
 
@@ -9,10 +8,6 @@ public class Wallet {
         return id;
     }
 
-    public Wallet() {
-        this.balance = 0;
-        this.id = globalId++;
-    }
 
     public Wallet(int id, float balance) {
         this.balance = balance;

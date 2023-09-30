@@ -7,14 +7,23 @@ import java.util.Map;
 import java.sql.Date;
 
 public class Client {
-    public Client(String name, String surname, String email, String password, int telephoneNumber, int id, ReservationManager reservationManager) {
+    public Client(int id, String name, String surname, String email, String password, int telephoneNumber, int isPremium, int points, Wallet wallet) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.points = 0;
-        this.isPremium = 0;
-        this.reservationManager = reservationManager;
+        this.telephoneNumber = telephoneNumber;
+        this.points = points;
+        this.isPremium = isPremium;
+        this.wallet = wallet;
+    }
+
+    // Constructor for database
+    public Client(String name, String surname, String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
     }
 
     public String getName() {
@@ -27,6 +36,14 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setTelephoneNumber(int telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public void setReservationManager(ReservationManager reservationManager) {
+        this.reservationManager = reservationManager;
     }
 
     public String getEmail() {
@@ -57,7 +74,7 @@ public class Client {
         return reservationManager;
     }
 
-    void setPremium(int isPremium) {
+    void setIsPremium(int isPremium) {
         this.isPremium = isPremium;
     }
 

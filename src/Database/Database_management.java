@@ -93,7 +93,7 @@ public class Database_management {
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
-            Wallet wallet = new Wallet(rs.getInt(1), rs.getInt(2));
+            Wallet wallet = new Wallet(rs.getInt(1), rs.getFloat(2));
             disconnect();
             return wallet;
         } catch (SQLException e) {

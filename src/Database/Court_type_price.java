@@ -1,5 +1,7 @@
 package Database;
 
+import java.util.Formatter;
+
 public class Court_type_price {
     private final int id;
     private final float price;
@@ -23,7 +25,8 @@ public class Court_type_price {
         return price;
     }
 
-    public void printAllCourt() {
-        System.out.println(id + " - " + type + " - " + price+" €");
+    public void printAllCourt(Formatter fmt) {
+        fmt.format("%-15d%-15s%-15.2f\n", id, type, price);
+        //System.out.println(id + " - " + type + " - " + price+" €");
     }
 }
