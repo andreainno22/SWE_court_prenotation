@@ -17,9 +17,10 @@ public class AccountManager {
 
     public void startMenu() {
         while (startMenu) {
-            Scanner sc = new Scanner(System.in);
+            System.out.println("\nHello! Please login or register to continue.");
             System.out.println("1. Login\n2. Register\n3. Exit");
-            int choice = sc.nextInt();
+            Scanner scanner = new Scanner(System.in);
+            int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
                     startMenu = false;
@@ -68,6 +69,8 @@ public class AccountManager {
                     valid = true;
                 }
             }
+            System.out.println("Registration successful.");
+            System.out.println("You can now login.\n");
             startMenu = true;
         }
     }
@@ -84,12 +87,12 @@ public class AccountManager {
                 Client client = db.getClient(email, password);
                 if (client != null) {
                     logged = true;
-                    System.out.println("Login successful\n");
+                    System.out.println("Login successful.\n");
                     while (logged) {
                         clientMenu(client);
                     }
-                    logged = true;
                     startMenu = true;
+                    return;
                 } else {
                     System.err.println("Wrong email or password. Retry.");
                 }
@@ -99,8 +102,10 @@ public class AccountManager {
 
 
     private void clientMenu(Client client) {
-        Scanner sc = new Scanner(System.in);
+        System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
+        System.out.println("Please select an option:");
         System.out.println("1. Make a reservation\n2. Edit a reservation\n3. Delete a reservation\n4. Show all reservations\n6. Manage your wallet\n7. Logout");
+        Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
         switch (choice) {
             case 1:
@@ -159,6 +164,8 @@ public class AccountManager {
                             }
                             //TODO: fare la prenotazione
                             court_selection = false;
+                            System.out.println("Reservation successful.");
+                            System.out.println("Going back to Main Menu...\n");
                             break;
                         default:
                             System.err.println("Wrong choice.");
@@ -172,6 +179,7 @@ public class AccountManager {
             }
             case 7: {
                 logged = false;
+                System.out.println("Logout successful.\n");
                 break;
             }
         }
