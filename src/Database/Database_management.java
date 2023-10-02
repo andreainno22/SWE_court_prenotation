@@ -6,6 +6,7 @@ import Context.Wallet;
 import javax.management.Query;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 public class Database_management {
@@ -41,6 +42,59 @@ public class Database_management {
         }
     }
 
+    public void printAllReservations(int Client) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select reservation.date, court, start_hour, finish_hour from reservation, time_slots where reservation.time_slot = time_slots.id and client = '" + Client + "'");
+
+            Formatter fmt = new Formatter();
+            fmt.format("%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME");
+            while (rs.next()) {
+                fmt.format("%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
+            }
+            System.out.println(fmt);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int[] getReservationsId(int Client){
+        Statement stmt = connect();
+        assert stmt != null;
+        try {
+            ResultSet rs = stmt.executeQuery("select reservation.id from reservation where client = '" + Client + "'");
+            int[] reservations = new int[rs.getInt(1)];
+            while (rs.next()) {
+                for (int i = 0; i < rs.getInt(1); i++) {
+                    reservations[i] = rs.getInt(1);
+                }
+            }
+            rs.close();
+            disconnect();
+            return reservations;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public float getReservationPrice(int reservation){
+        Statement stmt = connect();
+        assert stmt != null;
+        try{
+            ResultSet rs = stmt.executeQuery("select prices.price from prices, reservation where reservation.id = '" + reservation + "' and prices.id = reservation.price");
+            float price = rs.getFloat(1);
+            rs.close();
+            disconnect();
+            return price;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public void printAllClient() {
         try {
             Statement stmt = connect();
@@ -56,6 +110,7 @@ public class Database_management {
                 }
                 System.out.println("");
             }
+            resultSet.close();
             disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,14 +125,15 @@ public class Database_management {
             ResultSet rs = stmt.executeQuery("select * from client where email = '" + email + "' and password = '" + password + "'");
             if (!rs.next()) {
                 System.err.println("Wrong email or password");
+                rs.close();
                 disconnect();
                 return null;
             }
-            //rs.next();
             Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
                     rs.getString(4), rs.getString(5),
                     rs.getInt(6), rs.getInt(7),
                     rs.getInt(8), getWallet(rs.getInt(1)));
+            rs.close();
             disconnect();
             return client;
         } catch (SQLException e) {
@@ -94,6 +150,7 @@ public class Database_management {
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
             Wallet wallet = new Wallet(rs.getInt(1), rs.getFloat(2));
+            rs.close();
             disconnect();
             return wallet;
         } catch (SQLException e) {
@@ -114,10 +171,10 @@ public class Database_management {
             int client_id = rs.getInt(1);
             stmt.executeUpdate("INSERT INTO wallet (id, balance, client) VALUES ('" + client_id + "', '" + 0 + "', '" + client_id + "')");
             stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
+            rs.close();
             disconnect();
             return 0;
         } catch (SQLIntegrityConstraintViolationException e1) {
-            System.err.println("Email already used");
             disconnect();
             return -1;
         } catch (SQLException e) {
@@ -158,6 +215,7 @@ public class Database_management {
             while (rs.next()) {
                 court_type_prices.add(new Court_type_price(rs.getInt(1), rs.getString(2), rs.getFloat(3)));
             }
+            rs.close();
             disconnect();
             return court_type_prices;
         } catch (SQLException e) {
@@ -175,6 +233,7 @@ public class Database_management {
             while (rs.next()) {
                 timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
+            rs.close();
             disconnect();
             return timeSlots;
         } catch (SQLException e) {
@@ -185,6 +244,17 @@ public class Database_management {
 
     public void insertReservation() {
 
+    }
+
+    public void deleteReservation(int reservation) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation + "'");
+            disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

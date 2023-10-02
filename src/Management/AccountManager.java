@@ -1,20 +1,32 @@
 package Management;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import Context.Client;
-import Context.Court;
 import Database.Database_management;
-
-import java.awt.*;
 import java.sql.Date;
 import java.util.Formatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.sql.Statement;
+
 
 public class AccountManager {
     private boolean logged = false;
 
     private boolean startMenu = true;
+
+    public static boolean isValidEmail(String email) {
+        String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+
+        // Crea un oggetto Pattern basato sulla regex
+        Pattern pattern = Pattern.compile(regex);
+
+        // Crea un oggetto Matcher per confrontare l'indirizzo email con il modello
+        Matcher matcher = pattern.matcher(email);
+
+        // Restituisce true se l'indirizzo email corrisponde al modello regex
+        return matcher.matches();
+    }
+
 
     public void startMenu() {
         while (startMenu) {
@@ -22,7 +34,7 @@ public class AccountManager {
             System.out.println("1. Login\n2. Register\n3. Exit");
             int choice;
             Scanner scanner;
-            while(true) {
+            while (true) {
                 try {
                     scanner = new Scanner(System.in);
                     choice = scanner.nextInt();
@@ -31,7 +43,7 @@ public class AccountManager {
                     System.err.println("Wrong choice format.Retry.");
                 }
             }
-            switch(choice) {
+            switch (choice) {
                 case 1:
                     startMenu = false;
                     loginAccount();
@@ -59,6 +71,7 @@ public class AccountManager {
             System.out.println("Surname: ");
             String surname = sc.nextLine();
             System.out.println("Email: ");
+            // todo: fare in modo che venga inviata una email a ogni azione compiuta dall'utente
             String email = sc.nextLine();
             System.out.println("Password: ");
             String password = sc.nextLine();
@@ -70,10 +83,11 @@ public class AccountManager {
             Database_management db = new Database_management();
 
             while (!valid) {
-                if (db.insertClient(client) == -1) {
-                    sc.nextLine();
+                // fatto controllo sulla validità dell'email
+                if (!isValidEmail(email) || db.insertClient(client) == -1) {
+                    System.err.println("Email already used or wrong email format. Retry.");
                     System.out.println("Type another email: ");
-                    email = sc.nextLine();
+                    email = sc.next();
                     client.setEmail(email);
                 } else {
                     valid = true;
@@ -126,19 +140,26 @@ public class AccountManager {
                 System.err.println("Wrong choice format. Retry.");
             }
         }
+        if (client.getReservationManager() == null) {
+            if (client.getisPremium() == 1)
+                client.setReservationManager(new PremiumReservationManager());
+            else
+                client.setReservationManager(new StandardReservationManager());
+        }
         switch (choice) {
             case 1:
-                if (client.getReservationManager() == null) {
-                    if (client.getisPremium() == 1)
-                        client.setReservationManager(new PremiumReservationManager());
-                    else
-                        client.setReservationManager(new StandardReservationManager());
-                }
                 Date date;
                 int court = 0;
                 System.out.println("Date (yyyy-mm-dd): ");
                 try {
+                    // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.next());
+                    int compare = date.compareTo(new Date(System.currentTimeMillis()));
+                    //todo: rendere non disponibili i giorni festivi
+                    if (compare < 0) {
+                        System.err.println("You selected a past date. Retry.");
+                        break;
+                    }
                 } catch (IllegalArgumentException e) {
                     System.err.println("Wrong date format.");
                     break;
@@ -168,10 +189,10 @@ public class AccountManager {
                     }
                     Formatter fmt2 = new Formatter();
                     boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
-                    while(true) {
-                    System.out.println(fmt2);
-                    System.out.println("Select an option:");
-                    System.out.println("1. Back to Courts\n2. Choose a time slot for this Court");
+                    while (true) {
+                        System.out.println(fmt2);
+                        System.out.println("Select an option:");
+                        System.out.println("1. Back to Courts\n2. Choose a time slot for this Court");
                         try {
                             choice = sc.nextInt();
                             break;
@@ -188,10 +209,10 @@ public class AccountManager {
                             int slot;
                             System.out.println("ID of desired Time Slot: ");
                             boolean valid = false;
-                            while(!valid) {
+                            while (!valid) {
                                 try {
                                     slot = sc.nextInt();
-                                    if(slot > available_slots.length || slot < 1) {
+                                    if (slot > available_slots.length || slot < 1) {
                                         System.err.println("Given Time Slot is wrong. Retry.");
                                         continue;
                                     }
@@ -206,7 +227,12 @@ public class AccountManager {
                                     break;
                                 }
                             }
+                            System.out.println("How many renting kit do you want to rent? [0 = None]");
+                            int rentingKits = sc.nextInt();
+
+                            //todo: fare in modo che il kit venga aggiunto alla prenotazione
                             //TODO: fare la prenotazione
+                            //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
                             System.out.println("Reservation successful.");
                             System.out.println("Going back to Main Menu...\n");
@@ -216,6 +242,38 @@ public class AccountManager {
                             break;
                     }
                 }
+                break;
+            case 3:
+                // gestione della cancellazione della prenotazione
+                client.getReservationManager().printAllReservations(client);
+                System.out.println("ID of reservation to delete: ");
+                int reservation = 0;
+                boolean valid = false;
+                while (!valid)
+                    try {
+                        reservation = sc.nextInt();
+                        valid = true;
+                    } catch (InputMismatchException e) {
+                        System.err.println("Wrong ID format. Retry.");
+                    }
+                int[] ids = client.getReservationManager().getReservationsId(client);
+                boolean found = false;
+                for (int j : ids)
+                    if (j == reservation) {
+                        found = true;
+                        break;
+                    }
+                if (found) {
+                    client.getReservationManager().deleteReservation(reservation);
+                    client.getReservationManager().updateWallet(client, client.getReservationManager().getReservationPrice(reservation));
+                    System.out.println("Reservation deleted successfully.");
+                }
+                else
+                    System.err.println("Wrong ID. Going back to Main Menu...");
+                break;
+            case 4:
+                // stampa delle prenotazioni
+                client.getReservationManager().printAllReservations(client);
                 break;
             default: {
                 System.err.println("Wrong choice.");

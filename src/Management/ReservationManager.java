@@ -43,4 +43,30 @@ public abstract class ReservationManager {
         }
         return num_of_courts;
     }
+
+    public void printAllReservations(Client client) {
+        Database_management db = new Database_management();
+        db.printAllReservations(client.getId());
+    }
+
+    public int[] getReservationsId(Client client) {
+        Database_management db = new Database_management();
+        return db.getReservationsId(client.getId());
+    }
+
+    public float getReservationPrice(int reservation) {
+        Database_management db = new Database_management();
+        return db.getReservationPrice(reservation);
+    }
+
+    public void updateWallet(Client client, float price) {
+        Database_management db = new Database_management();
+        client.getWallet().addMoney(price);
+        db.modifyBalance(client);
+    }
+
+    public void deleteReservation(int reservation) {
+        Database_management db = new Database_management();
+        db.deleteReservation(reservation);
+    }
 }
