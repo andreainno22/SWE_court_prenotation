@@ -48,7 +48,7 @@ public class StandardReservationManager extends ReservationManager {
         System.out.println(fmt);
     }*/
 
-    @Override
+    /*@Override
     public void getCourt() {
         Database_management db = new Database_management();
         List<Court_type_price> court_type_prices = db.getCourt();
@@ -58,5 +58,5 @@ public class StandardReservationManager extends ReservationManager {
             court_type_price.printAllCourt(fmt);
         }
         System.out.println(fmt);
-    }
+    }*/
 }
