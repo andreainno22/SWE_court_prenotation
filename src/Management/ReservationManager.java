@@ -59,9 +59,25 @@ public abstract class ReservationManager {
         return db.getReservationPrice(reservation);
     }
 
-    public void updateWallet(Client client, float price) {
+    public boolean removeMoney(Client client, float price) {
         Database_management db = new Database_management();
-        client.getWallet().addMoney(price);
+        if(client.getWallet().removeMoney(price)) {
+            db.modifyBalance(client);
+            return true;
+        }
+        else System.out.println("Insufficient funds");
+        return false;
+    }
+
+    public void setIsPremium(Client client) {
+        Database_management db = new Database_management();
+        client.setIsPremium(1);
+        db.modifyPremium(client);
+    }
+
+    public void addMoney(Client client, float money) {
+        Database_management db = new Database_management();
+        client.getWallet().addMoney(money);
         db.modifyBalance(client);
     }
 

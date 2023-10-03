@@ -68,7 +68,7 @@ public class Client {
         return points;
     }
 
-    public int getisPremium() {
+    public int getIsPremium() {
         return isPremium;
     }
 
@@ -76,7 +76,7 @@ public class Client {
         return reservationManager;
     }
 
-    void setIsPremium(int isPremium) {
+    public void setIsPremium(int isPremium) {
         this.isPremium = isPremium;
     }
 

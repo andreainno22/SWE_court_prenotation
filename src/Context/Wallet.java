@@ -18,8 +18,12 @@ public class Wallet {
         this.balance += amount;
     }
 
-    public void removeMoney(float amount) {
+    public boolean removeMoney(float amount) {
+        if(this.balance - amount < 0) {
+            return false;
+        }
         this.balance -= amount;
+        return true;
     }
 
     public float getBalance() {

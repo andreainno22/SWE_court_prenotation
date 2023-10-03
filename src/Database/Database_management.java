@@ -3,11 +3,12 @@ package Database;
 import Context.Client;
 import Context.Wallet;
 
-import javax.management.Query;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+
+// TODO: gestire le migrazioni del database con Flyway
 
 public class Database_management {
 
@@ -60,7 +61,7 @@ public class Database_management {
         }
     }
 
-    public int[] getReservationsId(int Client){
+    public int[] getReservationsId(int Client) {
         Statement stmt = connect();
         assert stmt != null;
         try {
@@ -80,16 +81,16 @@ public class Database_management {
         return null;
     }
 
-    public float getReservationPrice(int reservation){
+    public float getReservationPrice(int reservation) {
         Statement stmt = connect();
         assert stmt != null;
-        try{
+        try {
             ResultSet rs = stmt.executeQuery("select prices.price from prices, reservation where reservation.id = '" + reservation + "' and prices.id = reservation.price");
             float price = rs.getFloat(1);
             rs.close();
             disconnect();
             return price;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
@@ -164,7 +165,7 @@ public class Database_management {
         Statement stmt = connect();
         assert stmt != null;
         try {
-            stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getisPremium() + "')");
+            stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getIsPremium() + "')");
             String user = client.getEmail();
             ResultSet rs = stmt.executeQuery("select id from client where email = '" + user + "'");
             rs.next();
@@ -199,7 +200,9 @@ public class Database_management {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            stmt.executeUpdate("INSERT INTO wallet (id, balance, client_id) VALUES ('" + client.getWallet().getBalance() + "', '" + client.getId() + "', '" + client.getWallet().getId() + "')");
+            stmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
+            disconnect();
+        } catch (SQLIntegrityConstraintViolationException e1) {
             disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -265,4 +268,14 @@ public class Database_management {
     }
 
 
+    public void modifyPremium(Client client) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            stmt.executeUpdate("update client set is_premium = '" + client.getIsPremium() + "' where id = '" + client.getId() + "'");
+            disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

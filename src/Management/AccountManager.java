@@ -1,8 +1,11 @@
 package Management;
+
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
 import Context.Client;
 import Database.Database_management;
+
 import java.sql.Date;
 import java.util.Formatter;
 import java.util.InputMismatchException;
@@ -128,7 +131,8 @@ public class AccountManager {
     private void clientMenu(Client client) {
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
         System.out.println("Please select an option:");
-        System.out.println("1. Make a reservation\n2. Edit a reservation\n3. Delete a reservation\n4. Show all reservations\n6. Manage your wallet\n7. Logout");
+        System.out.println("1. Make a reservation\n2. Edit a reservation\n3. Delete a reservation\n" +
+                "4. Show all reservations\n6. Manage your wallet\n7. Upgrade as a premium client\n8. Logout");
         int choice;
         Scanner sc;
         while (true) {
@@ -141,7 +145,7 @@ public class AccountManager {
             }
         }
         if (client.getReservationManager() == null) {
-            if (client.getisPremium() == 1)
+            if (client.getIsPremium() == 1)
                 client.setReservationManager(new PremiumReservationManager());
             else
                 client.setReservationManager(new StandardReservationManager());
@@ -155,7 +159,7 @@ public class AccountManager {
                     // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.next());
                     int compare = date.compareTo(new Date(System.currentTimeMillis()));
-                    //todo: rendere non disponibili i giorni festivi
+                    //todo: rendere non disponibili i giorni festivi con public holiday api
                     if (compare < 0) {
                         System.err.println("You selected a past date. Retry.");
                         break;
@@ -265,11 +269,11 @@ public class AccountManager {
                     }
                 if (found) {
                     client.getReservationManager().deleteReservation(reservation);
-                    client.getReservationManager().updateWallet(client, client.getReservationManager().getReservationPrice(reservation));
+                    client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
                     System.out.println("Reservation deleted successfully.");
                 }
                 else
-                    System.err.println("Wrong ID. Going back to Main Menu...");
+                    System.err.println("Reservation not found.");
                 break;
             case 4:
                 // stampa delle prenotazioni
@@ -279,7 +283,27 @@ public class AccountManager {
                 System.err.println("Wrong choice.");
                 break;
             }
-            case 7: {
+            case 7:
+                // upgrade a premium
+                if (client.getIsPremium() == 0) {
+                    System.out.println("Do you want to upgrade to premium? The cost is 20€ a year and then " +
+                            "you can book your court with a\n 20% discount and for every 15 bookings you will get one free![y/n]");
+                    String answer = sc.next();
+                    if (answer.equals("y")) {
+                        if(client.getReservationManager().removeMoney(client, 20)) {
+                            client.getReservationManager().setIsPremium(client);
+                            System.out.println("Upgrade successful.");
+                        }
+                    } else if (answer.equals("n")) {
+                        System.out.println("Upgrade aborted.");
+                    } else {
+                        System.err.println("Wrong choice. Going back to Main Menu...");
+                    }
+                } else {
+                    System.err.println("You are already a premium client. Going back to Main Menu...");
+                }
+                break;
+            case 8: {
                 logged = false;
                 System.out.println("Logout successful.\n");
                 break;
