@@ -31,8 +31,8 @@ public class PremiumReservationManager extends ReservationManager {
 
     }
 
-    public boolean deleteReservation(Reservation reservation) {
-        return false;
+    public void deleteReservation(int reservation) {
+        super.deleteReservation(reservation);
     }
 
 

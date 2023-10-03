@@ -9,12 +9,10 @@ public class RentingKit {
     public float getPrice(){
         return unitPrice*num;
     }
-
     public void modifyNumOfRents(int numberOfRents){
         this.num = numberOfRents;
     }
     private float unitPrice = 10;
     private int num;
-
 
 }

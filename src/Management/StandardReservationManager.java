@@ -22,8 +22,8 @@ public class StandardReservationManager extends ReservationManager {
     }
 
     @Override
-    public boolean deleteReservation(Reservation reservation) {
-        return true;
+    public void deleteReservation(int reservation) {
+        super.deleteReservation(reservation);
     }
 
     @Override

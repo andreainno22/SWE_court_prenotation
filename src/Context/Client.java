@@ -85,11 +85,11 @@ public class Client {
         reservations.put(r.getId(), r);
     }
 
-    void deleteReservation(int id) {
+    /*void deleteReservation(int id) {
         Reservation reservation = reservations.get(id);
         if (reservationManager.deleteReservation(reservation))
             reservations.remove(id);
-    }
+    }*/
 
     public Wallet getWallet() {
         return wallet;

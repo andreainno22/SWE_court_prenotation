@@ -9,9 +9,12 @@ import java.util.List;
 // TODO: gestire le migrazioni del database con Flyway
 
 public class Database_management {
-    static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
+    static final String DB_URL = "jdbc:mysql://sql11.freemysqlhosting.net/sql11650722";
+    static final String USER = "sql11650722";
+    static final String PASS = "J2f8d9lQIG";
+    /*static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
-    static final String PASS = "";
+    static final String PASS = "";*/
 
     Connection conn = null;
 

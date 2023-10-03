@@ -158,9 +158,9 @@ public class AccountManager {
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.next());
-                    int compare = date.compareTo(new Date(System.currentTimeMillis()));
+                    int compare = date.compareTo(new Date(System.currentTimeMillis()-86400000));
                     //todo: rendere non disponibili i giorni festivi con public holiday api
-                    if (compare < 0) {
+                    if (compare <= 0) {
                         System.err.println("You selected a past date. Retry.");
                         break;
                     }
@@ -233,7 +233,6 @@ public class AccountManager {
                             }
                             System.out.println("How many renting kit do you want to rent? [0 = None]");
                             int rentingKits = sc.nextInt();
-
                             //todo: fare in modo che il kit venga aggiunto alla prenotazione
                             //TODO: fare la prenotazione
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
