@@ -1,8 +1,6 @@
 package Database;
-
 import Context.Client;
 import Context.Wallet;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -11,7 +9,6 @@ import java.util.List;
 // TODO: gestire le migrazioni del database con Flyway
 
 public class Database_management {
-
     static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
     static final String PASS = "";
