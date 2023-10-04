@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PremiumReservationManager extends ReservationManager {
 
-    @Override
+    /*@Override
     public Reservation makeReservation(Court court, Date date, Client client, RentingKit rentingKit) {
         float price = 90 * (court.getPrice() + rentingKit.getPrice()) / 100;
         if (client.getWallet().getBalance() < price)
@@ -24,7 +24,7 @@ public class PremiumReservationManager extends ReservationManager {
             Reservation reservation = new Reservation(globalId++, court, date, client, rentingKit);
             return reservation;
         }
-    }
+    }*/
 
     @Override
     public void editReservation(Reservation reservation) {

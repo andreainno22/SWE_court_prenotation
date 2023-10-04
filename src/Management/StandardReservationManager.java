@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Formatter;
 public class StandardReservationManager extends ReservationManager {
-    @Override
+    /*@Override
     public Reservation makeReservation(Court court, Date date, Client client, RentingKit rentingKit) {
         float price = court.getPrice() + rentingKit.getPrice();
         if (client.getWallet().getBalance() < price)
@@ -19,7 +19,7 @@ public class StandardReservationManager extends ReservationManager {
             client.getWallet().removeMoney(price);
             return reservation;
         }
-    }
+    }*/
 
     @Override
     public void deleteReservation(int reservation) {
