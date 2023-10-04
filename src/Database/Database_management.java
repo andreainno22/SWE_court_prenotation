@@ -1,5 +1,7 @@
 package Database;
 import Context.Client;
+import Context.Court;
+import Context.RentingKit;
 import Context.Wallet;
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,9 +11,9 @@ import java.util.List;
 // TODO: gestire le migrazioni del database con Flyway
 
 public class Database_management {
-    static final String DB_URL = "jdbc:mysql://sql11.freemysqlhosting.net/sql11650722";
-    static final String USER = "sql11650722";
-    static final String PASS = "J2f8d9lQIG";
+    static final String DB_URL = "jdbc:mysql://sql.freedb.tech/freedb_swe_courtprenotation_db";
+    static final String USER = "freedb_andreinno";
+    static final String PASS = "52Hwhz$Gxr2&!9&";
     /*static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
     static final String PASS = "";*/
@@ -119,6 +121,23 @@ public class Database_management {
 
     }
 
+    public RentingKit getRentingKit(String type){
+        try{
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM renting_kits WHERE type = '" + type + "'");
+            resultSet.next();
+            RentingKit rentingKit = new RentingKit(resultSet.getInt(1), resultSet.getString(2), resultSet.getFloat(3));
+            resultSet.close();
+            disconnect();
+            return rentingKit;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            disconnect();
+        }
+        return null;
+    }
+
     public Client getClient(String email, String password) {
         try {
             Statement stmt = connect();
@@ -209,15 +228,24 @@ public class Database_management {
         }
     }
 
-    public List<Court_type_price> getCourt() {
+    public List<Court> getCourt() {
         try {
             Statement stmt = connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price\n FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
-            List<Court_type_price> court_type_prices = new ArrayList<>();
+            List<Court> court_type_prices = new ArrayList<>();
             while (rs.next()) {
-                court_type_prices.add(new Court_type_price(rs.getInt(1), rs.getString(2), rs.getFloat(3)));
+                court_type_prices.add(new Court(rs.getInt(1), rs.getFloat(3)));
+                if(rs.getString(2).equals("padel")) {
+                    court_type_prices.get(court_type_prices.size() - 1).setType("padel");
+                    court_type_prices.get(court_type_prices.size() - 1).setTerrain_type("null");
+                }
+                else {
+                    court_type_prices.get(court_type_prices.size() - 1).setTerrain_type(rs.getString(2));
+                    court_type_prices.get(court_type_prices.size() - 1).setType("tennis");
+                }
             }
+
             rs.close();
             disconnect();
             return court_type_prices;

@@ -2,9 +2,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 03, 2023 at 03:09 PM
--- Server version: 10.4.28-MariaDB
+-- Host: sql11.freemysqlhosting.net
+-- Generation Time: Oct 04, 2023 at 12:07 PM
+-- Server version: 5.5.62-0ubuntu0.14.04.1
 -- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -18,20 +18,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `swe_court_prenotation_db`
+-- Database: `sql11650722`
 --
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `booked`
--- (See below for the actual view)
---
-CREATE TABLE `booked` (
-`court` int(11)
-,`date` date
-,`time_slot` int(11)
-);
 
 -- --------------------------------------------------------
 
@@ -47,9 +35,9 @@ CREATE TABLE `client` (
   `password` varchar(45) NOT NULL,
   `telephone_number` int(11) DEFAULT NULL,
   `is_premium` tinyint(1) NOT NULL,
-  `points` int(11) NOT NULL DEFAULT 0,
+  `points` int(11) NOT NULL DEFAULT '0',
   `wallet` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `client`
@@ -70,7 +58,7 @@ INSERT INTO `client` (`id`, `name`, `surname`, `email`, `password`, `telephone_n
 CREATE TABLE `court` (
   `type` int(11) DEFAULT NULL,
   `id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `court`
@@ -88,7 +76,7 @@ INSERT INTO `court` (`type`, `id`) VALUES
 (4, 9),
 (4, 10);
 
--- --------------------------------------------------------
+
 
 --
 -- Table structure for table `prices`
@@ -98,7 +86,7 @@ CREATE TABLE `prices` (
   `id` int(11) NOT NULL,
   `type` int(11) DEFAULT NULL,
   `price` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `prices`
@@ -113,6 +101,39 @@ INSERT INTO `prices` (`id`, `type`, `price`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rentingkit_reservation`
+--
+
+CREATE TABLE `rentingkit_reservation` (
+  `id` int(11) NOT NULL,
+  `reservation` int(11) NOT NULL,
+  `renting_kit` int(11) NOT NULL,
+  `num_of_rents` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `renting_kits`
+--
+
+CREATE TABLE `renting_kits` (
+  `id` int(11) NOT NULL,
+  `type` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  `price` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `renting_kits`
+--
+
+INSERT INTO `renting_kits` (`id`, `type`, `price`) VALUES
+(1, 'tennis', 5),
+(2, 'padel', 7);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reservation`
 --
 
@@ -123,7 +144,7 @@ CREATE TABLE `reservation` (
   `client` int(11) DEFAULT NULL,
   `time_slot` int(11) NOT NULL,
   `price` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -135,7 +156,7 @@ CREATE TABLE `time_slots` (
   `id` int(11) NOT NULL,
   `start_hour` varchar(5) NOT NULL,
   `finish_hour` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `time_slots`
@@ -166,7 +187,7 @@ INSERT INTO `time_slots` (`id`, `start_hour`, `finish_hour`) VALUES
 CREATE TABLE `type_of_court` (
   `id` int(11) NOT NULL,
   `type_of_court` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `type_of_court`
@@ -188,7 +209,7 @@ CREATE TABLE `wallet` (
   `id` int(11) NOT NULL,
   `balance` float DEFAULT NULL,
   `client` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `wallet`
@@ -199,15 +220,6 @@ INSERT INTO `wallet` (`id`, `balance`, `client`) VALUES
 (42, 30, 42),
 (60, 0, 60),
 (63, 0, 63);
-
--- --------------------------------------------------------
-
---
--- Structure for view `booked`
---
-DROP TABLE IF EXISTS `booked`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `booked`  AS   (select `reservation`.`court` AS `court`,`reservation`.`date` AS `date`,`reservation`.`time_slot` AS `time_slot` from `reservation` where `reservation`.`court` = 1)  ;
 
 --
 -- Indexes for dumped tables
@@ -229,6 +241,10 @@ ALTER TABLE `court`
   ADD KEY `type_idx` (`type`);
 
 --
+-- Indexes for table `pma__bookmark`
+--
+
+--
 -- Indexes for table `prices`
 --
 ALTER TABLE `prices`
@@ -236,12 +252,27 @@ ALTER TABLE `prices`
   ADD KEY `type_idx` (`type`);
 
 --
+-- Indexes for table `rentingkit_reservation`
+--
+ALTER TABLE `rentingkit_reservation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reservation` (`reservation`),
+  ADD KEY `renting_kit` (`renting_kit`);
+
+--
+-- Indexes for table `renting_kits`
+--
+ALTER TABLE `renting_kits`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `reservation`
 --
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `client_idx` (`client`),
-  ADD KEY `reservation_client` (`time_slot`);
+  ADD KEY `reservation_client` (`time_slot`),
+  ADD KEY `price` (`price`);
 
 --
 -- Indexes for table `time_slots`
@@ -273,6 +304,21 @@ ALTER TABLE `client`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
+-- AUTO_INCREMENT for table `pma__bookmark`
+--
+
+-- AUTO_INCREMENT for table `renting_kits`
+--
+ALTER TABLE `renting_kits`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `reservation`
+--
+ALTER TABLE `reservation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -287,6 +333,13 @@ ALTER TABLE `court`
 --
 ALTER TABLE `prices`
   ADD CONSTRAINT `type` FOREIGN KEY (`type`) REFERENCES `type_of_court` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `rentingkit_reservation`
+--
+ALTER TABLE `rentingkit_reservation`
+  ADD CONSTRAINT `renting_kit` FOREIGN KEY (`renting_kit`) REFERENCES `renting_kits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `reservation` FOREIGN KEY (`reservation`) REFERENCES `reservation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `reservation`

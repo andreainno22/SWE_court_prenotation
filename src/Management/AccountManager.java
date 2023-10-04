@@ -1,9 +1,12 @@
 package Management;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import Context.Client;
+import Context.Court;
+import Context.RentingKit;
 import Context.Reservation;
 import Database.Database_management;
 
@@ -155,17 +158,18 @@ public class AccountManager {
             case 1:
                 Date date;
                 int court = 0;
-                Reservation res= new Reservation();
+                Reservation res = new Reservation();
                 System.out.println("Date (yyyy-mm-dd): ");
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.next());
-                    int compare = date.compareTo(new Date(System.currentTimeMillis()-86400000));
+                    int compare = date.compareTo(new Date(System.currentTimeMillis() - 86400000));
                     //todo: rendere non disponibili i giorni festivi con public holiday api
                     if (compare <= 0) {
                         System.err.println("You selected a past date. Retry.");
                         break;
                     }
+                    // aggiunta data a reservation
                     res.setDate(date);
                 } catch (IllegalArgumentException e) {
                     System.err.println("Wrong date format.");
@@ -173,7 +177,8 @@ public class AccountManager {
                 }
                 boolean court_selection = true;
                 Formatter fmt = new Formatter();
-                int num_courts = client.getReservationManager().getCourt(fmt);
+                List<Court> courts = client.getReservationManager().getCourt(fmt);
+                int num_courts = courts.size();
                 while (court_selection) {
                     System.out.println("Available Courts: ");
                     System.out.println(fmt);
@@ -194,7 +199,8 @@ public class AccountManager {
                     if (court == 0) {
                         break;
                     }
-                    res.setCourt_id(court);
+                    // aggiunta di court a reservation
+                    res.setCourt(courts.get(court - 1));
                     Formatter fmt2 = new Formatter();
                     boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     while (true) {
@@ -225,7 +231,7 @@ public class AccountManager {
                                         continue;
                                     }
                                     valid = true;
-                                    if(slot != 0) {
+                                    if (slot != 0) {
                                         while (!available_slots[slot - 1]) {
                                             System.err.println("Given Time Slot is not available. Retry.");
                                             System.out.println("ID of desired Time Slot: ");
@@ -237,12 +243,22 @@ public class AccountManager {
                                     break;
                                 }
                             }
-                            if(slot == 0)
+                            if (slot == 0)
                                 break;
+                            // aggiunta time slot a reservation
                             res.setTime_slot(slot);
-                            System.out.println("How many renting kit do you want to rent? [0 = None]");
-                            int rentingKits = sc.nextInt();
-                            //todo: fare in modo che il kit venga aggiunto alla prenotazione
+                            RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
+                            System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
+                            int numOfRent = sc.nextInt();
+                            if (numOfRent > 0) {
+                                rentingKit.setNumOfRents(numOfRent);
+                                res.setRentingKit(rentingKit);
+                            } else if (numOfRent == 0)
+                                res.setRentingKit(null);
+                            else {
+                                System.err.println("Operation aborted.");
+                                break;
+                            }
                             //TODO: fare la prenotazione
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
@@ -279,8 +295,7 @@ public class AccountManager {
                     client.getReservationManager().deleteReservation(reservation);
                     client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
                     System.out.println("Reservation deleted successfully.");
-                }
-                else
+                } else
                     System.err.println("Reservation not found.");
                 break;
             case 4:
@@ -298,7 +313,7 @@ public class AccountManager {
                             "you can book your court with a\n 20% discount and for every 15 bookings you will get one free![y/n]");
                     String answer = sc.next();
                     if (answer.equals("y")) {
-                        if(client.getReservationManager().removeMoney(client, 20)) {
+                        if (client.getReservationManager().removeMoney(client, 20)) {
                             client.getReservationManager().setIsPremium(client);
                             System.out.println("Upgrade successful.");
                         }

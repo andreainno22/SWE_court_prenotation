@@ -80,10 +80,10 @@ public class Client {
         this.isPremium = isPremium;
     }
 
-    void makeReservation(Date date, Court court, RentingKit rentingKit, int numOfRent) {
+    /*void makeReservation(Date date, Court court, RentingKit rentingKit, int numOfRent) {
         Reservation r = reservationManager.makeReservation(court, date, this, rentingKit);
         reservations.put(r.getId(), r);
-    }
+    }*/
 
     /*void deleteReservation(int id) {
         Reservation reservation = reservations.get(id);

@@ -6,13 +6,14 @@ import Database.TimeSlot;
 
 import java.sql.Date;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class ReservationManager {
 
     public static int globalId = 0;
 
-    public abstract Reservation makeReservation(Court court, Date date, Client client, RentingKit rentingKit);
+    public boolean makeReservation(Reservation reservation){return false;};
 
     public void editReservation(Reservation reservation){};
 
@@ -30,16 +31,14 @@ public abstract class ReservationManager {
         return id_slots;
     };
 
-    public int getCourt(Formatter fmt) {
+    public List<Court> getCourt(Formatter fmt) {
         Database_management db = new Database_management();
-        List<Court_type_price> court_type_prices = db.getCourt();
-        fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE");
-        int num_of_courts = 0;
-        for (Court_type_price court_type_price : court_type_prices) {
+        List<Court> court_type_prices = db.getCourt();
+        fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
+        for (Court court_type_price : court_type_prices) {
             court_type_price.printAllCourt(fmt);
-            num_of_courts++;
         }
-        return num_of_courts;
+        return court_type_prices;
     }
 
     public void printAllReservations(Client client) {
@@ -82,5 +81,11 @@ public abstract class ReservationManager {
     public void deleteReservation(int reservation) {
         Database_management db = new Database_management();
         db.deleteReservation(reservation);
+    }
+
+    public RentingKit getRentingKit(String type) {
+        Database_management db = new Database_management();
+
+        return db.getRentingKit(type);
     }
 }

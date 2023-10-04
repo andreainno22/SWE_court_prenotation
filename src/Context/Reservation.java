@@ -10,12 +10,20 @@ public class Reservation {
         this.client = client;
     }
 
+    public Court getCourt() {
+        return court;
+    }
+
+    public void setRentingKit(RentingKit rentingKit) {
+        this.rentingKit = rentingKit;
+    }
+
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public void setCourt_id(int court_id) {
-        this.court_id = court_id;
+    public void setCourt(Court court) {
+        this.court = court;
     }
 
     public void setTime_slot(int time_slot) {
@@ -31,8 +39,7 @@ public class Reservation {
     }
 
     private int id;
-    //private Court court;
-    private int court_id;
+    private Court court;
     private Date date;
     private RentingKit rentingKit;
     private Client client;
