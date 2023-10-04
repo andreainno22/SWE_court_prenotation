@@ -12,6 +12,14 @@ public class RentingKit {
         this.unitPrice = unitPrice;
     }
 
+    public int getNumOfRents() {
+        return numOfRents;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public float getUnitPrice() {
         return unitPrice;
     }

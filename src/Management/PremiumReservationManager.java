@@ -1,38 +1,56 @@
 package Management;
 
-import Context.Court;
-import Context.RentingKit;
-import Context.Reservation;
 import Context.Client;
+import Context.Reservation;
 import Database.Database_management;
-import Database.TimeSlot;
 
-import java.sql.Date;
-import java.util.Formatter;
-import java.util.List;
+import java.util.Scanner;
 
 public class PremiumReservationManager extends ReservationManager {
 
-    /*@Override
-    public Reservation makeReservation(Court court, Date date, Client client, RentingKit rentingKit) {
-        float price = 90 * (court.getPrice() + rentingKit.getPrice()) / 100;
-        if (client.getWallet().getBalance() < price)
-            return null;
-        else {
-            // RIMUOVE PRIMA SOLDI DAL DATABASE
-            client.getWallet().removeMoney(price);
-            Reservation reservation = new Reservation(globalId++, court, date, client, rentingKit);
-            return reservation;
-        }
-    }*/
+    private final int giftPoints = 100;
 
     @Override
-    public void editReservation(Reservation reservation) {
+    public boolean makeReservation(Reservation reservation) {
+
+        if (reservation.getClient().getPoints() >= giftPoints) {
+            System.out.println("Congrats! You reached " + giftPoints + " points so you are eligible for a free booking. Do you want to use these for this booking? (y/N)");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.next();
+            if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
+                reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
+                Database_management db = new Database_management();
+                if (db.makeReservation(reservation)) {
+                    db.updatePoints(reservation.getClient().getPoints(), reservation.getClient());
+                    return true;
+                }
+            }
+        }
+        float price;
+        if(reservation.getRentingKit() != null)
+            price = 90 * (reservation.getCourt().getPrice() + reservation.getRentingKit().getTotPrice()) / 100;
+        else price = 90 * reservation.getCourt().getPrice() / 100;
+        if (super.makeReservation(reservation, price)) {
+            Database_management db = new Database_management();
+            db.updatePoints(reservation.getClient().getPoints(), reservation.getClient());
+            return true;
+        }
+        return false;
 
     }
 
-    public void deleteReservation(int reservation) {
-        super.deleteReservation(reservation);
+    @Override
+    public void editReservation(Reservation reservation) {
+    }
+
+    public boolean deleteReservation(int reservation, Client client) {
+        if (super.deleteReservation(reservation, client)) {
+            Database_management db = new Database_management();
+            db.updatePoints(client.getPoints() - giftPoints, client);
+            return true;
+        }
+        return false;
+        // todo: togliere i punti della prenotazione
     }
 
 

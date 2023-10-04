@@ -1,4 +1,5 @@
 package Context;
+
 import java.sql.Date;
 
 public class Reservation {
@@ -34,8 +35,28 @@ public class Reservation {
 
     }
 
-    public int getId() {
-        return id;
+    public RentingKit getRentingKit() {
+        return rentingKit;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public int getTime_slot() {
+        return time_slot;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public float getPrice() {
+        return price;
     }
 
     private int id;
@@ -44,5 +65,6 @@ public class Reservation {
     private RentingKit rentingKit;
     private Client client;
     private int time_slot;
+    private float price;
 
 }

@@ -1,10 +1,13 @@
 package Database;
-import Context.Client;
-import Context.Court;
-import Context.RentingKit;
-import Context.Wallet;
+
+import Context.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
 
@@ -12,8 +15,9 @@ import java.util.List;
 
 public class Database_management {
     static final String DB_URL = "jdbc:mysql://sql.freedb.tech/freedb_swe_courtprenotation_db";
-    static final String USER = "freedb_andreinno";
-    static final String PASS = "52Hwhz$Gxr2&!9&";
+    static final String USER = "freedb_kevaz";
+    static final String PASS = "4zusuGWRWxbZ%4F";
+    static final Logging logging = new Logging();
     /*static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
     static final String PASS = "";*/
@@ -49,7 +53,7 @@ public class Database_management {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("select reservation.date, court, start_hour, finish_hour from reservation, time_slots where reservation.time_slot = time_slots.id and client = '" + Client + "'");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour from reservation, time_slots where reservation.time_slot = time_slots.id and client = '" + Client + "'");
 
             Formatter fmt = new Formatter();
             fmt.format("%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME");
@@ -59,6 +63,7 @@ public class Database_management {
             System.out.println(fmt);
 
         } catch (SQLException e) {
+            disconnect();
             e.printStackTrace();
         }
     }
@@ -78,6 +83,7 @@ public class Database_management {
             disconnect();
             return reservations;
         } catch (SQLException e) {
+            disconnect();
             e.printStackTrace();
         }
         return null;
@@ -93,6 +99,7 @@ public class Database_management {
             disconnect();
             return price;
         } catch (SQLException e) {
+            disconnect();
             e.printStackTrace();
         }
         return 0;
@@ -116,13 +123,14 @@ public class Database_management {
             resultSet.close();
             disconnect();
         } catch (SQLException e) {
+            disconnect();
             e.printStackTrace();
         }
 
     }
 
-    public RentingKit getRentingKit(String type){
-        try{
+    public RentingKit getRentingKit(String type) {
+        try {
             Statement stmt = connect();
             assert stmt != null;
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM renting_kits WHERE type = '" + type + "'");
@@ -181,7 +189,7 @@ public class Database_management {
     }
 
     public int insertClient(Client client) {
-        Statement stmt = connect();
+        Statement stmt = connectTransaction();
         assert stmt != null;
         try {
             stmt.executeUpdate("INSERT INTO client (name, surname, email, password, telephone_number, points, is_premium) VALUES ('" + client.getName() + "', '" + client.getSurname() + "', '" + client.getEmail() + "', '" + client.getPassword() + "', '" + client.getTelephoneNumber() + "', '" + client.getPoints() + "', '" + client.getIsPremium() + "')");
@@ -192,6 +200,7 @@ public class Database_management {
             stmt.executeUpdate("INSERT INTO wallet (id, balance, client) VALUES ('" + client_id + "', '" + 0 + "', '" + client_id + "')");
             stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
             rs.close();
+            commitTransaction();
             disconnect();
             return 0;
         } catch (SQLIntegrityConstraintViolationException e1) {
@@ -211,7 +220,8 @@ public class Database_management {
             stmt.executeUpdate("DELETE FROM client WHERE id = '" + client.getId() + "'");
             disconnect();
         } catch (SQLException e) {
-            e.printStackTrace();
+            disconnect();
+            dbError(e);
         }
     }
 
@@ -232,15 +242,14 @@ public class Database_management {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price\n FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
+            ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
             List<Court> court_type_prices = new ArrayList<>();
             while (rs.next()) {
                 court_type_prices.add(new Court(rs.getInt(1), rs.getFloat(3)));
-                if(rs.getString(2).equals("padel")) {
+                if (rs.getString(2).equals("padel")) {
                     court_type_prices.get(court_type_prices.size() - 1).setType("padel");
                     court_type_prices.get(court_type_prices.size() - 1).setTerrain_type("null");
-                }
-                else {
+                } else {
                     court_type_prices.get(court_type_prices.size() - 1).setTerrain_type(rs.getString(2));
                     court_type_prices.get(court_type_prices.size() - 1).setType("tennis");
                 }
@@ -251,6 +260,7 @@ public class Database_management {
             return court_type_prices;
         } catch (SQLException e) {
             e.printStackTrace();
+            disconnect();
             return null;
         }
     }
@@ -269,22 +279,53 @@ public class Database_management {
             return timeSlots;
         } catch (SQLException e) {
             e.printStackTrace();
+            disconnect();
             return null;
         }
     }
 
-    public void insertReservation() {
-
+    public void updatePoints(int points, Client client){
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            stmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
+            disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            disconnect();
+        }
     }
 
-    public void deleteReservation(int reservation) {
+    public boolean makeReservation(Reservation reservation) {
+        try {
+            Statement stmt = connectTransaction();
+            assert stmt != null;
+            stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot() + "', '" + reservation.getPrice() + "')");
+            ResultSet rs = stmt.executeQuery("select id from reservation where date = '" + reservation.getDate() + "' and court = '" + reservation.getCourt().getId() + "' and client = '" + reservation.getClient().getId() + "' and time_slot = '" + reservation.getTime_slot() + "'");
+            rs.next();
+            if(reservation.getRentingKit() != null)
+                stmt.executeUpdate("INSERT INTO rentingkit_reservation (reservation, renting_kit, num_of_rents) VALUES ('" + rs.getInt(1) + "', '" + reservation.getRentingKit().getId() + "', '" + reservation.getRentingKit().getNumOfRents() + "')");
+            rs.close();
+            return commitTransaction();
+        } catch (SQLException e) {
+            dbError(e);
+            return false;
+        } finally {
+            disconnect();
+        }
+    }
+
+    public boolean deleteReservation(int reservation) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation + "'");
             disconnect();
+            return true;
         } catch (SQLException e) {
+            disconnect();
             e.printStackTrace();
+            return false;
         }
     }
 

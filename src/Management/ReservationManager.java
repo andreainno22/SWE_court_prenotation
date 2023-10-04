@@ -1,19 +1,16 @@
 package Management;
 import Context.*;
-import Database.Court_type_price;
 import Database.Database_management;
-import Database.TimeSlot;
-
+import Context.TimeSlot;
 import java.sql.Date;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class ReservationManager {
 
     public static int globalId = 0;
 
-    public boolean makeReservation(Reservation reservation){return false;};
+    public abstract boolean makeReservation(Reservation reservation);
 
     public void editReservation(Reservation reservation){};
 
@@ -78,14 +75,28 @@ public abstract class ReservationManager {
         db.modifyBalance(client);
     }
 
-    public void deleteReservation(int reservation) {
+    public boolean deleteReservation(int reservation, Client client) {
         Database_management db = new Database_management();
-        db.deleteReservation(reservation);
+        return db.deleteReservation(reservation);
     }
 
     public RentingKit getRentingKit(String type) {
         Database_management db = new Database_management();
 
         return db.getRentingKit(type);
+    }
+    protected boolean makeReservation(Reservation reservation, float price) {
+        if (reservation.getClient().getWallet().getBalance() < price){
+            System.out.println("Insufficient balance to proceed with the booking. Please add funds to your wallet!");
+            return false;
+        }else {
+            reservation.setPrice(price);
+            Database_management db = new Database_management();
+            if(db.makeReservation(reservation)) {
+                reservation.getClient().getWallet().removeMoney(price);
+                return db.modifyBalance(reservation.getClient());
+            }
+        }
+        return false;
     }
 }

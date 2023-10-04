@@ -82,12 +82,23 @@ public class AccountManager {
             String email = sc.nextLine();
             System.out.println("Password: ");
             String password = sc.nextLine();
-            System.out.println("Telephone number [0 = not provided]: ");
-            int telephoneNumber = sc.nextInt();
             Client client = new Client(name, surname, email, password);
-            if (telephoneNumber != 0)
-                client.setTelephoneNumber(telephoneNumber);
             Database_management db = new Database_management();
+            int telephoneNumber;
+            boolean telephoneNumberValid = false;
+            while (!telephoneNumberValid) {
+                try {
+                    System.out.println("Telephone number [0 = not provided]: ");
+                    sc = new Scanner(System.in);
+                    telephoneNumber = sc.nextInt();
+                    if (telephoneNumber != 0)
+                        client.setTelephoneNumber(telephoneNumber);
+                    telephoneNumberValid = true;
+                } catch (InputMismatchException e) {
+                    System.err.println("Wrong telephone number format. Retry.");
+                }
+
+            }
 
             while (!valid) {
                 // fatto controllo sulla validità dell'email
@@ -135,8 +146,13 @@ public class AccountManager {
     private void clientMenu(Client client) {
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
         System.out.println("Please select an option:");
-        System.out.println("1. Make a reservation\n2. Edit a reservation\n3. Delete a reservation\n" +
-                "4. Show all reservations\n6. Manage your wallet\n7. Upgrade as a premium client\n8. Logout");
+        System.out.println("""
+                1. Make a reservation
+                2. Delete a reservation
+                3. Show all reservations
+                4. Manage your wallet
+                5. Upgrade as a premium client
+                6. Logout""");
         int choice;
         Scanner sc;
         while (true) {
@@ -158,7 +174,7 @@ public class AccountManager {
             case 1:
                 Date date;
                 int court = 0;
-                Reservation res = new Reservation();
+                Reservation res = new Reservation(client);
                 System.out.println("Date (yyyy-mm-dd): ");
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
@@ -245,11 +261,14 @@ public class AccountManager {
                             }
                             if (slot == 0)
                                 break;
+
                             // aggiunta time slot a reservation
                             res.setTime_slot(slot);
                             RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
                             System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             int numOfRent = sc.nextInt();
+
+                            // aggiunta renting kit a reservation
                             if (numOfRent > 0) {
                                 rentingKit.setNumOfRents(numOfRent);
                                 res.setRentingKit(rentingKit);
@@ -259,10 +278,13 @@ public class AccountManager {
                                 System.err.println("Operation aborted.");
                                 break;
                             }
+                            // aggiunta della prenotazione al database
+                            if (client.getReservationManager().makeReservation(res))
+                                System.out.println("Reservation successful.");
+                            else System.err.println("Reservation failed.");
                             //TODO: fare la prenotazione
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
-                            System.out.println("Reservation successful.");
                             System.out.println("Going back to Main Menu...\n");
                             break;
                         default:
@@ -271,7 +293,7 @@ public class AccountManager {
                     }
                 }
                 break;
-            case 3:
+            case 2:
                 // gestione della cancellazione della prenotazione
                 client.getReservationManager().printAllReservations(client);
                 System.out.println("ID of reservation to delete: ");
@@ -292,21 +314,32 @@ public class AccountManager {
                         break;
                     }
                 if (found) {
-                    client.getReservationManager().deleteReservation(reservation);
-                    client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
-                    System.out.println("Reservation deleted successfully.");
+                    if (client.getReservationManager().deleteReservation(reservation, client)) {
+                        client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
+                        System.out.println("Reservation deleted successfully.");
+                    } else System.err.println("Error during deletion.");
                 } else
                     System.err.println("Reservation not found.");
                 break;
-            case 4:
+            case 3:
                 // stampa delle prenotazioni
                 client.getReservationManager().printAllReservations(client);
                 break;
-            default: {
-                System.err.println("Wrong choice.");
+            case 4:
+                // gestione del portafoglio
+                System.out.println("Your balance is: " + client.getWallet().getBalance() + "€");
+                System.out.println("Do you want to add money? [y/n]");
+                String choice2 = sc.next();
+                if (choice2.equals("y")) {
+                    System.out.println("How much money do you want to add?");
+                    float money = sc.nextFloat();
+                    client.getReservationManager().addMoney(client, money);
+                    System.out.println("Money added successfully.");
+                } else {
+                    System.err.println("Going back to Main Menu...");
+                }
                 break;
-            }
-            case 7:
+            case 5:
                 // upgrade a premium
                 if (client.getIsPremium() == 0) {
                     System.out.println("Do you want to upgrade to premium? The cost is 20€ a year and then " +
@@ -326,9 +359,13 @@ public class AccountManager {
                     System.err.println("You are already a premium client. Going back to Main Menu...");
                 }
                 break;
-            case 8: {
+            case 6: {
                 logged = false;
                 System.out.println("Logout successful.\n");
+                break;
+            }
+            default: {
+                System.err.println("Wrong choice.");
                 break;
             }
         }

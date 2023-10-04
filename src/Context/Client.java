@@ -72,6 +72,10 @@ public class Client {
         return isPremium;
     }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
     public ReservationManager getReservationManager() {
         return reservationManager;
     }
@@ -79,17 +83,6 @@ public class Client {
     public void setIsPremium(int isPremium) {
         this.isPremium = isPremium;
     }
-
-    /*void makeReservation(Date date, Court court, RentingKit rentingKit, int numOfRent) {
-        Reservation r = reservationManager.makeReservation(court, date, this, rentingKit);
-        reservations.put(r.getId(), r);
-    }*/
-
-    /*void deleteReservation(int id) {
-        Reservation reservation = reservations.get(id);
-        if (reservationManager.deleteReservation(reservation))
-            reservations.remove(id);
-    }*/
 
     public Wallet getWallet() {
         return wallet;

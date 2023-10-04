@@ -1,29 +1,18 @@
 package Management;
 
 import Context.*;
-import Database.Court_type_price;
-import Database.Database_management;
-import Database.TimeSlot;
 
-import java.sql.Date;
-import java.util.List;
-import java.util.Formatter;
 public class StandardReservationManager extends ReservationManager {
-    /*@Override
-    public Reservation makeReservation(Court court, Date date, Client client, RentingKit rentingKit) {
-        float price = court.getPrice() + rentingKit.getPrice();
-        if (client.getWallet().getBalance() < price)
-            return null;
-        else {
-            Reservation reservation = new Reservation(globalId++, court, date, client, rentingKit);
-            client.getWallet().removeMoney(price);
-            return reservation;
-        }
-    }*/
-
     @Override
-    public void deleteReservation(int reservation) {
-        super.deleteReservation(reservation);
+    public boolean makeReservation(Reservation reservation) {
+        float price = reservation.getCourt().getPrice();
+        if(reservation.getRentingKit() != null)
+            price += reservation.getRentingKit().getTotPrice();
+        return super.makeReservation(reservation, price);
+    }
+    @Override
+    public boolean deleteReservation(int reservation, Client client) {
+        return super.deleteReservation(reservation, client);
     }
 
     @Override

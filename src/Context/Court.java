@@ -14,16 +14,15 @@ public class Court {
         this.price = price;
     }
 
-
+    public Court(int id, float price) {
+        this.id = id;
+        this.price = price;
+    }
 
     public float getPrice() {
         return price;
     }
 
-    public Court(int id, float price) {
-        this.id = id;
-        this.price = price;
-    }
 
     public void setType(String type) {
         this.type = type;
