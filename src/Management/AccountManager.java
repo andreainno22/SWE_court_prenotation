@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import Context.Client;
+import Context.Reservation;
 import Database.Database_management;
 
 import java.sql.Date;
@@ -154,6 +155,7 @@ public class AccountManager {
             case 1:
                 Date date;
                 int court = 0;
+                Reservation res= new Reservation();
                 System.out.println("Date (yyyy-mm-dd): ");
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
@@ -164,6 +166,7 @@ public class AccountManager {
                         System.err.println("You selected a past date. Retry.");
                         break;
                     }
+                    res.setDate(date);
                 } catch (IllegalArgumentException e) {
                     System.err.println("Wrong date format.");
                     break;
@@ -179,7 +182,7 @@ public class AccountManager {
                         sc = new Scanner(System.in);
                         try {
                             court = sc.nextInt();
-                            if (court > num_courts) {
+                            if (court > num_courts || court < 0) {
                                 System.err.println("You selected a wrong Court. Retry.");
                             } else {
                                 break;
@@ -191,12 +194,13 @@ public class AccountManager {
                     if (court == 0) {
                         break;
                     }
+                    res.setCourt_id(court);
                     Formatter fmt2 = new Formatter();
                     boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     while (true) {
                         System.out.println(fmt2);
                         System.out.println("Select an option:");
-                        System.out.println("1. Back to Courts\n2. Choose a time slot for this Court");
+                        System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
                         try {
                             choice = sc.nextInt();
                             break;
@@ -210,27 +214,32 @@ public class AccountManager {
                             //back = true;
                             break;
                         case 2:
-                            int slot;
-                            System.out.println("ID of desired Time Slot: ");
+                            int slot = 0;
+                            System.out.println("ID of desired Time Slot [0 = Go Back to Court Selection]: ");
                             boolean valid = false;
                             while (!valid) {
                                 try {
                                     slot = sc.nextInt();
-                                    if (slot > available_slots.length || slot < 1) {
+                                    if (slot > available_slots.length || slot < 0) {
                                         System.err.println("Given Time Slot is wrong. Retry.");
                                         continue;
                                     }
                                     valid = true;
-                                    while (!available_slots[slot - 1]) {
-                                        System.err.println("Given Time Slot is not available. Retry.");
-                                        System.out.println("ID of desired Time Slot: ");
-                                        slot = sc.nextInt();
+                                    if(slot != 0) {
+                                        while (!available_slots[slot - 1]) {
+                                            System.err.println("Given Time Slot is not available. Retry.");
+                                            System.out.println("ID of desired Time Slot: ");
+                                            slot = sc.nextInt();
+                                        }
                                     }
                                 } catch (InputMismatchException e) {
                                     System.err.println("Wrong input format. Retry");
                                     break;
                                 }
                             }
+                            if(slot == 0)
+                                break;
+                            res.setTime_slot(slot);
                             System.out.println("How many renting kit do you want to rent? [0 = None]");
                             int rentingKits = sc.nextInt();
                             //todo: fare in modo che il kit venga aggiunto alla prenotazione
