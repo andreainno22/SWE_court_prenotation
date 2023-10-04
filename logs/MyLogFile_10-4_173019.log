@@ -1,0 +1,2 @@
+ott 04, 2023 5:30:20 PM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLException: Access denied for user 'freedb_kevaz'@'150.217.251.74' (using password: YES)
