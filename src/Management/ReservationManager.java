@@ -8,8 +8,6 @@ import java.util.List;
 
 public abstract class ReservationManager {
 
-    public static int globalId = 0;
-
     public abstract boolean makeReservation(Reservation reservation);
 
     public void editReservation(Reservation reservation){};

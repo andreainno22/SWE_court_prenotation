@@ -24,6 +24,10 @@ public class RentingKit {
         return unitPrice;
     }
 
+    public float getTotPrice(){
+        return unitPrice*numOfRents;
+    }
+
     public void setNumOfRents(int numOfRents) {
         this.numOfRents = numOfRents;
     }

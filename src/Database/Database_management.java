@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 // TODO: gestire le migrazioni del database con Flyway
 
@@ -22,6 +26,39 @@ public class Database_management {
     static final String USER = "root";
     static final String PASS = "";*/
 
+    private static class Logging {
+
+        private final Logger logger = Logger.getLogger(Database_management.class.getName());
+
+        private FileHandler fh = null;
+        SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
+        private String FILENAME = System.getProperty("user.dir")+"/logs/MyLogFile_"
+                + format.format(Calendar.getInstance().getTime()) + ".log";
+
+        private File file = new File(FILENAME);
+
+        public Logging() {
+            //just to make our log file nicer :)
+            try {
+                file.createNewFile();
+                fh = new FileHandler(FILENAME);
+            } catch (IOException ex){
+                ex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+            logger.setUseParentHandlers(false);
+        }
+    }
+    private void dbError(Exception e) {
+        System.err.println("Database did respond with an error. See log file for more information.");
+        //logging.logger.log(Level.SEVERE, "Exception: " + e);
+        logging.logger.severe("Exception: " + e);
+    }
+
     Connection conn = null;
 
     private Statement connect() {
@@ -31,11 +68,39 @@ public class Database_management {
             Statement stmt = conn.createStatement();
             return stmt;
         } catch (SQLException e) {
-            System.err.println("Error during connection: " + e.getMessage());
+            dbError(e);
+            System.err.println("Error during connection.");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    private Statement connectTransaction() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn.setAutoCommit(false);
+            Statement stmt = conn.createStatement();
+            return stmt;
+        } catch (SQLException e) {
+            dbError(e);
+            System.err.println("Error during connection.");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private boolean commitTransaction() throws SQLException {
+        try {
+            conn.commit();
+            return true;
+        }catch(SQLException e){
+            dbError(e);
+            conn.rollback();
+            return false;
+        }
     }
 
     private void disconnect() {
@@ -149,10 +214,13 @@ public class Database_management {
     public Client getClient(String email, String password) {
         try {
             Statement stmt = connect();
-            assert stmt != null;
+            //assert stmt != null;
+            if (stmt == null) {
+                return null;
+            }
             ResultSet rs = stmt.executeQuery("select * from client where email = '" + email + "' and password = '" + password + "'");
             if (!rs.next()) {
-                System.err.println("Wrong email or password");
+                System.err.println("Wrong email or password. Retry.");
                 rs.close();
                 disconnect();
                 return null;
@@ -207,7 +275,7 @@ public class Database_management {
             disconnect();
             return -1;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
             disconnect();
             return -2;
         }
@@ -225,16 +293,23 @@ public class Database_management {
         }
     }
 
-    public void modifyBalance(Client client) {
+    public boolean modifyBalance(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             stmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
             disconnect();
+            return true;
         } catch (SQLIntegrityConstraintViolationException e1) {
             disconnect();
+            dbError(e1);
+            //e1.printStackTrace();
+            return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
+            disconnect();
+            //e.printStackTrace();
+            return false;
         }
     }
 

@@ -136,7 +136,13 @@ public class AccountManager {
                     startMenu = true;
                     return;
                 } else {
-                    System.err.println("Wrong email or password. Retry.");
+                    System.out.println("Login Failed. Retry? (Y/n)");
+                    sc = new Scanner(System.in);
+                    String value = sc.next();
+                    if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("n")) {
+                        startMenu = true;
+                        return;
+                    }
                 }
             }
         }

@@ -3,13 +3,6 @@ package Context;
 import java.sql.Date;
 
 public class Reservation {
-    public Reservation(int id, Court court, Date date, Client client, RentingKit rentingKit) {
-        this.id = id;
-        //this.court = court;
-        this.date = date;
-        this.rentingKit = rentingKit;
-        this.client = client;
-    }
 
     public Court getCourt() {
         return court;
@@ -31,8 +24,8 @@ public class Reservation {
         this.time_slot = time_slot;
     }
 
-    public Reservation(){
-
+    public Reservation(Client client) {
+        this.client = client;
     }
 
     public RentingKit getRentingKit() {
