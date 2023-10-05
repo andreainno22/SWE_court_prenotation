@@ -1,6 +1,6 @@
 package Management;
 
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -11,9 +11,6 @@ import Context.Reservation;
 import Database.Database_management;
 
 import java.sql.Date;
-import java.util.Formatter;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 
 public class AccountManager {
@@ -158,9 +155,17 @@ public class AccountManager {
                 3. Show all reservations
                 4. Manage your wallet
                 5. Upgrade as a premium client
-                6. Logout""");
+                6. Your points
+                7. Logout""");
         int choice;
         Scanner sc;
+
+        client = updateClient(client);
+        if(client.getIsPremium() == 0)
+            client.setReservationManager(new StandardReservationManager());
+        else
+            client.setReservationManager(new PremiumReservationManager());
+
         while (true) {
             try {
                 sc = new Scanner(System.in);
@@ -169,12 +174,6 @@ public class AccountManager {
             } catch (InputMismatchException ex) {
                 System.err.println("Wrong choice format. Retry.");
             }
-        }
-        if (client.getReservationManager() == null) {
-            if (client.getIsPremium() == 1)
-                client.setReservationManager(new PremiumReservationManager());
-            else
-                client.setReservationManager(new StandardReservationManager());
         }
         switch (choice) {
             case 1:
@@ -288,7 +287,6 @@ public class AccountManager {
                             if (client.getReservationManager().makeReservation(res))
                                 System.out.println("Reservation successful.");
                             else System.err.println("Reservation failed.");
-                            //TODO: fare la prenotazione
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
                             System.out.println("Going back to Main Menu...\n");
@@ -312,7 +310,7 @@ public class AccountManager {
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong ID format. Retry.");
                     }
-                int[] ids = client.getReservationManager().getReservationsId(client);
+                ArrayList<Integer> ids = client.getReservationManager().getReservationsId(client);
                 boolean found = false;
                 for (int j : ids)
                     if (j == reservation) {
@@ -321,7 +319,7 @@ public class AccountManager {
                     }
                 if (found) {
                     if (client.getReservationManager().deleteReservation(reservation, client)) {
-                        client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
+                        //client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
                         System.out.println("Reservation deleted successfully.");
                     } else System.err.println("Error during deletion.");
                 } else
@@ -365,7 +363,11 @@ public class AccountManager {
                     System.err.println("You are already a premium client. Going back to Main Menu...");
                 }
                 break;
-            case 6: {
+            case 6:
+                // gestione dei punti
+                System.out.println("Your have: " + client.getPoints() + " points.");
+                break;
+            case 7: {
                 logged = false;
                 System.out.println("Logout successful.\n");
                 break;

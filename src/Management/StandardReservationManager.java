@@ -8,7 +8,8 @@ public class StandardReservationManager extends ReservationManager {
         float price = reservation.getCourt().getPrice();
         if(reservation.getRentingKit() != null)
             price += reservation.getRentingKit().getTotPrice();
-        return super.makeReservation(reservation, price);
+        boolean isPremium = reservation.getClient().getIsPremium() == 1;
+        return super.makeReservation(reservation, price, isPremium);
     }
     @Override
     public boolean deleteReservation(int reservation, Client client) {

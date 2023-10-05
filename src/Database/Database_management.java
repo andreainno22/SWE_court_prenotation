@@ -32,7 +32,7 @@ public class Database_management {
 
         private FileHandler fh = null;
         SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
-        private String FILENAME = System.getProperty("user.dir")+"/logs/MyLogFile_"
+        private String FILENAME = System.getProperty("user.dir") + "/logs/MyLogFile_"
                 + format.format(Calendar.getInstance().getTime()) + ".log";
 
         private File file = new File(FILENAME);
@@ -42,7 +42,7 @@ public class Database_management {
             try {
                 file.createNewFile();
                 fh = new FileHandler(FILENAME);
-            } catch (IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -53,6 +53,7 @@ public class Database_management {
             logger.setUseParentHandlers(false);
         }
     }
+
     private void dbError(Exception e) {
         System.err.println("Database did respond with an error. See log file for more information.");
         //logging.logger.log(Level.SEVERE, "Exception: " + e);
@@ -96,7 +97,7 @@ public class Database_management {
         try {
             conn.commit();
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             dbError(e);
             conn.rollback();
             return false;
@@ -133,16 +134,14 @@ public class Database_management {
         }
     }
 
-    public int[] getReservationsId(int Client) {
+    public ArrayList<Integer> getReservationsId(int Client) {
         Statement stmt = connect();
         assert stmt != null;
         try {
             ResultSet rs = stmt.executeQuery("select reservation.id from reservation where client = '" + Client + "'");
-            int[] reservations = new int[rs.getInt(1)];
+            ArrayList<Integer> reservations = new ArrayList<>();
             while (rs.next()) {
-                for (int i = 0; i < rs.getInt(1); i++) {
-                    reservations[i] = rs.getInt(1);
-                }
+                reservations.add(rs.getInt(1));
             }
             rs.close();
             disconnect();
@@ -359,7 +358,7 @@ public class Database_management {
         }
     }
 
-    public void updatePoints(int points, Client client){
+    public boolean updatePoints(int points, Client client, Statement transactionStmt) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -378,9 +377,13 @@ public class Database_management {
             stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot() + "', '" + reservation.getPrice() + "')");
             ResultSet rs = stmt.executeQuery("select id from reservation where date = '" + reservation.getDate() + "' and court = '" + reservation.getCourt().getId() + "' and client = '" + reservation.getClient().getId() + "' and time_slot = '" + reservation.getTime_slot() + "'");
             rs.next();
-            if(reservation.getRentingKit() != null)
+            if (reservation.getRentingKit() != null)
                 stmt.executeUpdate("INSERT INTO rentingkit_reservation (reservation, renting_kit, num_of_rents) VALUES ('" + rs.getInt(1) + "', '" + reservation.getRentingKit().getId() + "', '" + reservation.getRentingKit().getNumOfRents() + "')");
             rs.close();
+            if (updatePoints)
+                updatePoints(reservation.getClient().getPoints(), reservation.getClient(), stmt);
+            if(updateWallet)
+                modifyBalance(reservation.getClient(), stmt);
             return commitTransaction();
         } catch (SQLException e) {
             dbError(e);
@@ -390,12 +393,15 @@ public class Database_management {
         }
     }
 
-    public boolean deleteReservation(int reservation) {
+    public boolean deleteReservation(int reservation, Client client) {
         try {
-            Statement stmt = connect();
+            Statement stmt = connectTransaction();
             assert stmt != null;
+            updatePoints(client.getPoints(), client, stmt);
+            client.getWallet().addMoney(getReservationPrice(reservation, stmt));
+            modifyBalance(client, stmt);
             stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation + "'");
-            disconnect();
+            commitTransaction();
             return true;
         } catch (SQLException e) {
             disconnect();

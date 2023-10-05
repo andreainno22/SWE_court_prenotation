@@ -20,23 +20,18 @@ public class PremiumReservationManager extends ReservationManager {
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
                 Database_management db = new Database_management();
-                if (db.makeReservation(reservation)) {
-                    db.updatePoints(reservation.getClient().getPoints(), reservation.getClient());
-                    return true;
-                }
+                return db.makeReservation(reservation, true, false);
             }
         }
         float price;
         if(reservation.getRentingKit() != null)
             price = 90 * (reservation.getCourt().getPrice() + reservation.getRentingKit().getTotPrice()) / 100;
         else price = 90 * reservation.getCourt().getPrice() / 100;
-        if (super.makeReservation(reservation, price)) {
-            Database_management db = new Database_management();
-            db.updatePoints(reservation.getClient().getPoints(), reservation.getClient());
-            return true;
-        }
-        return false;
-
+        boolean isPremium = reservation.getClient().getIsPremium() == 1;
+        reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
+        return super.makeReservation(reservation, price, isPremium);
+            //Database_management db = new Database_management();
+            //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
     }
 
     @Override
@@ -44,13 +39,13 @@ public class PremiumReservationManager extends ReservationManager {
     }
 
     public boolean deleteReservation(int reservation, Client client) {
-        if (super.deleteReservation(reservation, client)) {
-            Database_management db = new Database_management();
-            db.updatePoints(client.getPoints() - giftPoints, client);
-            return true;
-        }
-        return false;
-        // todo: togliere i punti della prenotazione
+        client.setPoints(client.getPoints() - reservationPoints);
+        return (super.deleteReservation(reservation, client));
+          //  Database_management db = new Database_management();
+           // db.updatePoints(client.getPoints() - giftPoints, client);
+          //  return true;
+       // }
+        //return false;
     }
 
 
