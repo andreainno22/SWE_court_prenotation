@@ -145,6 +145,11 @@ public class AccountManager {
         }
     }
 
+    public Client updateClient(Client client) {
+        Database_management db = new Database_management();
+        return db.getClient(client.getEmail(), client.getPassword());
+    }
+
 
     private void clientMenu(Client client) {
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");

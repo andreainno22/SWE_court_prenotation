@@ -1,0 +1,8 @@
+ott 05, 2023 11:56:41 AM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLException: Illegal operation on empty result set.
+ott 05, 2023 11:56:42 AM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLException: No operations allowed after statement closed.
+ott 05, 2023 11:56:42 AM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLNonTransientConnectionException: No operations allowed after connection closed.
+ott 05, 2023 11:56:42 AM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLNonTransientConnectionException: No operations allowed after connection closed.

@@ -153,18 +153,24 @@ public class Database_management {
         return null;
     }
 
-    public float getReservationPrice(int reservation) {
-        Statement stmt = connect();
-        assert stmt != null;
+    public float getReservationPrice(int reservation, Statement transactionStmt) {
+            ResultSet rs;
         try {
-            ResultSet rs = stmt.executeQuery("select prices.price from prices, reservation where reservation.id = '" + reservation + "' and prices.id = reservation.price");
+            if(transactionStmt == null){
+                Statement stmt = connect();
+                assert stmt != null;
+                rs = stmt.executeQuery("select price from reservation where reservation.id = '" + reservation + "'");
+                rs.close();
+                disconnect();
+            }else{
+                rs = transactionStmt.executeQuery("select price from reservation where reservation.id = '" + reservation + "'");
+            }
+            rs.next();
             float price = rs.getFloat(1);
-            rs.close();
-            disconnect();
             return price;
         } catch (SQLException e) {
+            dbError(e);
             disconnect();
-            e.printStackTrace();
         }
         return 0;
     }
@@ -292,12 +298,16 @@ public class Database_management {
         }
     }
 
-    public boolean modifyBalance(Client client) {
+    public boolean modifyBalance(Client client, Statement transactionStmt) {
         try {
-            Statement stmt = connect();
-            assert stmt != null;
-            stmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
-            disconnect();
+            if(transactionStmt == null) {
+                Statement stmt = connect();
+                assert stmt != null;
+                stmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
+                disconnect();
+            }else{
+                transactionStmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
+            }
             return true;
         } catch (SQLIntegrityConstraintViolationException e1) {
             disconnect();
@@ -333,7 +343,7 @@ public class Database_management {
             disconnect();
             return court_type_prices;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
             disconnect();
             return null;
         }
@@ -360,17 +370,23 @@ public class Database_management {
 
     public boolean updatePoints(int points, Client client, Statement transactionStmt) {
         try {
-            Statement stmt = connect();
-            assert stmt != null;
-            stmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
-            disconnect();
+            if (transactionStmt == null) {
+                Statement stmt = connect();
+                assert stmt != null;
+                stmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
+                disconnect();
+            }else{
+               transactionStmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
+            }
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
             disconnect();
+            return false;
         }
     }
 
-    public boolean makeReservation(Reservation reservation) {
+    public boolean makeReservation(Reservation reservation, boolean updatePoints, boolean updateWallet) {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
@@ -403,10 +419,11 @@ public class Database_management {
             stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation + "'");
             commitTransaction();
             return true;
-        } catch (SQLException e) {
-            disconnect();
-            e.printStackTrace();
+        } catch (SQLException e){
+            dbError(e);
             return false;
+        }finally {
+            disconnect();
         }
     }
 

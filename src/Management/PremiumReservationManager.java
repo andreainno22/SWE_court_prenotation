@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class PremiumReservationManager extends ReservationManager {
 
     private final int giftPoints = 100;
+    private final int reservationPoints = 10;
 
     @Override
     public boolean makeReservation(Reservation reservation) {
