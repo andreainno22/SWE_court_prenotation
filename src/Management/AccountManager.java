@@ -343,8 +343,10 @@ public class AccountManager {
                 if (choice2.equals("y")) {
                     System.out.println("How much money do you want to add?");
                     float money = sc.nextFloat();
-                    client.getReservationManager().addMoney(client, money);
-                    System.out.println("Money added successfully.");
+                    if(client.getReservationManager().addMoney(client, money))
+                        System.out.println("Money added successfully.");
+                    else
+                        System.out.println("Transaction failed.");
                 } else {
                     System.err.println("Going back to Main Menu...");
                 }
@@ -353,7 +355,7 @@ public class AccountManager {
                 // upgrade a premium
                 if (client.getIsPremium() == 0) {
                     System.out.println("Do you want to upgrade to premium? The cost is 20€ a year and then " +
-                            "you can book your court with a\n 20% discount and for every 15 bookings you will get one free![y/n]");
+                            "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/n]");
                     String answer = sc.next();
                     if (answer.equals("y")) {
                         if (client.getReservationManager().setIsPremium(client)) {

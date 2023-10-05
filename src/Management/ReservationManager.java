@@ -69,10 +69,10 @@ public abstract class ReservationManager {
         return db.modifyPremium(client);
     }
 
-    public void addMoney(Client client, float money) {
+    public boolean addMoney(Client client, float money) {
         Database_management db = new Database_management();
         client.getWallet().addMoney(money);
-        db.modifyBalance(client, null);
+        return db.modifyBalance(client, null);
     }
 
     public boolean deleteReservation(int reservation, Client client) {
