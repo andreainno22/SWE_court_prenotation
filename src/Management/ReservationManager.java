@@ -13,15 +13,8 @@ public abstract class ReservationManager {
 
     public abstract boolean makeReservation(Reservation reservation);
 
-    public void editReservation(Reservation reservation) {
-    }
-
-    ;
-
     public void getAllReservation(Client client) {
     }
-
-    ;
 
     public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
         boolean[] id_slots = new boolean[14];
@@ -34,8 +27,6 @@ public abstract class ReservationManager {
         }
         return id_slots;
     }
-
-    ;
 
     public List<Court> getCourt(Formatter fmt) {
         Database_management db = new Database_management();
@@ -71,10 +62,11 @@ public abstract class ReservationManager {
         return false;
     }
 
-    public void setIsPremium(Client client) {
+    public boolean setIsPremium(Client client) {
         Database_management db = new Database_management();
         client.setIsPremium(1);
-        db.modifyPremium(client);
+        client.getWallet().removeMoney(20);
+        return db.modifyPremium(client);
     }
 
     public void addMoney(Client client, float money) {

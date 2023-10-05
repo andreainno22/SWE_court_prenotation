@@ -16,6 +16,7 @@ import java.sql.Date;
 public class AccountManager {
     private boolean logged = false;
 
+    private Date isPremiumDate;
     private boolean startMenu = true;
 
     public static boolean isValidEmail(String email) {
@@ -355,8 +356,7 @@ public class AccountManager {
                             "you can book your court with a\n 20% discount and for every 15 bookings you will get one free![y/n]");
                     String answer = sc.next();
                     if (answer.equals("y")) {
-                        if (client.getReservationManager().removeMoney(client, 20)) {
-                            client.getReservationManager().setIsPremium(client);
+                        if (client.getReservationManager().setIsPremium(client)) {
                             System.out.println("Upgrade successful.");
                         }
                     } else if (answer.equals("n")) {

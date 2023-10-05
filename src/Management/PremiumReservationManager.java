@@ -35,9 +35,6 @@ public class PremiumReservationManager extends ReservationManager {
             //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
     }
 
-    @Override
-    public void editReservation(Reservation reservation) {
-    }
 
     public boolean deleteReservation(int reservation, Client client) {
         client.setPoints(client.getPoints() - reservationPoints);

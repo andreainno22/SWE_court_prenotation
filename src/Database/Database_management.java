@@ -11,16 +11,14 @@ import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-// TODO: gestire le migrazioni del database con Flyway
 
 public class Database_management {
-    static final String DB_URL = "jdbc:mysql://sql.freedb.tech/freedb_swe_courtprenotation_db";
-    static final String USER = "freedb_kevaz";
-    static final String PASS = "4zusuGWRWxbZ%4F";
+    static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
+    static final String USER = "swecourtprentiondb_recordfell";
+    static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
     static final Logging logging = new Logging();
     /*static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
     static final String USER = "root";
@@ -368,7 +366,7 @@ public class Database_management {
         }
     }
 
-    public boolean updatePoints(int points, Client client, Statement transactionStmt) {
+    public void updatePoints(int points, Client client, Statement transactionStmt) {
         try {
             if (transactionStmt == null) {
                 Statement stmt = connect();
@@ -378,11 +376,9 @@ public class Database_management {
             }else{
                transactionStmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
             }
-            return true;
         } catch (SQLException e) {
             dbError(e);
             disconnect();
-            return false;
         }
     }
 
@@ -435,14 +431,31 @@ public class Database_management {
     }
 
 
-    public void modifyPremium(Client client) {
+    public boolean modifyPremium(Client client) {
         try {
-            Statement stmt = connect();
+            Statement stmt = connectTransaction();
             assert stmt != null;
             stmt.executeUpdate("update client set is_premium = '" + client.getIsPremium() + "' where id = '" + client.getId() + "'");
+            //Calendar calendario = Calendar.getInstance();
+            // Aggiungi un anno alla data corrente
+            //calendario.add(Calendar.YEAR, 1);
+            // Ottieni la data con un anno in più
+            //Date date = (Date) calendario.getTime();
+            Calendar calendario = Calendar.getInstance();
+
+            // Sottrai un giorno dalla data corrente
+            calendario.add(Calendar.DAY_OF_YEAR, -1);
+
+            // Ottieni la data di ieri
+            java.util.Date date = calendario.getTime();
+            stmt.executeUpdate("insert into premium_subs (client, end_date) values ('" + client.getId() + "', '" + date + "')");
+            modifyBalance(client, stmt);
+            commitTransaction();
             disconnect();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

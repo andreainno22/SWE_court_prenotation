@@ -16,10 +16,6 @@ public class StandardReservationManager extends ReservationManager {
         return super.deleteReservation(reservation, client);
     }
 
-    @Override
-    public void editReservation(Reservation reservation) {
-
-    }
 
     @Override
     public void getAllReservation(Client client) {

@@ -2,9 +2,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: sql11.freemysqlhosting.net
--- Generation Time: Oct 04, 2023 at 12:07 PM
--- Server version: 5.5.62-0ubuntu0.14.04.1
+-- Host: 127.0.0.1
+-- Generation Time: Oct 05, 2023 at 03:33 PM
+-- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -18,8 +18,20 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sql11650722`
+-- Database: `swe_court_prenotation_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `booked`
+-- (See below for the actual view)
+--
+CREATE TABLE `booked` (
+`court` int(11)
+,`date` date
+,`time_slot` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -35,9 +47,9 @@ CREATE TABLE `client` (
   `password` varchar(45) NOT NULL,
   `telephone_number` int(11) DEFAULT NULL,
   `is_premium` tinyint(1) NOT NULL,
-  `points` int(11) NOT NULL DEFAULT '0',
+  `points` int(11) NOT NULL DEFAULT 0,
   `wallet` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `client`
@@ -58,7 +70,7 @@ INSERT INTO `client` (`id`, `name`, `surname`, `email`, `password`, `telephone_n
 CREATE TABLE `court` (
   `type` int(11) DEFAULT NULL,
   `id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `court`
@@ -76,7 +88,26 @@ INSERT INTO `court` (`type`, `id`) VALUES
 (4, 9),
 (4, 10);
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `premium_subs`
+--
+
+CREATE TABLE `premium_subs` (
+  `id` int(11) NOT NULL,
+  `client` int(11) NOT NULL,
+  `end_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `premium_subs`
+--
+
+INSERT INTO `premium_subs` (`id`, `client`, `end_date`) VALUES
+(2, 42, '2023-10-05');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `prices`
@@ -86,7 +117,7 @@ CREATE TABLE `prices` (
   `id` int(11) NOT NULL,
   `type` int(11) DEFAULT NULL,
   `price` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `prices`
@@ -109,7 +140,15 @@ CREATE TABLE `rentingkit_reservation` (
   `reservation` int(11) NOT NULL,
   `renting_kit` int(11) NOT NULL,
   `num_of_rents` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rentingkit_reservation`
+--
+
+INSERT INTO `rentingkit_reservation` (`id`, `reservation`, `renting_kit`, `num_of_rents`) VALUES
+(5, 12, 1, 2),
+(6, 13, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -119,9 +158,9 @@ CREATE TABLE `rentingkit_reservation` (
 
 CREATE TABLE `renting_kits` (
   `id` int(11) NOT NULL,
-  `type` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  `type` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `renting_kits`
@@ -144,7 +183,7 @@ CREATE TABLE `reservation` (
   `client` int(11) DEFAULT NULL,
   `time_slot` int(11) NOT NULL,
   `price` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -156,7 +195,7 @@ CREATE TABLE `time_slots` (
   `id` int(11) NOT NULL,
   `start_hour` varchar(5) NOT NULL,
   `finish_hour` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `time_slots`
@@ -187,7 +226,7 @@ INSERT INTO `time_slots` (`id`, `start_hour`, `finish_hour`) VALUES
 CREATE TABLE `type_of_court` (
   `id` int(11) NOT NULL,
   `type_of_court` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `type_of_court`
@@ -209,7 +248,7 @@ CREATE TABLE `wallet` (
   `id` int(11) NOT NULL,
   `balance` float DEFAULT NULL,
   `client` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `wallet`
@@ -220,6 +259,15 @@ INSERT INTO `wallet` (`id`, `balance`, `client`) VALUES
 (42, 30, 42),
 (60, 0, 60),
 (63, 0, 63);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `booked`
+--
+DROP TABLE IF EXISTS `booked`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `booked`  AS   (select `reservation`.`court` AS `court`,`reservation`.`date` AS `date`,`reservation`.`time_slot` AS `time_slot` from `reservation` where `reservation`.`court` = 1)  ;
 
 --
 -- Indexes for dumped tables
@@ -241,8 +289,11 @@ ALTER TABLE `court`
   ADD KEY `type_idx` (`type`);
 
 --
--- Indexes for table `pma__bookmark`
+-- Indexes for table `premium_subs`
 --
+ALTER TABLE `premium_subs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sub_client` (`client`);
 
 --
 -- Indexes for table `prices`
@@ -271,8 +322,7 @@ ALTER TABLE `renting_kits`
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `client_idx` (`client`),
-  ADD KEY `reservation_client` (`time_slot`),
-  ADD KEY `price` (`price`);
+  ADD KEY `reservation_client` (`time_slot`);
 
 --
 -- Indexes for table `time_slots`
@@ -301,22 +351,25 @@ ALTER TABLE `wallet`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
--- AUTO_INCREMENT for table `pma__bookmark`
+-- AUTO_INCREMENT for table `premium_subs`
 --
+ALTER TABLE `premium_subs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
+--
+-- AUTO_INCREMENT for table `rentingkit_reservation`
+--
+ALTER TABLE `rentingkit_reservation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `renting_kits`
 --
 ALTER TABLE `renting_kits`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `reservation`
---
-ALTER TABLE `reservation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -329,29 +382,33 @@ ALTER TABLE `court`
   ADD CONSTRAINT `type_of_court` FOREIGN KEY (`type`) REFERENCES `type_of_court` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `premium_subs`
+--
+ALTER TABLE `premium_subs`
+  ADD CONSTRAINT `sub_client` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `prices`
 --
 ALTER TABLE `prices`
   ADD CONSTRAINT `type` FOREIGN KEY (`type`) REFERENCES `type_of_court` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `rentingkit_reservation`
---
-ALTER TABLE `rentingkit_reservation`
-  ADD CONSTRAINT `renting_kit` FOREIGN KEY (`renting_kit`) REFERENCES `renting_kits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `reservation` FOREIGN KEY (`reservation`) REFERENCES `reservation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `reservation`
---
-ALTER TABLE `reservation`
-  ADD CONSTRAINT `price` FOREIGN KEY (`price`) REFERENCES `prices` (`id`);
-
---
 -- Constraints for table `wallet`
 --
 ALTER TABLE `wallet`
   ADD CONSTRAINT `client_wallet` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `update_premium_subs` ON SCHEDULE EVERY 1 HOUR STARTS '2023-10-05 15:35:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    DELETE FROM premium_subs WHERE end_date < CURDATE();
+  UPDATE client SET is_premium = 0 WHERE ((is_premium = 1) AND (client.id NOT IN (SELECT client FROM premium_subs)));
+END$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
