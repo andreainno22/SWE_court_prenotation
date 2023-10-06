@@ -1,0 +1,2 @@
+ott 06, 2023 5:53:14 PM Database.Database_management dbError
+SEVERE: Exception: java.sql.SQLSyntaxErrorException: User 'swecourtprentiondb_recordfell' has exceeded the 'max_user_connections' resource (current value: 3)

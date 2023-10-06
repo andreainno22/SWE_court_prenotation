@@ -62,13 +62,6 @@ public abstract class ReservationManager {
         return false;
     }
 
-    public boolean setIsPremium(Client client) {
-        Database_management db = new Database_management();
-        client.setIsPremium(1);
-        client.getWallet().removeMoney(20);
-        return db.modifyPremium(client);
-    }
-
     public boolean addMoney(Client client, float money) {
         Database_management db = new Database_management();
         client.getWallet().addMoney(money);

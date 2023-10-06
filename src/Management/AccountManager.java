@@ -151,22 +151,41 @@ public class AccountManager {
         return db.getClient(client.getEmail(), client.getPassword());
     }
 
+    public boolean topUpWallet(Client client, float money) {
+        Database_management db = new Database_management();
+        client.getWallet().addMoney(money);
+        return db.modifyBalance(client, null);
+    }
 
     private void clientMenu(Client client) {
+        client = updateClient(client);
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
-        System.out.println("Please select an option:");
-        System.out.println("""
-                1. Make a reservation
-                2. Delete a reservation
-                3. Show all reservations
-                4. Manage your wallet
-                5. Upgrade as a premium client
-                6. Your points
-                7. Logout""");
+        if(client.getIsPremium() == 0) {
+            System.out.println("You are not subscribed to Premium.");
+            System.out.println("Please select an option:");
+            System.out.println("""
+                    1. Make a reservation
+                    2. Delete a reservation
+                    3. Show all reservations
+                    4. Manage your wallet
+                    5. Upgrade as a premium client
+                    6. Your points
+                    7. Logout""");
+        } else {
+            System.out.println("You are subscribed to Premium.");
+            System.out.println("Please select an option:");
+            System.out.println("""
+                    1. Make a reservation
+                    2. Delete a reservation
+                    3. Show all reservations
+                    4. Manage your wallet
+                    5. Manage your premium subscription
+                    6. Your points
+                    7. Logout""");
+        }
         int choice;
         Scanner sc;
 
-        client = updateClient(client);
         if(client.getIsPremium() == 0)
             client.setReservationManager(new StandardReservationManager());
         else
@@ -338,36 +357,56 @@ public class AccountManager {
             case 4:
                 // gestione del portafoglio
                 System.out.println("Your balance is: " + client.getWallet().getBalance() + "€");
-                System.out.println("Do you want to add money? [y/n]");
+                System.out.println("Do you want to add money? [y/N]");
                 String choice2 = sc.next();
-                if (choice2.equals("y")) {
-                    System.out.println("How much money do you want to add?");
-                    float money = sc.nextFloat();
-                    if(client.getReservationManager().addMoney(client, money))
+                if (choice2.equalsIgnoreCase("y") || choice2.equalsIgnoreCase("yes")) {
+                    float money;
+                    try {
+                        System.out.println("How much money do you want to add?");
+                        money = sc.nextFloat();
+                    } catch (InputMismatchException e) {
+                        System.err.println("Wrong input format. Going back to Main Menu...");
+                        break;
+                    }
+                    if(topUpWallet(client, money))
                         System.out.println("Money added successfully.");
                     else
                         System.out.println("Transaction failed.");
                 } else {
+                    System.out.println("Operation aborted.");
                     System.err.println("Going back to Main Menu...");
                 }
                 break;
             case 5:
-                // upgrade a premium
-                if (client.getIsPremium() == 0) {
-                    System.out.println("Do you want to upgrade to premium? The cost is 20€ a year and then " +
-                            "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/n]");
+                if (client.getIsPremium() == 0) { // upgrade to premium
+                    System.out.println("Do you want to upgrade to premium? The cost is 20€ for one year and then " +
+                            "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/N]");
                     String answer = sc.next();
-                    if (answer.equals("y")) {
-                        if (client.getReservationManager().setIsPremium(client)) {
+                    if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
+                        if (setIsPremium(client)) {
                             System.out.println("Upgrade successful.");
+                        } else {
+                            System.err.println("Upgrade failed.");
                         }
-                    } else if (answer.equals("n")) {
-                        System.out.println("Upgrade aborted.");
                     } else {
-                        System.err.println("Wrong choice. Going back to Main Menu...");
+                        System.out.println("Upgrade aborted.");
+                        System.err.println("Going back to Main Menu...");
                     }
-                } else {
-                    System.err.println("You are already a premium client. Going back to Main Menu...");
+                } else { // manage premium subscription
+                    showPremiumExpiration(client);
+                    System.out.println("Do you want to renew your subscription? [y/N]");
+                    sc = new Scanner(System.in);
+                    String answer = sc.next();
+                    if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
+                        if (renewPremium(client)) {
+                            System.out.println("Renewal successful.");
+                        } else {
+                            System.err.println("Renewal failed.");
+                        }
+                    } else {
+                        System.out.println("Renewal aborted.");
+                        System.err.println("Going back to Main Menu...");
+                    }
                 }
                 break;
             case 6:
@@ -385,6 +424,36 @@ public class AccountManager {
             }
         }
     }
+    private boolean setIsPremium(Client client) {
+        Database_management db = new Database_management();
+
+        if(client.getWallet().removeMoney(20)) {
+            client.setIsPremium(1);
+            return db.modifyPremium(client);
+        }
+        else{
+            System.err.println("Insufficient funds.");
+            return false;
+        }
+    }
+
+    private boolean renewPremium(Client client) {
+        Database_management db = new Database_management();
+        if(client.getWallet().removeMoney(20))
+            return db.modifyPremiumExpiration(client);
+        else{
+            System.err.println("Insufficient funds.");
+            return false;
+        }
+    }
+
+    private void showPremiumExpiration(Client client) {
+        Database_management db = new Database_management();
+        isPremiumDate = db.getPremiumExpiration(client);
+        System.out.println("Your premium subscription will expire on: " + isPremiumDate);
+    }
+
+
 }
 
 

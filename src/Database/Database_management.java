@@ -42,8 +42,6 @@ public class Database_management {
                 fh = new FileHandler(FILENAME);
             } catch (IOException ex) {
                 ex.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             fh.setFormatter(new SimpleFormatter());
@@ -109,7 +107,8 @@ public class Database_management {
                 //System.out.println("Connection closed.");
             }
         } catch (SQLException e) {
-            System.err.println("Error during disconnection: " + e.getMessage());
+            dbError(e);
+            System.err.println("Error during disconnection.");
         }
     }
 
@@ -125,10 +124,11 @@ public class Database_management {
                 fmt.format("%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
             }
             System.out.println(fmt);
-
+            rs.close();
         } catch (SQLException e) {
+            dbError(e);
+        } finally {
             disconnect();
-            e.printStackTrace();
         }
     }
 
@@ -142,11 +142,11 @@ public class Database_management {
                 reservations.add(rs.getInt(1));
             }
             rs.close();
-            disconnect();
             return reservations;
         } catch (SQLException e) {
+            dbError(e);
+        } finally {
             disconnect();
-            e.printStackTrace();
         }
         return null;
     }
@@ -189,10 +189,10 @@ public class Database_management {
                 System.out.println("");
             }
             resultSet.close();
-            disconnect();
         } catch (SQLException e) {
+            dbError(e);
+        } finally {
             disconnect();
-            e.printStackTrace();
         }
 
     }
@@ -205,10 +205,10 @@ public class Database_management {
             resultSet.next();
             RentingKit rentingKit = new RentingKit(resultSet.getInt(1), resultSet.getString(2), resultSet.getFloat(3));
             resultSet.close();
-            disconnect();
             return rentingKit;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
+        } finally {
             disconnect();
         }
         return null;
@@ -231,29 +231,46 @@ public class Database_management {
             Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
                     rs.getString(4), rs.getString(5),
                     rs.getInt(6), rs.getInt(7),
-                    rs.getInt(8), getWallet(rs.getInt(1)));
+                    rs.getInt(8), getWallet(rs.getInt(1), stmt));
             rs.close();
-            disconnect();
             return client;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
+        } finally {
             disconnect();
         }
         return null;
     }
 
-    Wallet getWallet(int id) {
+    Wallet getWallet(int id, Statement stmt) {
         try {
-            Statement stmt = connect();
-            assert stmt != null;
+            //Statement stmt = connect();
+            //assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
             Wallet wallet = new Wallet(rs.getInt(1), rs.getFloat(2));
             rs.close();
-            disconnect();
             return wallet;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
+        } finally {
+            disconnect();
+        }
+        return null;
+    }
+
+    public Date getPremiumExpiration(Client client) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select end_date from premium_subs where client = '" + client.getId() + "'");
+            rs.next();
+            Date date = rs.getDate(1);
+            rs.close();
+            return date;
+        } catch (SQLException e) {
+            dbError(e);
+        } finally {
             disconnect();
         }
         return null;
@@ -272,27 +289,28 @@ public class Database_management {
             stmt.executeUpdate("update client set wallet = '" + client_id + "' where id = '" + client_id + "'");
             rs.close();
             commitTransaction();
-            disconnect();
             return 0;
         } catch (SQLIntegrityConstraintViolationException e1) {
-            disconnect();
             return -1;
         } catch (SQLException e) {
             dbError(e);
-            disconnect();
             return -2;
+        } finally {
+            disconnect();
         }
     }
 
-    public void deleteClient(Client client) {
+    public boolean deleteClient(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             stmt.executeUpdate("DELETE FROM client WHERE id = '" + client.getId() + "'");
-            disconnect();
+            return true;
         } catch (SQLException e) {
-            disconnect();
             dbError(e);
+            return false;
+        }   finally {
+            disconnect();
         }
     }
 
@@ -308,8 +326,8 @@ public class Database_management {
             }
             return true;
         } catch (SQLIntegrityConstraintViolationException e1) {
-            disconnect();
             dbError(e1);
+            disconnect();
             //e1.printStackTrace();
             return false;
         } catch (SQLException e) {
@@ -338,12 +356,12 @@ public class Database_management {
             }
 
             rs.close();
-            disconnect();
             return court_type_prices;
         } catch (SQLException e) {
             dbError(e);
-            disconnect();
             return null;
+        } finally {
+            disconnect();
         }
     }
 
@@ -357,12 +375,12 @@ public class Database_management {
                 timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
             rs.close();
-            disconnect();
             return timeSlots;
         } catch (SQLException e) {
-            e.printStackTrace();
-            disconnect();
+            dbError(e);
             return null;
+        } finally {
+            disconnect();
         }
     }
 
@@ -430,6 +448,32 @@ public class Database_management {
         db.printAllClient();
     }
 
+    public boolean modifyPremiumExpiration(Client client) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            Date date = getPremiumExpiration(client);
+            if(date == null)
+                return false;
+            Calendar calendario = Calendar.getInstance();
+            // Aggiungi un anno a date
+            calendario.setTime(date);
+            calendario.add(Calendar.YEAR, 1);
+
+            // Aggiungi un giorno alla data corrente
+            calendario.add(Calendar.DAY_OF_YEAR, 1);
+
+            // Ottieni la data con un anno in più
+            java.sql.Date new_date = new java.sql.Date(calendario.getTimeInMillis());
+            stmt.executeUpdate("update premium_subs set end_date = '" + new_date + "' where client = '" + client.getId() + "'");
+            return true;
+        } catch (SQLException e) {
+            dbError(e);
+            return false;
+        } finally {
+            disconnect();
+        }
+    }
 
     public boolean modifyPremium(Client client) {
         try {
@@ -443,19 +487,23 @@ public class Database_management {
             //Date date = (Date) calendario.getTime();
             Calendar calendario = Calendar.getInstance();
 
-            // Sottrai un giorno dalla data corrente
-            calendario.add(Calendar.DAY_OF_YEAR, -1);
+            // Aggiungi un giorno alla data corrente
+            calendario.add(Calendar.DAY_OF_YEAR, 1);
 
-            // Ottieni la data di ieri
-            java.util.Date date = calendario.getTime();
+            // Aggiungi un anno a date
+            calendario.add(Calendar.YEAR, 1);
+
+            // Ottieni la data con un anno in più
+            java.sql.Date date = new java.sql.Date(calendario.getTimeInMillis());
             stmt.executeUpdate("insert into premium_subs (client, end_date) values ('" + client.getId() + "', '" + date + "')");
             modifyBalance(client, stmt);
             commitTransaction();
-            disconnect();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            dbError(e);
             return false;
+        } finally {
+            disconnect();
         }
     }
 }
