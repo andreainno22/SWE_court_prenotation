@@ -98,9 +98,7 @@ public class AccountManager {
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong telephone number format. Retry.");
                 }
-
             }
-
             while (!valid) {
                 // fatto controllo sulla validità dell'email
                 if (!isValidEmail(email) || db.insertClient(client) == -1) {
@@ -112,6 +110,11 @@ public class AccountManager {
                     valid = true;
                 }
             }
+            MailManager mailManager = new MailManager();
+            if (mailManager.createAndSendEmailMessage(client.getEmail(), "Registration successful", "Hi, " + client.getName() + "" + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!"))
+                System.out.println("A confirmation email has been sent.");
+            else
+                System.err.println("Cannot send a confirmation email.");
             System.out.println("Registration successful.");
             System.out.println("You can now login.\n");
             startMenu = true;
@@ -163,7 +166,7 @@ public class AccountManager {
     private void clientMenu(Client client) {
         client = updateClient(client);
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
-        if(client.getIsPremium() == 0) {
+        if (client.getIsPremium() == 0) {
             System.out.println("You are not subscribed to Premium.");
             System.out.println("Please select an option:");
             System.out.println("""
@@ -189,7 +192,7 @@ public class AccountManager {
         int choice;
         Scanner sc;
 
-        if(client.getIsPremium() == 0)
+        if (client.getIsPremium() == 0)
             client.setReservationManager(new StandardReservationManager());
         else
             client.setReservationManager(new PremiumReservationManager());
@@ -314,9 +317,13 @@ public class AccountManager {
                             // aggiunta della prenotazione al database
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
+                                MailManager mailManager = new MailManager();
+                                if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() +  "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!"))
+                                    System.out.println("A confirmation email has been sent.");
+                                else
+                                    System.err.println("Cannot send a confirmation email.");
 
-                            }
-                            else System.err.println("Reservation failed.");
+                            } else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
                             System.out.println("Going back to Main Menu...\n");
@@ -373,16 +380,15 @@ public class AccountManager {
                         System.err.println("Wrong input format. Going back to Main Menu...");
                         break;
                     }
-                    if(topUpWallet(client, money)) {
+                    if (topUpWallet(client, money)) {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
                         MailManager mailManager = new MailManager();
-                        if(mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: "+ money + "€\nThank you for choosing us!"))
+                        if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!"))
                             System.out.println("A confirmation email has been sent.");
                         else
                             System.err.println("Cannot send a confirmation email.");
-                    }
-                    else
+                    } else
                         System.out.println("Transaction failed.");
                 } else {
                     System.out.println("Operation aborted.");
@@ -436,14 +442,14 @@ public class AccountManager {
             }
         }
     }
+
     private boolean setIsPremium(Client client) {
         Database_management db = new Database_management();
 
-        if(client.getWallet().removeMoney(20)) {
+        if (client.getWallet().removeMoney(20)) {
             client.setIsPremium(1);
             return db.modifyPremium(client);
-        }
-        else{
+        } else {
             System.err.println("Insufficient funds.");
             return false;
         }
@@ -451,9 +457,9 @@ public class AccountManager {
 
     private boolean renewPremium(Client client) {
         Database_management db = new Database_management();
-        if(client.getWallet().removeMoney(20))
+        if (client.getWallet().removeMoney(20))
             return db.modifyPremiumExpiration(client);
-        else{
+        else {
             System.err.println("Insufficient funds.");
             return false;
         }
@@ -465,7 +471,7 @@ public class AccountManager {
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
 
-    private String getDateTimeUTC(){
+    private String getDateTimeUTC() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         Instant instant = Instant.now();
         ZoneId zone = ZoneId.of("UTC");

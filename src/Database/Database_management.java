@@ -51,7 +51,7 @@ public class Database_management {
     }
 
     private void dbError(Exception e) {
-        System.err.println("Database did respond with an error. See log file for more information.");
+        System.err.println("Database responded with an error. See log file for more information.");
         //logging.logger.log(Level.SEVERE, "Exception: " + e);
         logging.logger.severe("Exception: " + e);
     }
