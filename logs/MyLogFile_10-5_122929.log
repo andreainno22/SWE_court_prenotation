@@ -1,2 +1,0 @@
-ott 05, 2023 12:29:31 PM Database.Database_management dbError
-SEVERE: Exception: java.sql.SQLSyntaxErrorException: User 'freedb_kevaz' has exceeded the 'max_questions' resource (current value: 1000)

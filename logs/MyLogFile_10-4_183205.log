@@ -1,2 +1,0 @@
-ott 04, 2023 6:32:13 PM Database.Database_management dbError
-SEVERE: Exception: java.sql.SQLSyntaxErrorException: Unknown column 'wallett' in 'field list'

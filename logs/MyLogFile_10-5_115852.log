@@ -1,6 +1,0 @@
-ott 05, 2023 11:59:00 AM Database.Database_management dbError
-SEVERE: Exception: java.sql.SQLException: Illegal operation on empty result set.
-ott 05, 2023 11:59:00 AM Database.Database_management dbError
-SEVERE: Exception: java.sql.SQLException: No operations allowed after statement closed.
-ott 05, 2023 11:59:00 AM Database.Database_management dbError
-SEVERE: Exception: java.sql.SQLException: No operations allowed after statement closed.

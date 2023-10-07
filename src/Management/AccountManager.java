@@ -1,5 +1,8 @@
 package Management;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -309,8 +312,10 @@ public class AccountManager {
                                 break;
                             }
                             // aggiunta della prenotazione al database
-                            if (client.getReservationManager().makeReservation(res))
+                            if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
+
+                            }
                             else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
@@ -368,8 +373,15 @@ public class AccountManager {
                         System.err.println("Wrong input format. Going back to Main Menu...");
                         break;
                     }
-                    if(topUpWallet(client, money))
+                    if(topUpWallet(client, money)) {
                         System.out.println("Money added successfully.");
+                        String dateTime = getDateTimeUTC();
+                        MailManager mailManager = new MailManager();
+                        if(mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: "+ money + "€\nThank you for choosing us!"))
+                            System.out.println("A confirmation email has been sent.");
+                        else
+                            System.err.println("Cannot send a confirmation email.");
+                    }
                     else
                         System.out.println("Transaction failed.");
                 } else {
@@ -453,6 +465,13 @@ public class AccountManager {
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
 
+    private String getDateTimeUTC(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        Instant instant = Instant.now();
+        ZoneId zone = ZoneId.of("UTC");
+        String dateTime = instant.atZone(zone).format(dtf);
+        return dateTime;
+    }
 
 }
 

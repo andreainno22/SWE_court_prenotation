@@ -17,10 +17,10 @@ public class StandardReservationManager extends ReservationManager {
     }
 
 
-    @Override
+    /*@Override
     public void getAllReservation(Client client) {
 
-    }
+    }*/
 
     /*@Override
     public void getTimeSlots(Date date, int court) {

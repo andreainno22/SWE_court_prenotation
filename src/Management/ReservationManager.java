@@ -53,20 +53,20 @@ public abstract class ReservationManager {
     //  return db.getReservationPrice(reservation);
     //}
 
-    public boolean removeMoney(Client client, float price) {
+    /*public boolean removeMoney(Client client, float price) {
         Database_management db = new Database_management();
         if (client.getWallet().removeMoney(price)) {
             db.modifyBalance(client, null);
             return true;
         } else System.out.println("Insufficient funds");
         return false;
-    }
+    }*/
 
-    public boolean addMoney(Client client, float money) {
+    /*public boolean addMoney(Client client, float money) {
         Database_management db = new Database_management();
         client.getWallet().addMoney(money);
         return db.modifyBalance(client, null);
-    }
+    }*/
 
     public boolean deleteReservation(int reservation, Client client) {
         Database_management db = new Database_management();

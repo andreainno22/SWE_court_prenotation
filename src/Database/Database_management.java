@@ -30,7 +30,7 @@ public class Database_management {
 
         private FileHandler fh = null;
         SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
-        private String FILENAME = System.getProperty("user.dir") + "/logs/MyLogFile_"
+        private String FILENAME = System.getProperty("user.dir") + "/logs/DatabaseLogFile_"
                 + format.format(Calendar.getInstance().getTime()) + ".log";
 
         private File file = new File(FILENAME);
