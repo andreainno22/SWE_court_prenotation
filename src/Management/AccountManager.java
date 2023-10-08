@@ -229,7 +229,7 @@ public class AccountManager {
                 }
                 boolean court_selection = true;
                 Formatter fmt = new Formatter();
-                List<Court> courts = client.getReservationManager().getCourt(fmt);
+                List<Court> courts = client.getReservationManager().getCourt(fmt, client.getIsPremium() == 1);
                 int num_courts = courts.size();
                 while (court_selection) {
                     System.out.println("Available Courts: ");
