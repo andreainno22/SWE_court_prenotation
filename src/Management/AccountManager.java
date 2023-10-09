@@ -18,7 +18,6 @@ import java.sql.Date;
 
 public class AccountManager {
     private boolean logged = false;
-
     private Date isPremiumDate;
     private boolean startMenu = true;
 
@@ -109,11 +108,7 @@ public class AccountManager {
                     valid = true;
                 }
             }
-            MailManager mailManager = new MailManager();
-            if (mailManager.createAndSendEmailMessage(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!"))
-                System.out.println("A confirmation email has been sent.");
-            else
-                System.err.println("Cannot send a confirmation email.");
+            sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!");
             System.out.println("Registration successful.");
             System.out.println("You can now login.\n");
             startMenu = true;
@@ -325,12 +320,7 @@ public class AccountManager {
                             System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
-                                MailManager mailManager = new MailManager();
-                                if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!"))
-                                    System.out.println("A confirmation email has been sent.");
-                                else
-                                    System.err.println("Error sending the email.");
-
+                                sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!");
                             } else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
@@ -366,6 +356,7 @@ public class AccountManager {
                     Reservation reserv = client.getReservationManager().getReservationById(reservation);
                     if (client.getReservationManager().deleteReservation(reserv, client)) {
                         //client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
+                        sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + " (UTC).\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot() + "\nThank you for choosing us!");
                         System.out.println("Reservation deleted successfully.");
                     } else System.err.println("Error during deletion.");
                 } else
@@ -394,10 +385,8 @@ public class AccountManager {
                         String dateTime = getDateTimeUTC();
                         MailManager mailManager = new MailManager();
                         //todo: fixare il time slot nella email
-                        if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!"))
-                            System.out.println("A confirmation email has been sent.");
-                        else
-                            System.err.println("Cannot send a confirmation email.");
+                        sendEmail(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
+
                     } else
                         System.out.println("Transaction failed.");
                 } else {
@@ -487,6 +476,14 @@ public class AccountManager {
         ZoneId zone = ZoneId.of("UTC");
         String dateTime = instant.atZone(zone).format(dtf);
         return dateTime;
+    }
+
+    private void sendEmail(String email, String subject, String text) {
+        MailManager mailManager = new MailManager();
+        if (mailManager.createAndSendEmailMessage(email, subject, text))
+            System.out.println("A confirmation email has been sent.");
+        else
+            System.err.println("Error sending the email.");
     }
 
 }
