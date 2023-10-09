@@ -13,6 +13,10 @@ public class TimeSlot {
         this.ts = ts;
     }
 
+    public TimeSlot(int ts){
+        this.ts = ts;
+    }
+
     public int getTs() {
         return ts;
     }

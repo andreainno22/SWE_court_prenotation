@@ -270,13 +270,13 @@ public class AccountManager {
                             while (!valid) {
                                 try {
                                     slot = sc.nextInt();
-                                    if (slot > available_slots.length || slot < 0) {
+                                    if (slot > available_slots.size() || slot < 0) {
                                         System.err.println("Given Time Slot is wrong. Retry.");
                                         continue;
                                     }
                                     valid = true;
                                     if (slot != 0) {
-                                        while (!available_slots[slot - 1]) {
+                                        while (available_slots.get(slot - 1) == null) {
                                             System.err.println("Given Time Slot is not available. Retry.");
                                             System.out.println("ID of desired Time Slot: ");
                                             slot = sc.nextInt();
@@ -357,7 +357,7 @@ public class AccountManager {
                         System.out.println("Reservation deleted successfully.");
                     } else System.err.println("Error during deletion.");
                 } else
-                    System.err.println("Reservation not found.");
+                    System.err.println("Reservation not found or non-cancellable.");
                 break;
             case 3:
                 // stampa delle prenotazioni

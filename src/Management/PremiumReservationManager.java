@@ -33,7 +33,7 @@ public class PremiumReservationManager extends ReservationManager {
         df.format(price);
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
-        System.out.println("You have earned " + reservationPoints + " points for this booking.");
+        System.out.println("You will earn " + reservationPoints + " points for this booking.");
         return super.makeReservation(reservation, price, isPremium);
         //Database_management db = new Database_management();
         //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );

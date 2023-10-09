@@ -157,7 +157,8 @@ public class Database_management {
             ResultSet rs = stmt.executeQuery("select * from reservation where id = '" + id + "'");
             ResultSet timeSlot = stmt.executeQuery("select * from time_slots where id in (select time_slot from reservation where id = '" + id + "')");
             rs.next();
-            Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), rs.getInt(5), rs.getFloat(6), rs.getInt(7));
+            timeSlot.next();
+            Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), new TimeSlot(timeSlot.getInt(1), timeSlot.getString(2), timeSlot.getString(3)), rs.getFloat(6), rs.getInt(7));
             rs.close();
             return reservation;
         } catch (SQLException e) {
@@ -406,8 +407,20 @@ public class Database_management {
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("SELECT * FROM time_slots WHERE time_slots.id NOT IN(SELECT time_slots.id as ts FROM court JOIN reservation ON reservation.court = court.id JOIN time_slots ON time_slots.id = reservation.time_slot WHERE court.id = '" + court_id + "' AND reservation.date = '" + date + "')");
             List<TimeSlot> timeSlots = new ArrayList<>();
+            int id = 1;
             while (rs.next()) {
-                timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                if(rs.getInt(1) == id) {
+                    timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                    id++;
+                }
+                else {
+                    do {
+                        timeSlots.add(null);
+                        id++;
+                    }while(rs.getInt(1) != id);
+                    timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                    id++;
+                }
             }
             rs.close();
             return timeSlots;
