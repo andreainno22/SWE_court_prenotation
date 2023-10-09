@@ -62,8 +62,7 @@ public class Database_management {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = conn.createStatement();
-            return stmt;
+            return conn.createStatement();
         } catch (SQLException e) {
             dbError(e);
             System.err.println("Error during connection.");
@@ -78,8 +77,7 @@ public class Database_management {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             conn.setAutoCommit(false);
-            Statement stmt = conn.createStatement();
-            return stmt;
+            return conn.createStatement();
         } catch (SQLException e) {
             dbError(e);
             System.err.println("Error during connection.");
@@ -116,12 +114,12 @@ public class Database_management {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour from reservation, time_slots where reservation.time_slot = time_slots.id and client = '" + Client + "'");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price from reservation, time_slots where reservation.time_slot = time_slots.id and client = '" + Client + "'");
 
             Formatter fmt = new Formatter();
-            fmt.format("%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME");
+            fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME", "PRICE [€]");
             while (rs.next()) {
-                fmt.format("%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
+                fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getFloat(6));
             }
             System.out.println(fmt);
             rs.close();
@@ -130,6 +128,23 @@ public class Database_management {
         } finally {
             disconnect();
         }
+    }
+
+    public Reservation getReservationById(int id){
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select * from reservation where id = '" + id + "'");
+            rs.next();
+            Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), rs.getInt(5), rs.getFloat(6), rs.getInt(7));
+            rs.close();
+            return reservation;
+        } catch (SQLException e) {
+            dbError(e);
+        } finally {
+            disconnect();
+        }
+        return null;
     }
 
     public ArrayList<Integer> getReservationsId(int Client) {
@@ -164,8 +179,7 @@ public class Database_management {
                 rs = transactionStmt.executeQuery("select price from reservation where reservation.id = '" + reservation + "'");
             }
             rs.next();
-            float price = rs.getFloat(1);
-            return price;
+            return rs.getFloat(1);
         } catch (SQLException e) {
             dbError(e);
             disconnect();
@@ -186,7 +200,7 @@ public class Database_management {
                     String columnValue = resultSet.getString(i);
                     System.out.print(columnValue + " [" + rsmd.getColumnName(i) + "]");
                 }
-                System.out.println("");
+                System.out.println(" ");
             }
             resultSet.close();
         } catch (SQLException e) {
@@ -423,14 +437,14 @@ public class Database_management {
         }
     }
 
-    public boolean deleteReservation(int reservation, Client client) {
+    public boolean deleteReservation(Reservation reservation, Client client) {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
             updatePoints(client.getPoints(), client, stmt);
-            client.getWallet().addMoney(getReservationPrice(reservation, stmt));
+            client.getWallet().addMoney(reservation.getPrice());
             modifyBalance(client, stmt);
-            stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation + "'");
+            stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation.getId() + "'");
             commitTransaction();
             return true;
         } catch (SQLException e){

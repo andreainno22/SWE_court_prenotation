@@ -79,7 +79,6 @@ public class AccountManager {
             System.out.println("Surname: ");
             String surname = sc.nextLine();
             System.out.println("Email: ");
-            // todo: fare in modo che venga inviata una email a ogni azione compiuta dall'utente
             String email = sc.nextLine();
             System.out.println("Password: ");
             String password = sc.nextLine();
@@ -111,7 +110,7 @@ public class AccountManager {
                 }
             }
             MailManager mailManager = new MailManager();
-            if (mailManager.createAndSendEmailMessage(client.getEmail(), "Registration successful", "Hi, " + client.getName() + "" + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!"))
+            if (mailManager.createAndSendEmailMessage(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!"))
                 System.out.println("A confirmation email has been sent.");
             else
                 System.err.println("Cannot send a confirmation email.");
@@ -256,6 +255,7 @@ public class AccountManager {
                     Formatter fmt2 = new Formatter();
                     boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     while (true) {
+                        System.out.println("Available Time Slots: ");
                         System.out.println(fmt2);
                         System.out.println("Select an option:");
                         System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
@@ -355,7 +355,8 @@ public class AccountManager {
                         break;
                     }
                 if (found) {
-                    if (client.getReservationManager().deleteReservation(reservation, client)) {
+                    Reservation reserv = client.getReservationManager().getReservationById(reservation);
+                    if (client.getReservationManager().deleteReservation(reserv, client)) {
                         //client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
                         System.out.println("Reservation deleted successfully.");
                     } else System.err.println("Error during deletion.");

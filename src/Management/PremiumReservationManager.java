@@ -8,9 +8,6 @@ import java.util.Scanner;
 
 public class PremiumReservationManager extends ReservationManager {
 
-    private final int giftPoints = 100;
-    private final int reservationPoints = 10;
-
     @Override
     public boolean makeReservation(Reservation reservation) {
 
@@ -36,15 +33,15 @@ public class PremiumReservationManager extends ReservationManager {
     }
 
 
-    public boolean deleteReservation(int reservation, Client client) {
-        client.setPoints(client.getPoints() - reservationPoints);
-        return (super.deleteReservation(reservation, client));
+    //protected boolean deleteReservationPremium(Reservation reservation, Client client) {
+       // client.setPoints(client.getPoints() - reservationPoints);
+      //  return (super.deleteReservation(reservation, client));
           //  Database_management db = new Database_management();
            // db.updatePoints(client.getPoints() - giftPoints, client);
           //  return true;
        // }
         //return false;
-    }
+    //}
 
 
     /*@Override

@@ -4,6 +4,22 @@ import java.sql.Date;
 
 public class Reservation {
 
+    public Reservation(int id, Date date, int time_slot, float price, int isPremium) {
+        this.id = id;
+        this.date = date;
+        this.time_slot = time_slot;
+        this.price = price;
+        this.isPremium = isPremium;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getIsPremium() {
+        return isPremium;
+    }
+
     public Court getCourt() {
         return court;
     }
@@ -59,5 +75,6 @@ public class Reservation {
     private Client client;
     private int time_slot;
     private float price;
+    private int isPremium;
 
 }

@@ -11,10 +11,10 @@ public class StandardReservationManager extends ReservationManager {
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         return super.makeReservation(reservation, price, isPremium);
     }
-    @Override
-    public boolean deleteReservation(int reservation, Client client) {
-        return super.deleteReservation(reservation, client);
-    }
+   // @Override
+    //public boolean deleteReservation(Reservation reservation, Client client) {
+    //    return super.deleteReservation(reservation, client);
+   // }
 
 
     /*@Override
