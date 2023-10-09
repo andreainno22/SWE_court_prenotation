@@ -418,7 +418,7 @@ public class Database_management {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
-            stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot() + "', '" + reservation.getPrice() + "')");
+            stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price, isPremium) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot() + "', '" + reservation.getPrice() + "', '" + reservation.getIsPremium() + "')");
             ResultSet rs = stmt.executeQuery("select id from reservation where date = '" + reservation.getDate() + "' and court = '" + reservation.getCourt().getId() + "' and client = '" + reservation.getClient().getId() + "' and time_slot = '" + reservation.getTime_slot() + "'");
             rs.next();
             if (reservation.getRentingKit() != null)

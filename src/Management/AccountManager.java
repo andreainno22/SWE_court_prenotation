@@ -304,6 +304,7 @@ public class AccountManager {
                             if(client.getIsPremium()==0)
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             else
+                                //todo: errore nel calcolo della percentuale, è il 10% del prezzo totale, non del prezzo del campo
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice()*0.9 + "€] [0 = None]");
                             int numOfRent = sc.nextInt();
 
@@ -319,6 +320,7 @@ public class AccountManager {
                             }
 
                             // aggiunta della prenotazione al database
+                            //todo: errore nel subtotal, non tiene conto se l'utente è premium
                             System.out.println("Subtotal price: " + res.getPrice() + "€");
                             System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {

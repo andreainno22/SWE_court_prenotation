@@ -11,6 +11,7 @@ public class PremiumReservationManager extends ReservationManager {
     @Override
     public boolean makeReservation(Reservation reservation) {
 
+        reservation.setIsPremium(1);
         if (reservation.getClient().getPoints() >= giftPoints) {
             System.out.println("Congrats! You reached " + giftPoints + " points so you are eligible for a free booking. Do you want to use these for this booking? (y/N)");
             Scanner scanner = new Scanner(System.in);
@@ -19,29 +20,30 @@ public class PremiumReservationManager extends ReservationManager {
                 System.out.println("You have used " + giftPoints + " points for this booking.");
                 System.out.println("Final price: 0€");
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
+                reservation.setPrice(0);
                 Database_management db = new Database_management();
                 return db.makeReservation(reservation, true, false);
             }
         }
         float price;
-        price = reservation.getPrice()*0.9f;
+        price = reservation.getPrice() * 0.9f;
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You have earned " + reservationPoints + " points for this booking.");
         return super.makeReservation(reservation, price, isPremium);
-            //Database_management db = new Database_management();
-            //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
+        //Database_management db = new Database_management();
+        //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
     }
 
 
     //protected boolean deleteReservationPremium(Reservation reservation, Client client) {
-       // client.setPoints(client.getPoints() - reservationPoints);
-      //  return (super.deleteReservation(reservation, client));
-          //  Database_management db = new Database_management();
-           // db.updatePoints(client.getPoints() - giftPoints, client);
-          //  return true;
-       // }
-        //return false;
+    // client.setPoints(client.getPoints() - reservationPoints);
+    //  return (super.deleteReservation(reservation, client));
+    //  Database_management db = new Database_management();
+    // db.updatePoints(client.getPoints() - giftPoints, client);
+    //  return true;
+    // }
+    //return false;
     //}
 
 

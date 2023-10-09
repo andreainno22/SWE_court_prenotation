@@ -4,6 +4,22 @@ import java.sql.Date;
 
 public class Reservation {
 
+    public Reservation(int id, Date date, int time_slot, float price, int isPremium) {
+        this.id = id;
+        this.date = date;
+        this.time_slot = time_slot;
+        this.price = price;
+        this.isPremium = isPremium;
+    }
+
+    public void setIsPremium(int isPremium) {
+        this.isPremium = isPremium;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public Court getCourt() {
         return court;
     }
@@ -49,7 +65,16 @@ public class Reservation {
     }
 
     public float getPrice() {
+        if(price == -1) {
+            if (getRentingKit() != null)
+                price = (getCourt().getPrice() + getRentingKit().getTotPrice());
+            else price = getCourt().getPrice();
+        }
         return price;
+    }
+
+    public int getIsPremium() {
+        return isPremium;
     }
 
     private int id;
@@ -58,6 +83,7 @@ public class Reservation {
     private RentingKit rentingKit;
     private Client client;
     private int time_slot;
-    private float price;
+    private float price = -1;
+    private int isPremium;
 
 }

@@ -80,7 +80,7 @@ public abstract class ReservationManager {
     }*/
 
     public boolean deleteReservation(Reservation reservation, Client client) {
-        if (reservation.getIsPremium() == 1)
+        if (reservation.getIsPremium() == 1 && reservation.getPrice() != 0)
             client.setPoints(client.getPoints() - reservationPoints);
         if (reservation.getPrice() == 0)
             client.setPoints(client.getPoints() + giftPoints);
