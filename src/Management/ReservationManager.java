@@ -34,7 +34,7 @@ public abstract class ReservationManager {
         if(!showDiscount)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
-            fmt.format("%-15s%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]", "PREMIUM DISCOUNT (-10%) [€]");
+            fmt.format("%-15s%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]", "YOUR PRICE (-10%) [€]");
         for (Court court_type_price : court_type_prices) {
             court_type_price.printAllCourt(fmt, showDiscount);
         }
@@ -82,6 +82,7 @@ public abstract class ReservationManager {
     }
 
     protected boolean makeReservation(Reservation reservation, float price, boolean isPremium) {
+        System.out.println("Final price: " + price + "€");
         if (reservation.getClient().getWallet().getBalance() < price) {
             System.out.println("Insufficient balance to proceed with the booking. Please add funds to your wallet!");
             return false;

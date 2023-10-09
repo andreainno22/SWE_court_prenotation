@@ -5,11 +5,8 @@ import Context.*;
 public class StandardReservationManager extends ReservationManager {
     @Override
     public boolean makeReservation(Reservation reservation) {
-        float price = reservation.getCourt().getPrice();
-        if(reservation.getRentingKit() != null)
-            price += reservation.getRentingKit().getTotPrice();
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
-        return super.makeReservation(reservation, price, isPremium);
+        return super.makeReservation(reservation, reservation.getPrice(), isPremium);
     }
     @Override
     public boolean deleteReservation(int reservation, Client client) {

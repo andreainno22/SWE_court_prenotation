@@ -49,6 +49,11 @@ public class Reservation {
     }
 
     public float getPrice() {
+        if(price == 0) {
+            if (getRentingKit() != null)
+                price = (getCourt().getPrice() + getRentingKit().getTotPrice());
+            else price = getCourt().getPrice();
+        }
         return price;
     }
 
@@ -58,6 +63,6 @@ public class Reservation {
     private RentingKit rentingKit;
     private Client client;
     private int time_slot;
-    private float price;
+    private float price = 0;
 
 }
