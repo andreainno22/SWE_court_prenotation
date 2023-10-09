@@ -228,7 +228,7 @@ public class AccountManager {
                 }
                 boolean court_selection = true;
                 Formatter fmt = new Formatter();
-                List<Court> courts = client.getReservationManager().getCourt(fmt);
+                List<Court> courts = client.getReservationManager().getCourt(fmt, client.getIsPremium() == 1);
                 int num_courts = courts.size();
                 while (court_selection) {
                     System.out.println("Available Courts: ");
@@ -301,7 +301,10 @@ public class AccountManager {
                             // aggiunta time slot a reservation
                             res.setTime_slot(slot);
                             RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
-                            System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
+                            if(client.getIsPremium()==0)
+                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
+                            else
+                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice()*0.9 + "€] [0 = None]");
                             int numOfRent = sc.nextInt();
 
                             // aggiunta renting kit a reservation
@@ -314,7 +317,10 @@ public class AccountManager {
                                 System.err.println("Operation aborted.");
                                 break;
                             }
+
                             // aggiunta della prenotazione al database
+                            System.out.println("Subtotal price: " + res.getPrice() + "€");
+                            System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
                                 MailManager mailManager = new MailManager();

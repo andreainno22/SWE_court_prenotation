@@ -16,17 +16,18 @@ public class PremiumReservationManager extends ReservationManager {
             Scanner scanner = new Scanner(System.in);
             String answer = scanner.next();
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
+                System.out.println("You have used " + giftPoints + " points for this booking.");
+                System.out.println("Final price: 0€");
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
                 Database_management db = new Database_management();
                 return db.makeReservation(reservation, true, false);
             }
         }
         float price;
-        if(reservation.getRentingKit() != null)
-            price = 90 * (reservation.getCourt().getPrice() + reservation.getRentingKit().getTotPrice()) / 100;
-        else price = 90 * reservation.getCourt().getPrice() / 100;
+        price = reservation.getPrice()*0.9f;
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
+        System.out.println("You have earned " + reservationPoints + " points for this booking.");
         return super.makeReservation(reservation, price, isPremium);
             //Database_management db = new Database_management();
             //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
