@@ -7,6 +7,7 @@ import Database.Database_management;
 import java.util.Scanner;
 
 public class PremiumReservationManager extends ReservationManager {
+    private final float discount = 0.9f;
 
     @Override
     public boolean makeReservation(Reservation reservation) {
@@ -26,7 +27,7 @@ public class PremiumReservationManager extends ReservationManager {
             }
         }
         float price;
-        price = reservation.getPrice() * 0.9f;
+        price = reservation.getPrice() * discount;
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You have earned " + reservationPoints + " points for this booking.");

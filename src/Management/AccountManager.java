@@ -301,11 +301,11 @@ public class AccountManager {
                             // aggiunta time slot a reservation
                             res.setTime_slot(slot);
                             RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
-                            if(client.getIsPremium()==0)
+                            if (client.getIsPremium() == 0)
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             else
                                 //todo: errore nel calcolo della percentuale, è il 10% del prezzo totale, non del prezzo del campo
-                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice()*0.9 + "€] [0 = None]");
+                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice() * 0.9 + "€] [0 = None]");
                             int numOfRent = sc.nextInt();
 
                             // aggiunta renting kit a reservation
@@ -321,15 +321,15 @@ public class AccountManager {
 
                             // aggiunta della prenotazione al database
                             //todo: errore nel subtotal, non tiene conto se l'utente è premium
-                            System.out.println("Subtotal price: " + res.getPrice() + "€");
+                            System.out.println("Subtotal price: " + String.format("%.2f", res.getPrice(client)) + "€");
                             System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
                                 MailManager mailManager = new MailManager();
-                                if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() +  "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!"))
+                                if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!"))
                                     System.out.println("A confirmation email has been sent.");
                                 else
-                                    System.err.println("Cannot send a confirmation email.");
+                                    System.err.println("Error sending the email.");
 
                             } else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
@@ -393,6 +393,7 @@ public class AccountManager {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
                         MailManager mailManager = new MailManager();
+                        //todo: fixare il time slot nella email
                         if (mailManager.createAndSendEmailMessage(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!"))
                             System.out.println("A confirmation email has been sent.");
                         else

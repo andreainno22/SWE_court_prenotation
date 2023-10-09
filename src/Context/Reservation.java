@@ -73,6 +73,12 @@ public class Reservation {
         return price;
     }
 
+    public float getPrice(Client client){
+        if(client.getIsPremium() == 1)
+            return getPrice() * 0.9f;
+        return getPrice();
+    }
+
     public int getIsPremium() {
         return isPremium;
     }
