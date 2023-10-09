@@ -1,5 +1,4 @@
 package Management;
-
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -7,10 +6,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import Context.Client;
-import Context.Court;
-import Context.RentingKit;
-import Context.Reservation;
+import Context.*;
 import Database.Database_management;
 
 import java.sql.Date;
@@ -248,7 +244,8 @@ public class AccountManager {
                     // aggiunta di court a reservation
                     res.setCourt(courts.get(court - 1));
                     Formatter fmt2 = new Formatter();
-                    boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
+                    //boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
+                    List<TimeSlot> available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     while (true) {
                         System.out.println("Available Time Slots: ");
                         System.out.println(fmt2);
@@ -294,12 +291,12 @@ public class AccountManager {
                                 break;
 
                             // aggiunta time slot a reservation
-                            res.setTime_slot(slot);
+                            TimeSlot ts = available_slots.get(slot - 1);
+                            res.setTime_slot(ts);
                             RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
                             if (client.getIsPremium() == 0)
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             else
-                                //todo: errore nel calcolo della percentuale, è il 10% del prezzo totale, non del prezzo del campo
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice() * 0.9 + "€] [0 = None]");
                             int numOfRent = sc.nextInt();
 
@@ -315,12 +312,11 @@ public class AccountManager {
                             }
 
                             // aggiunta della prenotazione al database
-                            //todo: errore nel subtotal, non tiene conto se l'utente è premium
                             System.out.println("Subtotal price: " + String.format("%.2f", res.getPrice(client)) + "€");
                             System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
-                                sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot() + "\nThank you for choosing us!");
+                                sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot().getStart_hour() + "-" + res.getTime_slot().getFinish_hour() +  "\nThank you for choosing us!");
                             } else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
@@ -334,8 +330,8 @@ public class AccountManager {
                 break;
             case 2:
                 // gestione della cancellazione della prenotazione
-                client.getReservationManager().printAllReservations(client);
-                System.out.println("ID of reservation to delete: ");
+                client.getReservationManager().printAllFutureReservations(client);
+                System.out.println("ID of reservation to delete: [0 to go back] ");
                 int reservation = 0;
                 boolean valid = false;
                 while (!valid)
@@ -345,6 +341,8 @@ public class AccountManager {
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong ID format. Retry.");
                     }
+                if(reservation == 0)
+                    break;
                 ArrayList<Integer> ids = client.getReservationManager().getReservationsId(client);
                 boolean found = false;
                 for (int j : ids)
@@ -355,8 +353,7 @@ public class AccountManager {
                 if (found) {
                     Reservation reserv = client.getReservationManager().getReservationById(reservation);
                     if (client.getReservationManager().deleteReservation(reserv, client)) {
-                        //client.getReservationManager().addMoney(client, client.getReservationManager().getReservationPrice(reservation));
-                        sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + " (UTC).\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot() + "\nThank you for choosing us!");
+                        sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + " (UTC).\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                         System.out.println("Reservation deleted successfully.");
                     } else System.err.println("Error during deletion.");
                 } else
@@ -383,8 +380,6 @@ public class AccountManager {
                     if (topUpWallet(client, money)) {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
-                        MailManager mailManager = new MailManager();
-                        //todo: fixare il time slot nella email
                         sendEmail(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
 
                     } else

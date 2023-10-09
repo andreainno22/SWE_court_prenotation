@@ -4,6 +4,7 @@ import Context.Client;
 import Context.Reservation;
 import Database.Database_management;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class PremiumReservationManager extends ReservationManager {
@@ -27,7 +28,9 @@ public class PremiumReservationManager extends ReservationManager {
             }
         }
         float price;
+        DecimalFormat df = new DecimalFormat("#.##");
         price = reservation.getPrice() * discount;
+        df.format(price);
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You have earned " + reservationPoints + " points for this booking.");

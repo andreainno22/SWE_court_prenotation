@@ -17,6 +17,14 @@ public class TimeSlot {
         return ts;
     }
 
+    public String getStart_hour() {
+        return start_hour;
+    }
+
+    public String getFinish_hour() {
+        return finish_hour;
+    }
+
     public void printAllTimeSlots(Formatter fmt) {
         fmt.format("%-15d%-15s%-15s\n", ts, start_hour, finish_hour);
         //System.out.println(start_hour + " - " + finish_hour);

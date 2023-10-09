@@ -130,11 +130,32 @@ public class Database_management {
         }
     }
 
+    public void printAllFutureReservations(int Client) {
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            Date today = new Date(Calendar.getInstance().getTimeInMillis());
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price from reservation, time_slots where date > '" + today + "' and reservation.time_slot = time_slots.id and client = '" + Client + "'");
+            Formatter fmt = new Formatter();
+            fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME", "PRICE [€]");
+            while (rs.next()) {
+                fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getFloat(6));
+            }
+            System.out.println(fmt);
+            rs.close();
+        } catch (SQLException e) {
+            dbError(e);
+        } finally {
+            disconnect();
+        }
+    }
+
     public Reservation getReservationById(int id){
         try {
             Statement stmt = connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from reservation where id = '" + id + "'");
+            ResultSet timeSlot = stmt.executeQuery("select * from time_slots where id in (select time_slot from reservation where id = '" + id + "')");
             rs.next();
             Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), rs.getInt(5), rs.getFloat(6), rs.getInt(7));
             rs.close();
@@ -418,8 +439,8 @@ public class Database_management {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
-            stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price, isPremium) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot() + "', '" + reservation.getPrice() + "', '" + reservation.getIsPremium() + "')");
-            ResultSet rs = stmt.executeQuery("select id from reservation where date = '" + reservation.getDate() + "' and court = '" + reservation.getCourt().getId() + "' and client = '" + reservation.getClient().getId() + "' and time_slot = '" + reservation.getTime_slot() + "'");
+            stmt.executeUpdate("INSERT INTO reservation (date, court, client, time_slot, price, isPremium) VALUES ('" + reservation.getDate() + "', '" + reservation.getCourt().getId() + "', '" + reservation.getClient().getId() + "', '" + reservation.getTime_slot().getTs() + "', '" + reservation.getPrice() + "', '" + reservation.getIsPremium() + "')");
+            ResultSet rs = stmt.executeQuery("select id from reservation where date = '" + reservation.getDate() + "' and court = '" + reservation.getCourt().getId() + "' and client = '" + reservation.getClient().getId() + "' and time_slot = '" + reservation.getTime_slot().getTs() + "'");
             rs.next();
             if (reservation.getRentingKit() != null)
                 stmt.executeUpdate("INSERT INTO rentingkit_reservation (reservation, renting_kit, num_of_rents) VALUES ('" + rs.getInt(1) + "', '" + reservation.getRentingKit().getId() + "', '" + reservation.getRentingKit().getNumOfRents() + "')");
@@ -454,6 +475,7 @@ public class Database_management {
             disconnect();
         }
     }
+
 
     public static void main(String[] args) {
         System.out.println("Connecting to a selected database...");

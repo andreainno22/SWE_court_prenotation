@@ -19,7 +19,7 @@ public abstract class ReservationManager {
     public void getAllReservation(Client client) {
     }
 
-    public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
+    /*public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
         boolean[] id_slots = new boolean[14];
         Database_management db = new Database_management();
         List<TimeSlot> time_slots = (db.getTimeSlots(date, court));
@@ -29,6 +29,18 @@ public abstract class ReservationManager {
             id_slots[timeSlot.getTs() - 1] = true;
         }
         return id_slots;
+    }*/
+
+    public List<TimeSlot> getTimeSlots(Formatter fmt, Date date, int court) {
+        Database_management db = new Database_management();
+        List<TimeSlot> time_slots = (db.getTimeSlots(date, court));
+        System.out.println(time_slots.size());
+        fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
+        for (TimeSlot timeSlot : time_slots) {
+            if(timeSlot != null)
+                timeSlot.printAllTimeSlots(fmt);
+        }
+        return time_slots;
     }
 
     public List<Court> getCourt(Formatter fmt, boolean showDiscount) {
@@ -88,13 +100,18 @@ public abstract class ReservationManager {
         return db.deleteReservation(reservation, client);
     }
 
+    public void printAllFutureReservations(Client client) {
+        Database_management db = new Database_management();
+        db.printAllFutureReservations(client.getId());
+    }
+
     public RentingKit getRentingKit(String type) {
         Database_management db = new Database_management();
         return db.getRentingKit(type);
     }
 
     protected boolean makeReservation(Reservation reservation, float price, boolean isPremium) {
-        System.out.println("Final price: " + price + "€");
+        System.out.println("Final price: " + String.format("%.2f", price) + "€");
         if (reservation.getClient().getWallet().getBalance() < price) {
             System.out.println("Insufficient balance to proceed with the booking. Please add funds to your wallet!");
             return false;

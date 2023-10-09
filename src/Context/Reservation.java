@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Reservation {
 
-    public Reservation(int id, Date date, int time_slot, float price, int isPremium) {
+    public Reservation(int id, Date date, TimeSlot time_slot, float price, int isPremium) {
         this.id = id;
         this.date = date;
         this.time_slot = time_slot;
@@ -36,7 +36,7 @@ public class Reservation {
         this.court = court;
     }
 
-    public void setTime_slot(int time_slot) {
+    public void setTime_slot(TimeSlot time_slot) {
         this.time_slot = time_slot;
     }
 
@@ -52,7 +52,7 @@ public class Reservation {
         return date;
     }
 
-    public int getTime_slot() {
+    public TimeSlot getTime_slot() {
         return time_slot;
     }
 
@@ -88,7 +88,7 @@ public class Reservation {
     private Date date;
     private RentingKit rentingKit;
     private Client client;
-    private int time_slot;
+    private TimeSlot time_slot;
     private float price = -1;
     private int isPremium;
 
