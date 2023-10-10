@@ -153,6 +153,7 @@ public class Database_management {
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from reservation where id = '" + id + "'");
             ResultSet timeSlot = stmt.executeQuery("select * from time_slots where id in (select time_slot from reservation where id = '" + id + "')");
+            //todo: bug here
             rs.next();
             timeSlot.next();
             Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), new TimeSlot(timeSlot.getInt(1), timeSlot.getString(2), timeSlot.getString(3)), rs.getFloat(6), rs.getInt(7));
