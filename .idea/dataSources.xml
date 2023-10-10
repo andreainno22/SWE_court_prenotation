@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://sql11.freemysqlhosting.net/sql11650722</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="swecourtprentiondb_recordfell@40s.h.filess.io" uuid="9769b19f-f79e-413a-84fe-8bae41ea7851">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

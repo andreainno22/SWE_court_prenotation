@@ -12,7 +12,6 @@ import Database.Database_management;
 
 import java.sql.Date;
 
-
 public class AccountManager {
     private boolean logged = false;
     private boolean startMenu = true;
@@ -29,7 +28,6 @@ public class AccountManager {
         // Restituisce true se l'indirizzo email corrisponde al modello regex
         return matcher.matches();
     }
-
 
     public void startMenu() {
         while (startMenu) {

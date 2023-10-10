@@ -20,9 +20,6 @@ public class Database_management {
     static final String USER = "swecourtprentiondb_recordfell";
     static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
     static final Logging logging = new Logging();
-    /*static final String DB_URL = "jdbc:mysql://localhost/swe_court_prenotation_db";
-    static final String USER = "root";
-    static final String PASS = "";*/
 
     private static class Logging {
 
