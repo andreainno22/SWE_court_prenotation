@@ -1,4 +1,5 @@
 package Management;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -14,10 +15,9 @@ import java.sql.Date;
 
 public class AccountManager {
     private boolean logged = false;
-    private Date isPremiumDate;
     private boolean startMenu = true;
 
-    public static boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
 
         // Crea un oggetto Pattern basato sulla regex
@@ -298,25 +298,28 @@ public class AccountManager {
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             else
                                 System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice() * 0.9 + "€] [0 = None]");
-                            int numOfRent = sc.nextInt();
-
-                            // aggiunta renting kit a reservation
-                            if (numOfRent > 0) {
-                                rentingKit.setNumOfRents(numOfRent);
-                                res.setRentingKit(rentingKit);
-                            } else if (numOfRent == 0)
-                                res.setRentingKit(null);
-                            else {
-                                System.err.println("Operation aborted.");
-                                break;
+                            boolean rentIsValid = false;
+                            while (!rentIsValid) {
+                                try {
+                                    sc = new Scanner(System.in);
+                                    int numOfRent = sc.nextInt();
+                                    rentIsValid = true;
+                                    // aggiunta renting kit a reservation
+                                    if (numOfRent > 0) {
+                                        rentingKit.setNumOfRents(numOfRent);
+                                        res.setRentingKit(rentingKit);
+                                    } else if (numOfRent == 0)
+                                        res.setRentingKit(null);
+                                } catch (InputMismatchException e) {
+                                    System.err.println("Wrong input format. Retry");
+                                }
                             }
-
                             // aggiunta della prenotazione al database
                             System.out.println("Subtotal price: " + String.format("%.2f", res.getPrice(client)) + "€");
                             System.out.println("Making reservation...");
                             if (client.getReservationManager().makeReservation(res)) {
                                 System.out.println("Reservation successful.");
-                                sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate and time of reservation: " + res.getDate() + " (UTC).\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot().getStart_hour() + "-" + res.getTime_slot().getFinish_hour() +  "\nThank you for choosing us!");
+                                sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate of reservation: " + res.getDate() + "\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot().getStart_hour() + "-" + res.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                             } else System.err.println("Reservation failed.");
                             //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
@@ -336,12 +339,13 @@ public class AccountManager {
                 boolean valid = false;
                 while (!valid)
                     try {
+                        sc = new Scanner(System.in);
                         reservation = sc.nextInt();
                         valid = true;
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong ID format. Retry.");
                     }
-                if(reservation == 0)
+                if (reservation == 0)
                     break;
                 ArrayList<Integer> ids = client.getReservationManager().getReservationsId(client);
                 boolean found = false;
@@ -402,7 +406,7 @@ public class AccountManager {
                         }
                     } else {
                         System.out.println("Upgrade aborted.");
-                        System.err.println("Going back to Main Menu...");
+                        System.out.println("Going back to Main Menu...");
                     }
                 } else { // manage premium subscription
                     showPremiumExpiration(client);
@@ -417,7 +421,7 @@ public class AccountManager {
                         }
                     } else {
                         System.out.println("Renewal aborted.");
-                        System.err.println("Going back to Main Menu...");
+                        System.out.println("Going back to Main Menu...");
                     }
                 }
                 break;
@@ -461,7 +465,7 @@ public class AccountManager {
 
     private void showPremiumExpiration(Client client) {
         Database_management db = new Database_management();
-        isPremiumDate = db.getPremiumExpiration(client);
+        Date isPremiumDate = db.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
 
