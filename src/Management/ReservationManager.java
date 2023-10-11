@@ -16,21 +16,6 @@ public abstract class ReservationManager {
 
     public abstract boolean makeReservation(Reservation reservation);
 
-    public void getAllReservation(Client client) {
-    }
-
-    /*public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
-        boolean[] id_slots = new boolean[14];
-        Database_management db = new Database_management();
-        List<TimeSlot> time_slots = (db.getTimeSlots(date, court));
-        fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
-        for (TimeSlot timeSlot : time_slots) {
-            timeSlot.printAllTimeSlots(fmt);
-            id_slots[timeSlot.getTs() - 1] = true;
-        }
-        return id_slots;
-    }*/
-
     public List<TimeSlot> getTimeSlots(Formatter fmt, Date date, int court) {
         Database_management db = new Database_management();
         List<TimeSlot> time_slots = (db.getTimeSlots(date, court));
@@ -71,26 +56,6 @@ public abstract class ReservationManager {
         return db.getReservationById(id);
     }
 
-    //public float getReservationPrice(int reservation) {
-    //   Database_management db = new Database_management();
-    //  return db.getReservationPrice(reservation);
-    //}
-
-    /*public boolean removeMoney(Client client, float price) {
-        Database_management db = new Database_management();
-        if (client.getWallet().removeMoney(price)) {
-            db.modifyBalance(client, null);
-            return true;
-        } else System.out.println("Insufficient funds");
-        return false;
-    }*/
-
-    /*public boolean addMoney(Client client, float money) {
-        Database_management db = new Database_management();
-        client.getWallet().addMoney(money);
-        return db.modifyBalance(client, null);
-    }*/
-
     public boolean deleteReservation(Reservation reservation, Client client) {
         if (reservation.getIsPremium() == 1 && reservation.getPrice() != 0)
             client.setPoints(client.getPoints() - reservationPoints);
@@ -120,7 +85,6 @@ public abstract class ReservationManager {
             Database_management db = new Database_management();
             reservation.getClient().getWallet().removeMoney(price);
             return db.makeReservation(reservation, isPremium, true);
-            //return db.modifyBalance(reservation.getClient());
         }
     }
 }

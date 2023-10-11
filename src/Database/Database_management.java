@@ -293,8 +293,6 @@ public class Database_management {
 
     Wallet getWallet(int id, Statement stmt) {
         try {
-            //Statement stmt = connect();
-            //assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
             Wallet wallet = new Wallet(rs.getInt(1), rs.getFloat(2));
@@ -349,7 +347,7 @@ public class Database_management {
         }
     }
 
-    public boolean deleteClient(Client client) {
+    /*public boolean deleteClient(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -361,7 +359,7 @@ public class Database_management {
         }   finally {
             disconnect();
         }
-    }
+    }*/
 
     public boolean modifyBalance(Client client, Statement transactionStmt) {
         try {
@@ -377,7 +375,6 @@ public class Database_management {
         } catch (SQLIntegrityConstraintViolationException e1) {
             dbError(e1);
             disconnect();
-            //e1.printStackTrace();
             return false;
         } catch (SQLException e) {
             dbError(e);
@@ -542,11 +539,6 @@ public class Database_management {
             Statement stmt = connectTransaction();
             assert stmt != null;
             stmt.executeUpdate("update client set is_premium = '" + client.getIsPremium() + "' where id = '" + client.getId() + "'");
-            //Calendar calendario = Calendar.getInstance();
-            // Aggiungi un anno alla data corrente
-            //calendario.add(Calendar.YEAR, 1);
-            // Ottieni la data con un anno in più
-            //Date date = (Date) calendario.getTime();
             Calendar calendario = Calendar.getInstance();
 
             // Aggiungi un giorno alla data corrente

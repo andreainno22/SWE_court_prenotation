@@ -35,32 +35,6 @@ public class PremiumReservationManager extends ReservationManager {
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You will earn " + reservationPoints + " points for this booking.");
         return super.makeReservation(reservation, price, isPremium);
-        //Database_management db = new Database_management();
-        //db.updatePoints(reservation.getClient().getPoints(), reservation.getClient(), );
+
     }
-
-
-    //protected boolean deleteReservationPremium(Reservation reservation, Client client) {
-    // client.setPoints(client.getPoints() - reservationPoints);
-    //  return (super.deleteReservation(reservation, client));
-    //  Database_management db = new Database_management();
-    // db.updatePoints(client.getPoints() - giftPoints, client);
-    //  return true;
-    // }
-    //return false;
-    //}
-
-
-    /*@Override
-    public void getTimeSlots(Date date, int court) {
-        Database_management db = new Database_management();
-        List<TimeSlot> time_slots = db.getTimeSlots(date, court);
-        Formatter fmt = new Formatter();
-        fmt.format("%-15s%-15s%-15s\n", "ID", "START", "END");
-        for (TimeSlot timeSlot : time_slots) {
-            timeSlot.printAllTimeSlots(fmt);
-        }
-        System.out.println(fmt);
-    }*/
-
 }
