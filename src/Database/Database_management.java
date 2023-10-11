@@ -19,7 +19,7 @@ public class Database_management {
     static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
     static final String USER = "swecourtprentiondb_recordfell";
     static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
-    static final Logging logging = new Logging();
+    static Logging logging = null;
 
     private static class Logging {
 
@@ -48,6 +48,8 @@ public class Database_management {
     }
 
     private void dbError(Exception e) {
+        if(logging == null)
+            logging = new Logging();
         System.err.println("Database responded with an error. See log file for more information.");
         //logging.logger.log(Level.SEVERE, "Exception: " + e);
         logging.logger.severe("Exception: " + e);
@@ -65,6 +67,16 @@ public class Database_management {
             System.err.println("Error during connection.");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private Statement newStatement() {
+        try {
+            if (conn != null)
+                return conn.createStatement();
+        }catch(SQLException e){
+            dbError(e);
         }
         return null;
     }
@@ -149,15 +161,18 @@ public class Database_management {
 
     public Reservation getReservationById(int id){
         try {
-            Statement stmt = connect();
-            assert stmt != null;
-            ResultSet rs = stmt.executeQuery("select * from reservation where id = '" + id + "'");
-            ResultSet timeSlot = stmt.executeQuery("select * from time_slots where id in (select time_slot from reservation where id = '" + id + "')");
-            //todo: bug here
+            Statement stmt1 = connect();
+            assert stmt1 != null;
+            Statement stmt2 = newStatement();
+            assert stmt2 != null;
+            ResultSet rs = stmt1.executeQuery("select * from reservation where id = '" + id + "'");
+            ResultSet timeSlot = stmt2.executeQuery("select * from time_slots where id in (select time_slot from reservation where id = '" + id + "')");
             rs.next();
             timeSlot.next();
             Reservation reservation = new Reservation(rs.getInt(1), rs.getDate(2), new TimeSlot(timeSlot.getInt(1), timeSlot.getString(2), timeSlot.getString(3)), rs.getFloat(6), rs.getInt(7));
+            reservation.setCourt(new Court(rs.getInt(3)));
             rs.close();
+            timeSlot.close();
             return reservation;
         } catch (SQLException e) {
             dbError(e);

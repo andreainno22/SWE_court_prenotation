@@ -203,10 +203,10 @@ public class AccountManager {
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.next());
-                    int compare = date.compareTo(new Date(System.currentTimeMillis() - 86400000));
+                    //int compare = date.compareTo(new Date(System.currentTimeMillis() - 86400000));
                     //todo: rendere non disponibili i giorni festivi con public holiday api
-                    if (compare <= 0) {
-                        System.err.println("You selected a past date. Retry.");
+                    if (!date.after(new Date(System.currentTimeMillis()))) {
+                        System.err.println("You can book at least for the day after today. Retry.");
                         break;
                     }
                     // aggiunta data a reservation
@@ -332,6 +332,7 @@ public class AccountManager {
             case 2:
                 // gestione della cancellazione della prenotazione
                 client.getReservationManager().printAllFutureReservations(client);
+                System.out.println("Note: you can delete your reservation by the day before the booking date!");
                 System.out.println("ID of reservation to delete: [0 to go back] ");
                 int reservation = 0;
                 boolean valid = false;
@@ -355,8 +356,8 @@ public class AccountManager {
                 if (found) {
                     Reservation reserv = client.getReservationManager().getReservationById(reservation);
                     if (client.getReservationManager().deleteReservation(reserv, client)) {
-                        sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + " (UTC).\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                         System.out.println("Reservation deleted successfully.");
+                        sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + "\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                     } else System.err.println("Error during deletion.");
                 } else
                     System.err.println("Reservation not found or non-cancellable.");
