@@ -119,6 +119,19 @@ public class Database_management {
         }
     }
 
+    public boolean deleteTestClient(String email){
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("");
+        }catch(SQLException e){
+            System.err.println("Error deleting user from database")
+        }finally {
+            disconnect();
+        }
+
+    }
+
     public void printAllReservations(int Client) {
         try {
             Statement stmt = connect();
@@ -347,7 +360,7 @@ public class Database_management {
         }
     }
 
-    /*public boolean deleteClient(Client client) {
+    public boolean deleteClient(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -359,7 +372,7 @@ public class Database_management {
         }   finally {
             disconnect();
         }
-    }*/
+    }
 
     public boolean modifyBalance(Client client, Statement transactionStmt) {
         try {

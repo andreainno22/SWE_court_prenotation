@@ -15,6 +15,12 @@ import java.sql.Date;
 public class AccountManager {
     private boolean logged = false;
     private boolean startMenu = true;
+    private Scanner sc;
+
+    public AccountManager(){
+        sc = new Scanner(System.in);
+        //sc.useDelimiter("[;\r\n]+");
+    }
 
     private static boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
@@ -34,11 +40,11 @@ public class AccountManager {
             System.out.println("\nHello! Please login or register to continue.");
             System.out.println("1. Login\n2. Register\n3. Exit");
             int choice;
-            Scanner scanner;
             while (true) {
                 try {
-                    scanner = new Scanner(System.in);
-                    choice = scanner.nextInt();
+                    //sc = new Scanner(System.in);
+                    choice = sc.nextInt();
+                    sc.nextLine();
                     break;
                 } catch (InputMismatchException ex) {
                     System.err.println("Wrong choice format.Retry.");
@@ -66,27 +72,32 @@ public class AccountManager {
     public void registerAccount() {
         while (!startMenu) {
             boolean valid = false;
-            Scanner sc = new Scanner(System.in);
             System.out.println("Name: ");
             String name = sc.nextLine();
+            System.out.println(name);
             System.out.println("Surname: ");
             String surname = sc.nextLine();
+            System.out.println(surname);
             System.out.println("Email: ");
             String email = sc.nextLine();
+            System.out.println(email);
             System.out.println("Password: ");
             String password = sc.nextLine();
+            System.out.println(password);
             Client client = new Client(name, surname, email, password);
             Database_management db = new Database_management();
             int telephoneNumber;
             boolean telephoneNumberValid = false;
             while (!telephoneNumberValid) {
                 try {
-                    System.out.println("Telephone number [0 = not provided]: ");
-                    sc = new Scanner(System.in);
-                    telephoneNumber = sc.nextInt();
-                    if (telephoneNumber != 0)
-                        client.setTelephoneNumber(telephoneNumber);
-                    telephoneNumberValid = true;
+                        System.out.println("Telephone number [0 = not provided]: ");
+                        //sc = new Scanner(System.in);
+                        telephoneNumber = sc.nextInt();
+                        sc.nextLine();
+                        System.out.println(telephoneNumber);
+                        if (telephoneNumber != 0)
+                            client.setTelephoneNumber(telephoneNumber);
+                        telephoneNumberValid = true;
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong telephone number format. Retry.");
                 }
@@ -112,7 +123,7 @@ public class AccountManager {
     public void loginAccount() {
         while (!startMenu) {
             while (!logged) {
-                Scanner sc = new Scanner(System.in);
+                //Scanner sc;
                 System.out.println("Email: ");
                 String email = sc.nextLine();
                 System.out.println("Password: ");
@@ -129,7 +140,6 @@ public class AccountManager {
                     return;
                 } else {
                     System.out.println("Login Failed. Retry? (Y/n)");
-                    sc = new Scanner(System.in);
                     String value = sc.next();
                     if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("n")) {
                         startMenu = true;
@@ -178,7 +188,6 @@ public class AccountManager {
                     7. Logout""");
         }
         int choice;
-        Scanner sc;
 
         if (client.getIsPremium() == 0)
             client.setReservationManager(new StandardReservationManager());
@@ -187,7 +196,7 @@ public class AccountManager {
 
         while (true) {
             try {
-                sc = new Scanner(System.in);
+                //sc = new Scanner(System.in);
                 choice = sc.nextInt();
                 break;
             } catch (InputMismatchException ex) {
@@ -224,7 +233,7 @@ public class AccountManager {
                     System.out.println(fmt);
                     System.out.println("Select a Court [0 = Back to Main Menu]: ");
                     while (true) {
-                        sc = new Scanner(System.in);
+                        //sc = new Scanner(System.in);
                         try {
                             court = sc.nextInt();
                             if (court > num_courts || court < 0) {
@@ -299,7 +308,7 @@ public class AccountManager {
                             boolean rentIsValid = false;
                             while (!rentIsValid) {
                                 try {
-                                    sc = new Scanner(System.in);
+                                    //sc = new Scanner(System.in);
                                     int numOfRent = sc.nextInt();
                                     rentIsValid = true;
                                     // aggiunta renting kit a reservation
@@ -338,7 +347,7 @@ public class AccountManager {
                 boolean valid = false;
                 while (!valid)
                     try {
-                        sc = new Scanner(System.in);
+                        //sc = new Scanner(System.in);
                         reservation = sc.nextInt();
                         valid = true;
                     } catch (InputMismatchException e) {
@@ -410,7 +419,7 @@ public class AccountManager {
                 } else { // manage premium subscription
                     showPremiumExpiration(client);
                     System.out.println("Do you want to renew your subscription? [y/N]");
-                    sc = new Scanner(System.in);
+                    //sc = new Scanner(System.in);
                     String answer = sc.next();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                         if (renewPremium(client)) {
