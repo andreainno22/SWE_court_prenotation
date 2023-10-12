@@ -123,13 +123,28 @@ public class Database_management {
         try {
             Statement stmt = connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("");
+            stmt.executeUpdate("DELETE FROM client WHERE email = '" + email + "'");
+            return true;
         }catch(SQLException e){
-            System.err.println("Error deleting user from database")
+            System.err.println("Error deleting user from database.");
+            System.err.println("ERROR: " + e);
         }finally {
             disconnect();
         }
+    return false;
+    }
 
+    public int getTestClientIdByMail(String email){
+        try{
+            Statement stmt = connect();
+            ResultSet rs = stmt.executeQuery("SELECT id FROM client WHERE email = '" + email + "'");
+            rs.next();
+            return rs.getInt(1);
+        }catch(SQLException e) {
+            System.err.println("Error getting user id from database.");
+            System.err.println("ERROR: " + e);
+        }
+        return 0;
     }
 
     public void printAllReservations(int Client) {
@@ -213,6 +228,7 @@ public class Database_management {
         }
         return null;
     }
+
 
     public float getReservationPrice(int reservation, Statement transactionStmt) {
             ResultSet rs;

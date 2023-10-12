@@ -15,7 +15,7 @@ import java.sql.Date;
 public class AccountManager {
     private boolean logged = false;
     private boolean startMenu = true;
-    private Scanner sc;
+    private final Scanner sc;
 
     public AccountManager(){
         sc = new Scanner(System.in);
@@ -74,16 +74,12 @@ public class AccountManager {
             boolean valid = false;
             System.out.println("Name: ");
             String name = sc.nextLine();
-            System.out.println(name);
             System.out.println("Surname: ");
             String surname = sc.nextLine();
-            System.out.println(surname);
             System.out.println("Email: ");
             String email = sc.nextLine();
-            System.out.println(email);
             System.out.println("Password: ");
             String password = sc.nextLine();
-            System.out.println(password);
             Client client = new Client(name, surname, email, password);
             Database_management db = new Database_management();
             int telephoneNumber;
@@ -140,7 +136,7 @@ public class AccountManager {
                     return;
                 } else {
                     System.out.println("Login Failed. Retry? (Y/n)");
-                    String value = sc.next();
+                    String value = sc.nextLine();
                     if (value.equalsIgnoreCase("no") || value.equalsIgnoreCase("n")) {
                         startMenu = true;
                         return;
@@ -198,6 +194,7 @@ public class AccountManager {
             try {
                 //sc = new Scanner(System.in);
                 choice = sc.nextInt();
+                sc.nextLine();
                 break;
             } catch (InputMismatchException ex) {
                 System.err.println("Wrong choice format. Retry.");
@@ -211,7 +208,7 @@ public class AccountManager {
                 System.out.println("Date (yyyy-mm-dd): ");
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
-                    date = Date.valueOf(sc.next());
+                    date = Date.valueOf(sc.nextLine());
                     //int compare = date.compareTo(new Date(System.currentTimeMillis() - 86400000));
                     //todo: rendere non disponibili i giorni festivi con public holiday api
                     if (!date.after(new Date(System.currentTimeMillis()))) {
@@ -236,6 +233,7 @@ public class AccountManager {
                         //sc = new Scanner(System.in);
                         try {
                             court = sc.nextInt();
+                            sc.nextLine();
                             if (court > num_courts || court < 0) {
                                 System.err.println("You selected a wrong Court. Retry.");
                             } else {
@@ -260,6 +258,7 @@ public class AccountManager {
                         System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
                         try {
                             choice = sc.nextInt();
+                            sc.nextLine();
                             break;
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong choice format. Going back to Court Selection...");
@@ -277,6 +276,7 @@ public class AccountManager {
                             while (!valid) {
                                 try {
                                     slot = sc.nextInt();
+                                    sc.nextLine();
                                     if (slot > available_slots.size() || slot < 0) {
                                         System.err.println("Given Time Slot is wrong. Retry.");
                                         continue;
@@ -287,6 +287,7 @@ public class AccountManager {
                                             System.err.println("Given Time Slot is not available. Retry.");
                                             System.out.println("ID of desired Time Slot: ");
                                             slot = sc.nextInt();
+                                            sc.nextLine();
                                         }
                                     }
                                 } catch (InputMismatchException e) {
@@ -310,6 +311,7 @@ public class AccountManager {
                                 try {
                                     //sc = new Scanner(System.in);
                                     int numOfRent = sc.nextInt();
+                                    sc.nextLine();
                                     rentIsValid = true;
                                     // aggiunta renting kit a reservation
                                     if (numOfRent > 0) {
@@ -349,6 +351,7 @@ public class AccountManager {
                     try {
                         //sc = new Scanner(System.in);
                         reservation = sc.nextInt();
+                        sc.nextLine();
                         valid = true;
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong ID format. Retry.");
@@ -379,12 +382,13 @@ public class AccountManager {
                 // gestione del portafoglio
                 System.out.println("Your balance is: " + client.getWallet().getBalance() + "€");
                 System.out.println("Do you want to add money? [y/N]");
-                String choice2 = sc.next();
+                String choice2 = sc.nextLine();
                 if (choice2.equalsIgnoreCase("y") || choice2.equalsIgnoreCase("yes")) {
                     float money;
                     try {
                         System.out.println("How much money do you want to add?");
                         money = sc.nextFloat();
+                        sc.nextLine();
                     } catch (InputMismatchException e) {
                         System.err.println("Wrong input format. Going back to Main Menu...");
                         break;
@@ -405,7 +409,7 @@ public class AccountManager {
                 if (client.getIsPremium() == 0) { // upgrade to premium
                     System.out.println("Do you want to upgrade to premium? The cost is 20€ for one year and then " +
                             "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/N]");
-                    String answer = sc.next();
+                    String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                         if (setIsPremium(client)) {
                             System.out.println("Upgrade successful.");
@@ -420,7 +424,7 @@ public class AccountManager {
                     showPremiumExpiration(client);
                     System.out.println("Do you want to renew your subscription? [y/N]");
                     //sc = new Scanner(System.in);
-                    String answer = sc.next();
+                    String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                         if (renewPremium(client)) {
                             System.out.println("Renewal successful.");
