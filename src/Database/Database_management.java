@@ -589,6 +589,8 @@ public class Database_management {
             stmt.executeUpdate("update client set is_premium = '" + client.getIsPremium() + "' where id = '" + client.getId() + "'");
             Calendar calendario = Calendar.getInstance();
 
+            calendario.setTimeZone(TimeZone.getTimeZone("UTC"));
+
             // Aggiungi un giorno alla data corrente
             calendario.add(Calendar.DAY_OF_YEAR, 1);
 

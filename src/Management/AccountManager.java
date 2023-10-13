@@ -105,17 +105,24 @@ public class AccountManager {
                 // fatto controllo sulla validità dell'email
                 if (!isValidEmail(email) || db.insertClient(client) == -1) {
                     System.err.println("Email already used or wrong email format. Retry.");
-                    System.out.println("Type another email: ");
-                    email = sc.next();
+                    System.out.println("Type another email: [0 = Go Back]");
+                    email = sc.nextLine();
+                    if(email.equals("0"))
+                        break;
                     client.setEmail(email);
                 } else {
                     valid = true;
                 }
             }
-            sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!");
-            System.out.println("Registration successful.");
-            System.out.println("You can now login.\n");
-            startMenu = true;
+            if(valid) {
+                sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!");
+                System.out.println("Registration successful.");
+                System.out.println("You can now login.\n");
+                startMenu = true;
+            }else{
+                startMenu = true;
+                System.out.println("Registration cancelled.");
+            }
         }
     }
 
@@ -495,8 +502,7 @@ public class AccountManager {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         Instant instant = Instant.now();
         ZoneId zone = ZoneId.of("UTC");
-        String dateTime = instant.atZone(zone).format(dtf);
-        return dateTime;
+        return instant.atZone(zone).format(dtf);
     }
 
     private void sendEmail(String email, String subject, String text) {
