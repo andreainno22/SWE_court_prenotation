@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.PrintStream;
 import java.io.ByteArrayOutputStream;
+import java.sql.Date;
 import java.util.ArrayList;
 
 
@@ -23,78 +24,95 @@ import java.util.ArrayList;
 @DisableIfTestFails
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class AccountTest {
-    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    private ByteArrayInputStream inputStream;
     private static AccountManager account;
+    private String simulatedUserInput;
+    private Client client;
 
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
-    @BeforeAll
-    public static void setUp() {
-
+    public void setUp() {
+        System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
+        account = new AccountManager();
+        assertDoesNotThrow(() -> account.startMenu());
     }
 
     @Test
     public void TestARegistration() {
-        String simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n3\n";
-
-        System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+        simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n3\n";
+        Database_management db = new Database_management();
+        Client client = db.getClient("test1@email", "password");
+        setClient(client);
+        setUp();
     }
 
     @Test
-    public void TestBRegistration() {
+    public void TestBRegistrationWithAlreadyUsedEmail() {
         // tests if inserting another time the same email makes the program doesn't accept it
-        String simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\ntest2@email\n3\n";
-        System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+        simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n0\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestCRegistrationInvalidEmail() {
+        // tests if inserting another time the same email makes the program doesn't accept it
+        simulatedUserInput = "2\nName\nSurname\nemail\npassword\n123\n0\n3\n";
+        setUp();
     }
 
     @Test   // login
-    public void TestCLogin() {
-        String simulatedInput = "1\ntest1@email\npassword\n7\n3\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+    public void TestDLogin() {
+        simulatedUserInput = "1\ntest1@email\npassword\n7\n3\n";
+        setUp();
     }
 
     @Test
-    public void TestDAddMoney() {
-        String simulatedInput = "1\ntest1@email\npassword\n4\ny\n100\n7\n3\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+    public void TestEAddMoney() {
+        simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n100\n7\n3\n";
+        setUp();
+
     }
 
     @Test
-    public void TestEMakeReservation() {
-        String simulatedInput = "1\ntest1@email\npassword\n1\n2025-01-01\n1\n2\n1\n0\n7\n3\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+    public void TestGUpgradePremium() {
+        simulatedUserInput = "1\ntest1@email\npassword\n5\ny\n7\n3\n";
+        setUp();
     }
 
     @Test
-    public void TestFDeleteReservation() {
+    public void TestHMakeReservationPremium() {
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n2\n0\n7\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestIMakeReservationOnHoliday() {
+        String date = "2025-01-01";
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
+        setUp();
         Database_management db = new Database_management();
-        int testClientId = db.getTestClientIdByMail("test1@email");
-        assertNotEquals(0, testClientId);
-        ArrayList<Integer> reservationsId = db.getReservationsId(testClientId);
+        assertFalse(db.checkTestReservation(client, Date.valueOf(date)));
+    }
+
+    @Test
+    public void TestLDeleteReservation() {
+        Database_management db = new Database_management();
+        /*int testClientId = db.getTestClientIdByMail("test1@email");
+        assertNotEquals(0, testClientId);*/
+        ArrayList<Integer> reservationsId = db.getReservationsId(client.getId());
         int reservationId = reservationsId.get(0);
-        String simulatedInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+        simulatedUserInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
+        setUp();
+        int premiumReservationId = reservationsId.get(1);
+        simulatedUserInput = "1\ntest1@email\npassword\n2\n" + premiumReservationId + "\n7\n3\n";
+        setUp();
     }
 
     @AfterAll
     static void tearDown() {
         Database_management db = new Database_management();
         db.deleteTestClient("test1@email");
-        db.deleteTestClient("test2@email");
     }
 
 }

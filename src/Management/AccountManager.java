@@ -1,12 +1,15 @@
 package Management;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
+import de.jollyday.*;
 import Context.*;
 import Database.Database_management;
 
@@ -209,10 +212,18 @@ public class AccountManager {
                 try {
                     // fatto controllo sul fatto che la data non sia nel passato
                     date = Date.valueOf(sc.nextLine());
-                    //int compare = date.compareTo(new Date(System.currentTimeMillis() - 86400000));
-                    //todo: rendere non disponibili i giorni festivi con public holiday api
-                    if (!date.after(new Date(System.currentTimeMillis()))) {
-                        System.err.println("You can book at least for the day after today. Retry.");
+                    ZoneId italyZone = ZoneId.of("Europe/Rome");
+                    // Crea una data nel fuso orario italiano
+                    LocalDate italianDate = LocalDate.now(italyZone);
+                    java.util.Date italianZonedDate = Date.from(italianDate.atStartOfDay().atZone(italyZone).toInstant());
+
+                    if (!date.after(italianZonedDate)) {
+                        System.err.println("You can book at least for tomorrow. Retry.");
+                        break;
+                    }
+                    HolidayManager holidayManager = HolidayManager.getInstance(HolidayCalendar.ITALY);
+                    if (holidayManager.isHoliday(date.toLocalDate())) {
+                        System.err.println("You can't book on a holiday. Retry.");
                         break;
                     }
                     // aggiunta data a reservation
@@ -397,7 +408,6 @@ public class AccountManager {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
                         sendEmail(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
-
                     } else
                         System.out.println("Transaction failed.");
                 } else {

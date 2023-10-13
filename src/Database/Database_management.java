@@ -5,11 +5,9 @@ import Context.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -318,6 +316,27 @@ public class Database_management {
             disconnect();
         }
         return null;
+    }
+
+    public boolean checkTestReservation(Client client, Date date){
+        try {
+            Statement stmt = connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select * from reservation where client = '" + client.getId() + "' and date = '" + date + "'");
+            if (!rs.next()) {
+                rs.close();
+                disconnect();
+                return false;
+            }
+            rs.close();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Reservation not found or other generic SQLException.");
+            System.out.println("ERROR: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
     }
 
     Wallet getWallet(int id, Statement stmt) {
