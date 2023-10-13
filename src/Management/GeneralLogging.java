@@ -34,6 +34,7 @@ public class GeneralLogging {
         logger.addHandler(fh);
         logger.setUseParentHandlers(false);
     }
+
     public void log(Exception e) {
         System.err.println("App encountered an error. See log file for more information.");
         //logging.logger.log(Level.SEVERE, "Exception: " + e);

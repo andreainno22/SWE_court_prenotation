@@ -65,7 +65,7 @@ public class Reservation {
     }
 
     public float getPrice() {
-        if(price == -1) {
+        if (price == -1) {
             if (getRentingKit() != null)
                 price = (getCourt().getPrice() + getRentingKit().getTotPrice());
             else price = getCourt().getPrice();
@@ -73,8 +73,8 @@ public class Reservation {
         return price;
     }
 
-    public float getPrice(Client client){
-        if(client.getIsPremium() == 1)
+    public float getPrice(Client client) {
+        if (client.getIsPremium() == 1)
             return getPrice() * 0.9f;
         return getPrice();
     }

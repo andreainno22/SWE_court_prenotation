@@ -22,7 +22,7 @@ public abstract class ReservationManager {
         System.out.println(time_slots.size());
         fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
         for (TimeSlot timeSlot : time_slots) {
-            if(timeSlot != null)
+            if (timeSlot != null)
                 timeSlot.printAllTimeSlots(fmt);
         }
         return time_slots;
@@ -31,7 +31,7 @@ public abstract class ReservationManager {
     public List<Court> getCourt(Formatter fmt, boolean showDiscount) {
         Database_management db = new Database_management();
         List<Court> court_type_prices = db.getCourt();
-        if(!showDiscount)
+        if (!showDiscount)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
             fmt.format("%-15s%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]", "YOUR PRICE (-10%) [€]");

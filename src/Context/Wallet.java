@@ -1,7 +1,7 @@
 package Context;
 
 public class Wallet {
-    private int id;
+    private final int id;
     private float balance;
 
     public int getId() {
@@ -19,7 +19,7 @@ public class Wallet {
     }
 
     public boolean removeMoney(float amount) {
-        if(this.balance - amount < 0) {
+        if (this.balance - amount < 0) {
             return false;
         }
         this.balance -= amount;

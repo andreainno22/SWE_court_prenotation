@@ -42,9 +42,10 @@ public class AccountTest {
     public void TestARegistration() {
         simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n3\n";
         Database_management db = new Database_management();
-        Client client = db.getClient("test1@email", "password");
-        setClient(client);
         setUp();
+        Client client = db.getClient("test1@email", "password");
+        assertNotNull(client);
+        testClient = client;
     }
 
     @Test
@@ -68,10 +69,28 @@ public class AccountTest {
     }
 
     @Test
+    public void TestEMakeReservationWithoutMoney() {
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n3\n0\n7\n3\n";
+        setUp();
+    }
+
+    @Test
     public void TestEAddMoney() {
         simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n100\n7\n3\n";
         setUp();
 
+    }
+
+    @Test
+    public void TestGMakeReservationStandard() {
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n3\n0\n7\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestHMakeReservationStandardRentingKit() {
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n2\n2\n3\n1\n7\n3\n";
+        setUp();
     }
 
     @Test
@@ -80,9 +99,16 @@ public class AccountTest {
         setUp();
     }
 
+
     @Test
     public void TestHMakeReservationPremium() {
         simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n2\n0\n7\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestKMakeReservationPremiumRentingKit() {
+        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n3\n2\n3\n1\n7\n3\n";
         setUp();
     }
 
@@ -98,9 +124,7 @@ public class AccountTest {
     @Test
     public void TestLDeleteReservation() {
         Database_management db = new Database_management();
-        /*int testClientId = db.getTestClientIdByMail("test1@email");
-        assertNotEquals(0, testClientId);*/
-        ArrayList<Integer> reservationsId = db.getReservationsId(client.getId());
+        ArrayList<Integer> reservationsId = db.getReservationsId(testClient.getId());
         int reservationId = reservationsId.get(0);
         simulatedUserInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
         setUp();

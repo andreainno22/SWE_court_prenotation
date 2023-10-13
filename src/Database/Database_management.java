@@ -25,8 +25,7 @@ public class Database_management {
 
         private FileHandler fh = null;
         SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
-        private String FILENAME = System.getProperty("user.dir") + "/logs/DatabaseLogFile_"
-                + format.format(Calendar.getInstance().getTime()) + ".log";
+        private String FILENAME = System.getProperty("user.dir") + "/logs/DatabaseLogFile_" + format.format(Calendar.getInstance().getTime()) + ".log";
 
         private File file = new File(FILENAME);
 
@@ -46,10 +45,8 @@ public class Database_management {
     }
 
     private void dbError(Exception e) {
-        if(logging == null)
-            logging = new Logging();
+        if (logging == null) logging = new Logging();
         System.err.println("Database responded with an error. See log file for more information.");
-        //logging.logger.log(Level.SEVERE, "Exception: " + e);
         logging.logger.severe("Exception: " + e);
     }
 
@@ -71,9 +68,8 @@ public class Database_management {
 
     private Statement newStatement() {
         try {
-            if (conn != null)
-                return conn.createStatement();
-        }catch(SQLException e){
+            if (conn != null) return conn.createStatement();
+        } catch (SQLException e) {
             dbError(e);
         }
         return null;
@@ -109,7 +105,6 @@ public class Database_management {
         try {
             if (conn != null) {
                 conn.close();
-                //System.out.println("Connection closed.");
             }
         } catch (SQLException e) {
             dbError(e);
@@ -117,33 +112,21 @@ public class Database_management {
         }
     }
 
-    public boolean deleteTestClient(String email){
+    public boolean deleteTestClient(String email) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             stmt.executeUpdate("DELETE FROM client WHERE email = '" + email + "'");
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.err.println("Error deleting user from database.");
             System.err.println("ERROR: " + e);
-        }finally {
+        } finally {
             disconnect();
         }
-    return false;
+        return false;
     }
 
-    public int getTestClientIdByMail(String email){
-        try{
-            Statement stmt = connect();
-            ResultSet rs = stmt.executeQuery("SELECT id FROM client WHERE email = '" + email + "'");
-            rs.next();
-            return rs.getInt(1);
-        }catch(SQLException e) {
-            System.err.println("Error getting user id from database.");
-            System.err.println("ERROR: " + e);
-        }
-        return 0;
-    }
 
     public void printAllReservations(int Client) {
         try {
@@ -185,7 +168,7 @@ public class Database_management {
         }
     }
 
-    public Reservation getReservationById(int id){
+    public Reservation getReservationById(int id) {
         try {
             Statement stmt1 = connect();
             assert stmt1 != null;
@@ -228,51 +211,6 @@ public class Database_management {
     }
 
 
-    public float getReservationPrice(int reservation, Statement transactionStmt) {
-            ResultSet rs;
-        try {
-            if(transactionStmt == null){
-                Statement stmt = connect();
-                assert stmt != null;
-                rs = stmt.executeQuery("select price from reservation where reservation.id = '" + reservation + "'");
-                rs.close();
-                disconnect();
-            }else{
-                rs = transactionStmt.executeQuery("select price from reservation where reservation.id = '" + reservation + "'");
-            }
-            rs.next();
-            return rs.getFloat(1);
-        } catch (SQLException e) {
-            dbError(e);
-            disconnect();
-        }
-        return 0;
-    }
-
-    public void printAllClient() {
-        try {
-            Statement stmt = connect();
-            assert stmt != null;
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM client");
-            ResultSetMetaData rsmd = resultSet.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(", ");
-                    String columnValue = resultSet.getString(i);
-                    System.out.print(columnValue + " [" + rsmd.getColumnName(i) + "]");
-                }
-                System.out.println(" ");
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            dbError(e);
-        } finally {
-            disconnect();
-        }
-
-    }
-
     public RentingKit getRentingKit(String type) {
         try {
             Statement stmt = connect();
@@ -304,10 +242,7 @@ public class Database_management {
                 disconnect();
                 return null;
             }
-            Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3),
-                    rs.getString(4), rs.getString(5),
-                    rs.getInt(6), rs.getInt(7),
-                    rs.getInt(8), getWallet(rs.getInt(1), stmt));
+            Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), getWallet(rs.getInt(1), stmt));
             rs.close();
             return client;
         } catch (SQLException e) {
@@ -318,7 +253,7 @@ public class Database_management {
         return null;
     }
 
-    public boolean checkTestReservation(Client client, Date date){
+    public boolean checkTestReservation(Client client, Date date) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -395,28 +330,14 @@ public class Database_management {
         }
     }
 
-    public boolean deleteClient(Client client) {
-        try {
-            Statement stmt = connect();
-            assert stmt != null;
-            stmt.executeUpdate("DELETE FROM client WHERE id = '" + client.getId() + "'");
-            return true;
-        } catch (SQLException e) {
-            dbError(e);
-            return false;
-        }   finally {
-            disconnect();
-        }
-    }
-
     public boolean modifyBalance(Client client, Statement transactionStmt) {
         try {
-            if(transactionStmt == null) {
+            if (transactionStmt == null) {
                 Statement stmt = connect();
                 assert stmt != null;
                 stmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
                 disconnect();
-            }else{
+            } else {
                 transactionStmt.executeUpdate("update wallet set balance = '" + client.getWallet().getBalance() + "' where id = '" + client.getWallet().getId() + "'");
             }
             return true;
@@ -467,15 +388,14 @@ public class Database_management {
             List<TimeSlot> timeSlots = new ArrayList<>();
             int id = 1;
             while (rs.next()) {
-                if(rs.getInt(1) == id) {
+                if (rs.getInt(1) == id) {
                     timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
                     id++;
-                }
-                else {
+                } else {
                     do {
                         timeSlots.add(null);
                         id++;
-                    }while(rs.getInt(1) != id);
+                    } while (rs.getInt(1) != id);
                     timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
                     id++;
                 }
@@ -497,8 +417,8 @@ public class Database_management {
                 assert stmt != null;
                 stmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
                 disconnect();
-            }else{
-               transactionStmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
+            } else {
+                transactionStmt.executeUpdate("update client set points = '" + points + "' where id = '" + client.getId() + "'");
             }
         } catch (SQLException e) {
             dbError(e);
@@ -516,10 +436,8 @@ public class Database_management {
             if (reservation.getRentingKit() != null)
                 stmt.executeUpdate("INSERT INTO rentingkit_reservation (reservation, renting_kit, num_of_rents) VALUES ('" + rs.getInt(1) + "', '" + reservation.getRentingKit().getId() + "', '" + reservation.getRentingKit().getNumOfRents() + "')");
             rs.close();
-            if (updatePoints)
-                updatePoints(reservation.getClient().getPoints(), reservation.getClient(), stmt);
-            if(updateWallet)
-                modifyBalance(reservation.getClient(), stmt);
+            if (updatePoints) updatePoints(reservation.getClient().getPoints(), reservation.getClient(), stmt);
+            if (updateWallet) modifyBalance(reservation.getClient(), stmt);
             return commitTransaction();
         } catch (SQLException e) {
             dbError(e);
@@ -539,29 +457,21 @@ public class Database_management {
             stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation.getId() + "'");
             commitTransaction();
             return true;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             dbError(e);
             return false;
-        }finally {
+        } finally {
             disconnect();
         }
     }
 
-
-    public static void main(String[] args) {
-        System.out.println("Connecting to a selected database...");
-        // Open a connection
-        Database_management db = new Database_management();
-        db.printAllClient();
-    }
 
     public boolean modifyPremiumExpiration(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             Date date = getPremiumExpiration(client);
-            if(date == null)
-                return false;
+            if (date == null) return false;
             Calendar calendario = Calendar.getInstance();
             // Aggiungi un anno a date
             calendario.setTime(date);

@@ -24,20 +24,22 @@ public class RentingKit {
         return unitPrice;
     }
 
-    public float getTotPrice(){
-        return unitPrice*numOfRents;
+    public float getTotPrice() {
+        return unitPrice * numOfRents;
     }
 
     public void setNumOfRents(int numOfRents) {
         this.numOfRents = numOfRents;
     }
 
-    public float getTotalPrice(){
-        return unitPrice* numOfRents;
+    public float getTotalPrice() {
+        return unitPrice * numOfRents;
     }
-    public void modifyNumOfRents(int numberOfRents){
+
+    public void modifyNumOfRents(int numberOfRents) {
         this.numOfRents = numberOfRents;
     }
+
     private float unitPrice = 10;
     private int numOfRents;
     private int id;

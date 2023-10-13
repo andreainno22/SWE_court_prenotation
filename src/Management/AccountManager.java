@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
 import de.jollyday.*;
 import Context.*;
 import Database.Database_management;
@@ -20,7 +21,7 @@ public class AccountManager {
     private boolean startMenu = true;
     private final Scanner sc;
 
-    public AccountManager(){
+    public AccountManager() {
         sc = new Scanner(System.in);
         //sc.useDelimiter("[;\r\n]+");
     }
@@ -89,14 +90,11 @@ public class AccountManager {
             boolean telephoneNumberValid = false;
             while (!telephoneNumberValid) {
                 try {
-                        System.out.println("Telephone number [0 = not provided]: ");
-                        //sc = new Scanner(System.in);
-                        telephoneNumber = sc.nextInt();
-                        sc.nextLine();
-                        System.out.println(telephoneNumber);
-                        if (telephoneNumber != 0)
-                            client.setTelephoneNumber(telephoneNumber);
-                        telephoneNumberValid = true;
+                    System.out.println("Telephone number [0 = not provided]: ");
+                    telephoneNumber = sc.nextInt();
+                    sc.nextLine();
+                    if (telephoneNumber != 0) client.setTelephoneNumber(telephoneNumber);
+                    telephoneNumberValid = true;
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong telephone number format. Retry.");
                 }
@@ -107,19 +105,18 @@ public class AccountManager {
                     System.err.println("Email already used or wrong email format. Retry.");
                     System.out.println("Type another email: [0 = Go Back]");
                     email = sc.nextLine();
-                    if(email.equals("0"))
-                        break;
+                    if (email.equals("0")) break;
                     client.setEmail(email);
                 } else {
                     valid = true;
                 }
             }
-            if(valid) {
-                sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + ", welcome to Court prenotation manager." + " Thank you for registering to our service!");
+            if (valid) {
+                sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + "!\nWelcome to Court Prenotation Manager." + "\nThank you for registering to our service!");
                 System.out.println("Registration successful.");
                 System.out.println("You can now login.\n");
                 startMenu = true;
-            }else{
+            } else {
                 startMenu = true;
                 System.out.println("Registration cancelled.");
             }
@@ -195,10 +192,8 @@ public class AccountManager {
         }
         int choice;
 
-        if (client.getIsPremium() == 0)
-            client.setReservationManager(new StandardReservationManager());
-        else
-            client.setReservationManager(new PremiumReservationManager());
+        if (client.getIsPremium() == 0) client.setReservationManager(new StandardReservationManager());
+        else client.setReservationManager(new PremiumReservationManager());
 
         while (true) {
             try {
@@ -248,7 +243,6 @@ public class AccountManager {
                     System.out.println(fmt);
                     System.out.println("Select a Court [0 = Back to Main Menu]: ");
                     while (true) {
-                        //sc = new Scanner(System.in);
                         try {
                             court = sc.nextInt();
                             sc.nextLine();
@@ -267,7 +261,6 @@ public class AccountManager {
                     // aggiunta di court a reservation
                     res.setCourt(courts.get(court - 1));
                     Formatter fmt2 = new Formatter();
-                    //boolean[] available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     List<TimeSlot> available_slots = client.getReservationManager().getTimeSlots(fmt2, date, court);
                     while (true) {
                         System.out.println("Available Time Slots: ");
@@ -285,7 +278,6 @@ public class AccountManager {
                     }
                     switch (choice) {
                         case 1:
-                            //back = true;
                             break;
                         case 2:
                             int slot = 0;
@@ -313,8 +305,7 @@ public class AccountManager {
                                     break;
                                 }
                             }
-                            if (slot == 0)
-                                break;
+                            if (slot == 0) break;
 
                             // aggiunta time slot a reservation
                             TimeSlot ts = available_slots.get(slot - 1);
@@ -327,7 +318,6 @@ public class AccountManager {
                             boolean rentIsValid = false;
                             while (!rentIsValid) {
                                 try {
-                                    //sc = new Scanner(System.in);
                                     int numOfRent = sc.nextInt();
                                     sc.nextLine();
                                     rentIsValid = true;
@@ -335,8 +325,7 @@ public class AccountManager {
                                     if (numOfRent > 0) {
                                         rentingKit.setNumOfRents(numOfRent);
                                         res.setRentingKit(rentingKit);
-                                    } else if (numOfRent == 0)
-                                        res.setRentingKit(null);
+                                    } else if (numOfRent == 0) res.setRentingKit(null);
                                 } catch (InputMismatchException e) {
                                     System.err.println("Wrong input format. Retry");
                                 }
@@ -348,7 +337,6 @@ public class AccountManager {
                                 System.out.println("Reservation successful.");
                                 sendEmail(client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate of reservation: " + res.getDate() + "\nCourt: " + res.getCourt().getId() + "\nTime slot: " + res.getTime_slot().getStart_hour() + "-" + res.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                             } else System.err.println("Reservation failed.");
-                            //todo: inserire un trigger per eliminare le prenotazioni scadute
                             court_selection = false;
                             System.out.println("Going back to Main Menu...\n");
                             break;
@@ -365,17 +353,14 @@ public class AccountManager {
                 System.out.println("ID of reservation to delete: [0 to go back] ");
                 int reservation = 0;
                 boolean valid = false;
-                while (!valid)
-                    try {
-                        //sc = new Scanner(System.in);
-                        reservation = sc.nextInt();
-                        sc.nextLine();
-                        valid = true;
-                    } catch (InputMismatchException e) {
-                        System.err.println("Wrong ID format. Retry.");
-                    }
-                if (reservation == 0)
-                    break;
+                while (!valid) try {
+                    reservation = sc.nextInt();
+                    sc.nextLine();
+                    valid = true;
+                } catch (InputMismatchException e) {
+                    System.err.println("Wrong ID format. Retry.");
+                }
+                if (reservation == 0) break;
                 ArrayList<Integer> ids = client.getReservationManager().getReservationsId(client);
                 boolean found = false;
                 for (int j : ids)
@@ -389,8 +374,7 @@ public class AccountManager {
                         System.out.println("Reservation deleted successfully.");
                         sendEmail(client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + "\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                     } else System.err.println("Error during deletion.");
-                } else
-                    System.err.println("Reservation not found or non-cancellable.");
+                } else System.err.println("Reservation not found or non-cancellable.");
                 break;
             case 3:
                 // stampa delle prenotazioni
@@ -415,8 +399,7 @@ public class AccountManager {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
                         sendEmail(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
-                    } else
-                        System.out.println("Transaction failed.");
+                    } else System.out.println("Transaction failed.");
                 } else {
                     System.out.println("Operation aborted.");
                     System.err.println("Going back to Main Menu...");
@@ -424,12 +407,12 @@ public class AccountManager {
                 break;
             case 5:
                 if (client.getIsPremium() == 0) { // upgrade to premium
-                    System.out.println("Do you want to upgrade to premium? The cost is 20€ for one year and then " +
-                            "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/N]");
+                    System.out.println("Do you want to upgrade to premium? The cost is 20€ for one year and then " + "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/N]");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                         if (setIsPremium(client)) {
                             System.out.println("Upgrade successful.");
+                            sendEmail(client.getEmail(), "Premium Subscription", "Your account has been upgraded to Premium.\nThank you for choosing us!");
                         } else {
                             System.err.println("Upgrade failed.");
                         }
@@ -437,14 +420,15 @@ public class AccountManager {
                         System.out.println("Upgrade aborted.");
                         System.out.println("Going back to Main Menu...");
                     }
-                } else { // manage premium subscription
+                } else {
+                    // manage premium subscription
                     showPremiumExpiration(client);
                     System.out.println("Do you want to renew your subscription? [y/N]");
-                    //sc = new Scanner(System.in);
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                         if (renewPremium(client)) {
                             System.out.println("Renewal successful.");
+                            sendEmail(client.getEmail(), "Premium Subscription", "Your premium subscription has been renewed.\nThank you for choosing us!");
                         } else {
                             System.err.println("Renewal failed.");
                         }
@@ -484,8 +468,7 @@ public class AccountManager {
 
     private boolean renewPremium(Client client) {
         Database_management db = new Database_management();
-        if (client.getWallet().removeMoney(20))
-            return db.modifyPremiumExpiration(client);
+        if (client.getWallet().removeMoney(20)) return db.modifyPremiumExpiration(client);
         else {
             System.err.println("Insufficient funds.");
             return false;
@@ -509,8 +492,7 @@ public class AccountManager {
         MailManager mailManager = new MailManager();
         if (mailManager.createAndSendEmailMessage(email, subject, text))
             System.out.println("A confirmation email has been sent.");
-        else
-            System.err.println("Error sending the email.");
+        else System.err.println("Error sending the email.");
     }
 
 }
