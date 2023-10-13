@@ -1,7 +1,5 @@
 package Management;
 
-import com.sun.tools.javac.Main;
-
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;

@@ -7,13 +7,6 @@ public class Court {
         this.id = id;
     }
 
-    public Court(int id, String type, String terrain_type, int price) {
-        this.id = id;
-        this.type = type;
-        this.terrain_type = terrain_type;
-        this.price = price;
-    }
-
     public Court(int id, float price) {
         this.id = id;
         this.price = price;

@@ -2,10 +2,6 @@ package Context;
 
 import Management.ReservationManager;
 
-import java.util.Map;
-
-import java.sql.Date;
-
 public class Client {
     // Constructor for testing
     public Client(int id, String name, String surname, String email, String password, int telephoneNumber, int isPremium, int points, Wallet wallet) {
@@ -26,10 +22,6 @@ public class Client {
         this.surname = surname;
         this.email = email;
         this.password = password;
-    }
-
-    public Client (int id){
-        this.id = id;
     }
 
     public String getName() {
@@ -102,5 +94,4 @@ public class Client {
     private int points;
     private int isPremium;
     private ReservationManager reservationManager;
-    Map<Integer, Reservation> reservations;
 }

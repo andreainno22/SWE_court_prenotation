@@ -4,18 +4,12 @@ import java.io.ByteArrayInputStream;
 
 import Context.Client;
 import Database.Database_management;
-import Database.Database_management.*;
-
 import Management.AccountManager;
 import org.junit.jupiter.api.*;
 import org.junitpioneer.jupiter.DisableIfTestFails;
 
-import javax.xml.crypto.Data;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -26,11 +20,7 @@ import java.util.ArrayList;
 public class AccountTest {
     private static AccountManager account;
     private String simulatedUserInput;
-    private Client client;
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
+    private static Client testClient;
 
     public void setUp() {
         System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
@@ -75,8 +65,8 @@ public class AccountTest {
     }
 
     @Test
-    public void TestEAddMoney() {
-        simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n100\n7\n3\n";
+    public void TestFAddMoney() {
+        simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n150\n7\n3\n";
         setUp();
 
     }
@@ -94,14 +84,14 @@ public class AccountTest {
     }
 
     @Test
-    public void TestGUpgradePremium() {
+    public void TestIUpgradePremium() {
         simulatedUserInput = "1\ntest1@email\npassword\n5\ny\n7\n3\n";
         setUp();
     }
 
 
     @Test
-    public void TestHMakeReservationPremium() {
+    public void TestJMakeReservationPremium() {
         simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n2\n0\n7\n3\n";
         setUp();
     }
@@ -113,16 +103,16 @@ public class AccountTest {
     }
 
     @Test
-    public void TestIMakeReservationOnHoliday() {
+    public void TestLMakeReservationOnHoliday() {
         String date = "2025-01-01";
         simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
         setUp();
         Database_management db = new Database_management();
-        assertFalse(db.checkTestReservation(client, Date.valueOf(date)));
+        assertFalse(db.checkTestReservation(testClient, Date.valueOf(date)));
     }
 
     @Test
-    public void TestLDeleteReservation() {
+    public void TestMDeleteReservation() {
         Database_management db = new Database_management();
         ArrayList<Integer> reservationsId = db.getReservationsId(testClient.getId());
         int reservationId = reservationsId.get(0);
@@ -130,6 +120,12 @@ public class AccountTest {
         setUp();
         int premiumReservationId = reservationsId.get(1);
         simulatedUserInput = "1\ntest1@email\npassword\n2\n" + premiumReservationId + "\n7\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestNRenewPremium() {
+        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n5\ny\n7\n3\n";
         setUp();
     }
 

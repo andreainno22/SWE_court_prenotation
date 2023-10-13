@@ -1,6 +1,5 @@
 package Management;
 
-import Context.Client;
 import Context.Reservation;
 import Database.Database_management;
 

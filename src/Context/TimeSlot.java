@@ -13,10 +13,6 @@ public class TimeSlot {
         this.ts = ts;
     }
 
-    public TimeSlot(int ts){
-        this.ts = ts;
-    }
-
     public int getTs() {
         return ts;
     }
@@ -31,6 +27,5 @@ public class TimeSlot {
 
     public void printAllTimeSlots(Formatter fmt) {
         fmt.format("%-15d%-15s%-15s\n", ts, start_hour, finish_hour);
-        //System.out.println(start_hour + " - " + finish_hour);
     }
 }
