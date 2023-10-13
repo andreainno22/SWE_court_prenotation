@@ -112,19 +112,17 @@ public class Database_management {
         }
     }
 
-    public boolean deleteTestClient(String email) {
+    public void deleteTestClient(String email) {
         try {
             Statement stmt = connect();
             assert stmt != null;
             stmt.executeUpdate("DELETE FROM client WHERE email = '" + email + "'");
-            return true;
         } catch (SQLException e) {
             System.err.println("Error deleting user from database.");
             System.err.println("ERROR: " + e);
         } finally {
             disconnect();
         }
-        return false;
     }
 
 
