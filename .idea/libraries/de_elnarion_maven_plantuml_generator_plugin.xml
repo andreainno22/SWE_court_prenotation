@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="de.elnarion.maven.plantuml.generator.plugin" type="repository">
+    <properties maven-id="de.elnarion.maven:plantuml-generator-maven-plugin:2.3.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/elnarion/maven/plantuml-generator-maven-plugin/2.3.0/plantuml-generator-maven-plugin-2.3.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.13.0/commons-io-2.13.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/de/elnarion/util/plantuml-generator-util/2.3.0/plantuml-generator-util-2.3.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/github/classgraph/classgraph/4.8.162/classgraph-4.8.162.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/javassist/javassist/3.29.2-GA/javassist-3.29.2-GA.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

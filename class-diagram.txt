@@ -1,0 +1,170 @@
+@startuml
+
+class Context.Client {
+	{field} +email : String
+	{field} -id : int
+	{field} +isPremium : int
+	{field} -name : String
+	{field} -password : String
+	{field} +points : int
+	{field} -surname : String
+	{field} +telephoneNumber : int
+}
+
+
+class Context.Court {
+	{field} #id : int
+	{field} #price : float
+	{field} #terrain_type : String
+	{field} +type : String
+	{method} +printAllCourt ( paramFormatter1 : java.util.Formatter , paramboolean2 : boolean ) : void
+}
+
+
+class Context.RentingKit {
+	{field} -id : int
+	{field} +numOfRents : int
+	{field} -type : String
+	{field} -unitPrice : float
+	{method} +getTotPrice () : float
+	{method} +getTotalPrice () : float
+	{method} +modifyNumOfRents ( paramint1 : int ) : void
+}
+
+
+class Context.Reservation {
+	{field} +date : java.sql.Date
+	{field} -id : int
+	{field} +isPremium : int
+	{field} +price : float
+}
+
+
+class Context.TimeSlot {
+	{field} ~finish_hour : String
+	{field} ~start_hour : String
+	{field} ~ts : int
+	{method} +printAllTimeSlots ( paramFormatter1 : java.util.Formatter ) : void
+}
+
+
+class Context.Wallet {
+	{field} -balance : float
+	{field} -id : int
+	{method} +addMoney ( paramfloat1 : float ) : void
+	{method} +removeMoney ( paramfloat1 : float ) : boolean
+}
+
+
+class Database.Database_management {
+	{field} {static} ~DB_URL : String
+	{field} {static} ~PASS : String
+	{field} {static} ~USER : String
+	{field} ~conn : java.sql.Connection
+	{field} {static} ~logging : Database.Database_management$Logging
+	{method} +checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean
+	{method} -commitTransaction () : boolean
+	{method} -connect () : java.sql.Statement
+	{method} -connectTransaction () : java.sql.Statement
+	{method} -dbError ( paramException1 : Exception ) : void
+	{method} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
+	{method} +deleteTestClient ( paramString1 : String ) : void
+	{method} -disconnect () : void
+	{method} +getClient ( paramString1 : String , paramString2 : String ) : Context.Client
+	{method} +getCourt () : java.util.List
+	{method} +getPremiumExpiration ( paramClient1 : Context.Client ) : java.sql.Date
+	{method} +getRentingKit ( paramString1 : String ) : Context.RentingKit
+	{method} +getReservationById ( paramint1 : int ) : Context.Reservation
+	{method} +getReservationsId ( paramint1 : int ) : java.util.ArrayList
+	{method} +getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List
+	{method} ~getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet
+	{method} +insertClient ( paramClient1 : Context.Client ) : int
+	{method} +makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean
+	{method} +modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean
+	{method} +modifyPremium ( paramClient1 : Context.Client ) : boolean
+	{method} +modifyPremiumExpiration ( paramClient1 : Context.Client ) : boolean
+	{method} -newStatement () : java.sql.Statement
+	{method} +printAllFutureReservations ( paramint1 : int ) : void
+	{method} +printAllReservations ( paramint1 : int ) : void
+	{method} +updatePoints ( paramint1 : int , paramClient2 : Context.Client , paramStatement3 : java.sql.Statement ) : void
+}
+
+
+class Management.AccountManager {
+	{field} -logged : boolean
+	{field} -sc : java.util.Scanner
+	{field} -startMenu : boolean
+	{method} -clientMenu ( paramClient1 : Context.Client ) : void
+	{method} -getDateTimeUTC () : String
+	{method}  {static} -isValidEmail ( paramString1 : String ) : boolean
+	{method} +loginAccount () : void
+	{method} +registerAccount () : void
+	{method} -renewPremium ( paramClient1 : Context.Client ) : boolean
+	{method} -sendEmail ( paramString1 : String , paramString2 : String , paramString3 : String ) : void
+	{method} -setIsPremium ( paramClient1 : Context.Client ) : boolean
+	{method} -showPremiumExpiration ( paramClient1 : Context.Client ) : void
+	{method} +startMenu () : void
+	{method} +topUpWallet ( paramClient1 : Context.Client , paramfloat2 : float ) : boolean
+	{method} +updateClient ( paramClient1 : Context.Client ) : Context.Client
+}
+
+
+class Management.GeneralLogging {
+	{field} -FILENAME : String
+	{field} -fh : java.util.logging.FileHandler
+	{field} -file : java.io.File
+	{field} ~format : java.text.SimpleDateFormat
+	{field} -logger : java.util.logging.Logger
+	{method} +log ( paramException1 : Exception ) : void
+}
+
+
+class Management.MailManager {
+	{field} {static} +pass : String
+	{field} {static} +sender : String
+	{method} +createAndSendEmailMessage ( paramString1 : String , paramString2 : String , paramString3 : String ) : boolean
+	{method} -sendEmailMessage ( paramMailManager$Email1 : Management.MailManager$Email ) : void
+}
+
+
+class Management.PremiumReservationManager {
+	{field} -discount : float
+	{method} +makeReservation ( paramReservation1 : Context.Reservation ) : boolean
+}
+
+
+abstract class Management.ReservationManager {
+	{field} #giftPoints : int
+	{field} #reservationPoints : int
+	{method} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
+	{method} +getCourt ( paramFormatter1 : java.util.Formatter , paramboolean2 : boolean ) : java.util.List
+	{method} +getRentingKit ( paramString1 : String ) : Context.RentingKit
+	{method} +getReservationById ( paramint1 : int ) : Context.Reservation
+	{method} +getReservationsId ( paramClient1 : Context.Client ) : java.util.ArrayList
+	{method} +getTimeSlots ( paramFormatter1 : java.util.Formatter , paramDate2 : java.sql.Date , paramint3 : int ) : java.util.List
+	{method}  {abstract} +makeReservation ( paramReservation1 : Context.Reservation ) : boolean
+	{method} #makeReservation ( paramReservation1 : Context.Reservation , paramfloat2 : float , paramboolean3 : boolean ) : boolean
+	{method} +printAllFutureReservations ( paramClient1 : Context.Client ) : void
+	{method} +printAllReservations ( paramClient1 : Context.Client ) : void
+}
+
+
+class Management.StandardReservationManager {
+	{method} +makeReservation ( paramReservation1 : Context.Reservation ) : boolean
+}
+
+
+
+
+Context.Client -->  Context.Wallet : wallet
+Context.Client -->  Management.ReservationManager : reservationManager
+Context.Reservation -->  Context.Client : client
+Context.Reservation -->  Context.Court : court
+Context.Reservation -->  Context.RentingKit : rentingKit
+Context.Reservation -->  Context.TimeSlot : time_slot
+Management.PremiumReservationManager --|>  Management.ReservationManager
+Management.StandardReservationManager --|>  Management.ReservationManager
+
+hide 
+
+@enduml

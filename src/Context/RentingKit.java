@@ -12,6 +12,10 @@ public class RentingKit {
         return numOfRents;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public int getId() {
         return id;
     }
@@ -28,17 +32,9 @@ public class RentingKit {
         this.numOfRents = numOfRents;
     }
 
-    public float getTotalPrice() {
-        return unitPrice * numOfRents;
-    }
-
-    public void modifyNumOfRents(int numberOfRents) {
-        this.numOfRents = numberOfRents;
-    }
-
-    private float unitPrice = 10;
+    private final float unitPrice;
     private int numOfRents;
-    private int id;
-    private String type;
+    private final int id;
+    private final String type;
 
 }

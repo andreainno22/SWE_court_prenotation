@@ -310,9 +310,9 @@ public class AccountManager {
                             res.setTime_slot(ts);
                             RentingKit rentingKit = client.getReservationManager().getRentingKit(res.getCourt().getType());
                             if (client.getIsPremium() == 0)
-                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
+                                System.out.println("How many " + rentingKit.getType() + " kits do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€] [0 = None]");
                             else
-                                System.out.println("How many renting kit do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice() * 0.9 + "€] [0 = None]");
+                                System.out.println("How many " + rentingKit.getType() + " kits do you want to rent? [Unit price = " + rentingKit.getUnitPrice() + "€. Your price (-10%) = " + rentingKit.getUnitPrice() * 0.9 + "€] [0 = None]");
                             boolean rentIsValid = false;
                             while (!rentIsValid) {
                                 try {

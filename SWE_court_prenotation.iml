@@ -34,8 +34,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="junit.jupiter" level="project" />
+    <orderEntry type="library" name="junit.jupiter" level="project" />
     <orderEntry type="library" name="junit.pioneer" level="project" />
     <orderEntry type="library" name="de.jollyday" level="project" />
+    <orderEntry type="library" name="apache.directory.studio.commons.io" level="project" />
+    <orderEntry type="library" name="de.elnarion.maven.plantuml.generator.plugin" level="project" />
   </component>
 </module>
