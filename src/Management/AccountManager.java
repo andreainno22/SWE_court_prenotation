@@ -21,7 +21,6 @@ public class AccountManager {
 
     public AccountManager() {
         sc = new Scanner(System.in);
-        //sc.useDelimiter("[;\r\n]+");
     }
 
     private static boolean isValidEmail(String email) {
@@ -44,12 +43,12 @@ public class AccountManager {
             int choice;
             while (true) {
                 try {
-                    //sc = new Scanner(System.in);
                     choice = sc.nextInt();
                     sc.nextLine();
                     break;
                 } catch (InputMismatchException ex) {
                     System.err.println("Wrong choice format.Retry.");
+                    sc.nextLine();
                 }
             }
             switch (choice) {
@@ -95,6 +94,7 @@ public class AccountManager {
                     telephoneNumberValid = true;
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong telephone number format. Retry.");
+                    sc.nextLine();
                 }
             }
             while (!valid) {
@@ -124,7 +124,6 @@ public class AccountManager {
     public void loginAccount() {
         while (!startMenu) {
             while (!logged) {
-                //Scanner sc;
                 System.out.println("Email: ");
                 String email = sc.nextLine();
                 System.out.println("Password: ");
@@ -195,12 +194,12 @@ public class AccountManager {
 
         while (true) {
             try {
-                //sc = new Scanner(System.in);
                 choice = sc.nextInt();
                 sc.nextLine();
                 break;
             } catch (InputMismatchException ex) {
                 System.err.println("Wrong choice format. Retry.");
+                sc.nextLine();
             }
         }
         switch (choice) {
@@ -251,6 +250,7 @@ public class AccountManager {
                             }
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong court format. Retry.");
+                            sc.nextLine();
                         }
                     }
                     if (court == 0) {
@@ -271,6 +271,7 @@ public class AccountManager {
                             break;
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong choice format. Going back to Court Selection...");
+                            sc.nextLine();
                             break;
                         }
                     }
@@ -300,6 +301,7 @@ public class AccountManager {
                                     }
                                 } catch (InputMismatchException e) {
                                     System.err.println("Wrong input format. Retry");
+                                    sc.nextLine();
                                     break;
                                 }
                             }
@@ -326,6 +328,7 @@ public class AccountManager {
                                     } else if (numOfRent == 0) res.setRentingKit(null);
                                 } catch (InputMismatchException e) {
                                     System.err.println("Wrong input format. Retry");
+                                    sc.nextLine();
                                 }
                             }
                             // aggiunta della prenotazione al database
@@ -357,6 +360,7 @@ public class AccountManager {
                     valid = true;
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong ID format. Retry.");
+                    sc.nextLine();
                 }
                 if (reservation == 0) break;
                 ArrayList<Integer> ids = client.getReservationManager().getReservationsId(client);
