@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Formatter;
 
 public interface ReservationDao {
-    public void printAllReservations(int Client);
-    public void printAllFutureReservations(int Client);
-    public Reservation getReservationById(int id);
-    public ArrayList<Integer> getReservationsId(int Client);
-    public boolean checkTestReservation(Client client, Date date);
-    public boolean makeReservation(Reservation reservation, boolean updatePoints, boolean updateWallet);
-    public boolean deleteReservation(Reservation reservation, Client client);
+    void printAllReservations(int Client);
+    void printAllFutureReservations(int Client);
+    Reservation getReservationById(int id);
+    ArrayList<Integer> getReservationsId(int Client);
+    boolean checkTestReservation(Client client, Date date);
+    boolean makeReservation(Reservation reservation, boolean updatePoints, boolean updateWallet);
+    boolean deleteReservation(Reservation reservation, Client client);
 }

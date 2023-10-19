@@ -6,11 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class RentingKitDaoImpl {
+public class RentingKitDaoImpl implements RentingKitDao{
+    private final DatabaseManager db = new DatabaseManager();
     @Override
     public RentingKit getRentingKit(String type) {
         try {
-            Statement stmt = connect();
+            Statement stmt = db.connect();
             assert stmt != null;
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM renting_kits WHERE type = '" + type + "'");
             resultSet.next();
@@ -18,9 +19,9 @@ public class RentingKitDaoImpl {
             resultSet.close();
             return rentingKit;
         } catch (SQLException e) {
-            dbError(e);
+            db.dbError(e);
         } finally {
-            disconnect();
+            db.disconnect();
         }
         return null;
     }

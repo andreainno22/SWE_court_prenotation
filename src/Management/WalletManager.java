@@ -1,14 +1,16 @@
 package Management;
 
 import Context.Client;
-import Database.DatabaseManager;
+//import Database.DatabaseManager;
+import Database.WalletDaoImpl;
 
 public class WalletManager {
-    private final DatabaseManager db = new DatabaseManager();
+    //private final DatabaseManager db = new DatabaseManager();
 
+    private final WalletDaoImpl walletDao = new WalletDaoImpl();
     public boolean topUpWallet(float money, Client client) {
         client.getWallet().addMoney(money);
-        return db.modifyBalance(client, null);
+        return walletDao.modifyBalance(client, null);
     }
 
     public boolean withdrawalWallet(float money, Client client){

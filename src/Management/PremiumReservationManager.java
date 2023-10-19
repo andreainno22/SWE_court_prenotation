@@ -1,6 +1,7 @@
 package Management;
 
 import Context.Reservation;
+import Database.ReservationDaoImpl;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -22,7 +23,8 @@ public class PremiumReservationManager extends ReservationManager {
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
                 reservation.setPrice(0);
                 //Database_management db = new Database_management();
-                return db.makeReservation(reservation, true, false);
+                ReservationDaoImpl reservationDao = new ReservationDaoImpl();
+                return reservationDao.makeReservation(reservation, true, false);
             }
         }
         float price;

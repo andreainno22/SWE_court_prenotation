@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourtDaoImpl implements CourtDao{
+    private final DatabaseManager db = new DatabaseManager();
 
     @Override
     public List<Court> getCourt() {
         try {
-            Statement stmt = connect();
+            Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
             List<Court> court_type_prices = new ArrayList<>();
@@ -31,10 +32,10 @@ public class CourtDaoImpl implements CourtDao{
             rs.close();
             return court_type_prices;
         } catch (SQLException e) {
-            dbError(e);
+            db.dbError(e);
             return null;
         } finally {
-            disconnect();
+            db.disconnect();
         }
     }
 }

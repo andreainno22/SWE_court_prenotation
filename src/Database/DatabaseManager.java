@@ -15,11 +15,11 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 
-package class DatabaseManager {
-    static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
-    static final String USER = "swecourtprentiondb_recordfell";
-    static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
-    static Logging logging = null;
+class DatabaseManager {
+    private static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
+    private static final String USER = "swecourtprentiondb_recordfell";
+    private static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
+    private static Logging logging = null;
 
     private static class Logging {
 
@@ -46,7 +46,7 @@ package class DatabaseManager {
         }
     }
 
-    private void dbError(Exception e) {
+    void dbError(Exception e) {
         if (logging == null) logging = new Logging();
         System.err.println("Database responded with an error. See log file for more information.");
         logging.logger.severe("Exception: " + e);
@@ -54,7 +54,7 @@ package class DatabaseManager {
 
     Connection conn = null;
 
-    private Statement connect() {
+    Statement connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -68,7 +68,7 @@ package class DatabaseManager {
         return null;
     }
 
-    private Statement newStatement() {
+    Statement newStatement() {
         try {
             if (conn != null) return conn.createStatement();
         } catch (SQLException e) {
@@ -77,7 +77,7 @@ package class DatabaseManager {
         return null;
     }
 
-    private Statement connectTransaction() {
+    Statement connectTransaction() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -92,7 +92,7 @@ package class DatabaseManager {
         return null;
     }
 
-    private boolean commitTransaction() throws SQLException {
+    boolean commitTransaction() throws SQLException {
         try {
             conn.commit();
             return true;
@@ -103,7 +103,7 @@ package class DatabaseManager {
         }
     }
 
-    private void disconnect() {
+    void disconnect() {
         try {
             if (conn != null) {
                 conn.close();
@@ -114,7 +114,7 @@ package class DatabaseManager {
         }
     }
 
-    public void deleteTestClient(String email) {
+    /*public void deleteTestClient(String email) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -125,10 +125,10 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
 
-    public void printAllReservations(int Client) {
+    /*public void printAllReservations(int Client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -146,9 +146,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public void printAllFutureReservations(int Client) {
+    /*public void printAllFutureReservations(int Client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -170,9 +170,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public Reservation getReservationById(int id) {
+    /*public Reservation getReservationById(int id) {
         try {
             Statement stmt1 = connect();
             assert stmt1 != null;
@@ -193,9 +193,9 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
-    public ArrayList<Integer> getReservationsId(int Client) {
+    /*public ArrayList<Integer> getReservationsId(int Client) {
         Statement stmt = connect();
         assert stmt != null;
         try {
@@ -212,10 +212,10 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
 
-    public RentingKit getRentingKit(String type) {
+    /*public RentingKit getRentingKit(String type) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -230,9 +230,9 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
-    public Client getClient(String email, String password) {
+    /*public Client getClient(String email, String password) {
         try {
             Statement stmt = connect();
             //assert stmt != null;
@@ -255,9 +255,9 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
-    public boolean checkTestReservation(Client client, Date date) {
+    /*public boolean checkTestReservation(Client client, Date date) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -276,9 +276,9 @@ package class DatabaseManager {
             disconnect();
         }
         return false;
-    }
+    }*/
 
-    Wallet getWallet(int id, Statement stmt) {
+    /*Wallet getWallet(int id, Statement stmt) {
         try {
             ResultSet rs = stmt.executeQuery("select * from wallet where client = '" + id + "'");
             rs.next();
@@ -291,9 +291,9 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
-    public Date getPremiumExpiration(Client client) {
+    /*public Date getPremiumExpiration(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -308,9 +308,9 @@ package class DatabaseManager {
             disconnect();
         }
         return null;
-    }
+    }*/
 
-    public int insertClient(Client client) {
+    /*public int insertClient(Client client) {
         Statement stmt = connectTransaction();
         assert stmt != null;
         try {
@@ -332,9 +332,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public boolean modifyBalance(Client client, Statement transactionStmt) {
+    /*public boolean modifyBalance(Client client, Statement transactionStmt) {
         try {
             if (transactionStmt == null) {
                 Statement stmt = connect();
@@ -355,9 +355,9 @@ package class DatabaseManager {
             //e.printStackTrace();
             return false;
         }
-    }
+    }*/
 
-    public List<Court> getCourt() {
+    /*public List<Court> getCourt() {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -382,9 +382,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public List<TimeSlot> getTimeSlots(Date date, int court_id) {
+    /*public List<TimeSlot> getTimeSlots(Date date, int court_id) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -412,9 +412,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public void updatePoints(int points, Client client, Statement transactionStmt) {
+    /*public void updatePoints(int points, Client client, Statement transactionStmt) {
         try {
             if (transactionStmt == null) {
                 Statement stmt = connect();
@@ -428,9 +428,9 @@ package class DatabaseManager {
             dbError(e);
             disconnect();
         }
-    }
+    }*/
 
-    public boolean makeReservation(Reservation reservation, boolean updatePoints, boolean updateWallet) {
+    /*public boolean makeReservation(Reservation reservation, boolean updatePoints, boolean updateWallet) {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
@@ -449,9 +449,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public boolean deleteReservation(Reservation reservation, Client client) {
+    /*public boolean deleteReservation(Reservation reservation, Client client) {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
@@ -467,10 +467,10 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
 
-    public boolean modifyPremiumExpiration(Client client) {
+    /*public boolean modifyPremiumExpiration(Client client) {
         try {
             Statement stmt = connect();
             assert stmt != null;
@@ -494,9 +494,9 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 
-    public boolean modifyPremium(Client client) {
+    /*public boolean modifyPremium(Client client) {
         try {
             Statement stmt = connectTransaction();
             assert stmt != null;
@@ -523,5 +523,5 @@ package class DatabaseManager {
         } finally {
             disconnect();
         }
-    }
+    }*/
 }

@@ -6,5 +6,5 @@ import java.sql.Date;
 import java.util.List;
 
 public interface TimeSlotDao {
-    public List<TimeSlot> getTimeSlots(Date date, int court_id);
+    List<TimeSlot> getTimeSlots(Date date, int court_id);
 }

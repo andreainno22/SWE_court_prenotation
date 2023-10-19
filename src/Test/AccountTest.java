@@ -3,7 +3,8 @@ package Test;
 import java.io.ByteArrayInputStream;
 
 import Context.Client;
-import Database.DatabaseManager;
+import Database.ClientDaoImpl;
+import Database.ReservationDaoImpl;
 import Management.AccountManager;
 import org.junit.jupiter.api.*;
 import org.junitpioneer.jupiter.DisableIfTestFails;
@@ -31,9 +32,9 @@ public class AccountTest {
     @Test
     public void TestARegistration() {
         simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n3\n";
-        DatabaseManager db = new DatabaseManager();
+        ClientDaoImpl clientDao = new ClientDaoImpl();
         setUp();
-        Client client = db.getClient("test1@email", "password");
+        Client client = clientDao.getClient("test1@email", "password");
         assertNotNull(client);
         testClient = client;
     }
@@ -107,14 +108,14 @@ public class AccountTest {
         String date = "2025-01-01";
         simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
         setUp();
-        DatabaseManager db = new DatabaseManager();
-        assertFalse(db.checkTestReservation(testClient, Date.valueOf(date)));
+        ReservationDaoImpl reservationDao = new ReservationDaoImpl();
+        assertFalse(reservationDao.checkTestReservation(testClient, Date.valueOf(date)));
     }
 
     @Test
     public void TestMDeleteReservation() {
-        DatabaseManager db = new DatabaseManager();
-        ArrayList<Integer> reservationsId = db.getReservationsId(testClient.getId());
+        ReservationDaoImpl reservationDao = new ReservationDaoImpl();
+        ArrayList<Integer> reservationsId = reservationDao.getReservationsId(testClient.getId());
         int reservationId = reservationsId.get(0);
         simulatedUserInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
         setUp();
@@ -131,8 +132,8 @@ public class AccountTest {
 
     @AfterAll
     static void tearDown() {
-        DatabaseManager db = new DatabaseManager();
-        db.deleteTestClient("test1@email");
+        ClientDaoImpl clientDao = new ClientDaoImpl();
+        clientDao.deleteTestClient("test1@email");
     }
 
 }

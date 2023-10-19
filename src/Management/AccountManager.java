@@ -10,22 +10,24 @@ import java.util.regex.Matcher;
 
 import de.jollyday.*;
 import Context.*;
-import Database.DatabaseManager;
+import Database.ClientDaoImpl;
 
 import java.sql.Date;
 
 public class AccountManager {
     private boolean logged = false;
     private boolean startMenu = true;
-    private final Scanner sc;
+    private final Scanner sc = new Scanner(System.in);
     private Client client;
-    private final DatabaseManager db;
+    //private final DatabaseManager db;
+
+    private final ClientDaoImpl clientDao = new ClientDaoImpl();
     private final WalletManager walletManager = new WalletManager();
 
-    public AccountManager() {
-        this.db = new DatabaseManager();
+    /*public AccountManager() {
+        //this.db = new DatabaseManager();
         sc = new Scanner(System.in);
-    }
+    }*/
 
     private static boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
@@ -103,7 +105,7 @@ public class AccountManager {
             }
             while (!valid) {
                 // fatto controllo sulla validità dell'email
-                if (!isValidEmail(email) || db.insertClient(newClient) == -1) {
+                if (!isValidEmail(email) || clientDao.insertClient(newClient) == -1) {
                     System.err.println("Email already used or wrong email format. Retry.");
                     System.out.println("Type another email: [0 = Go Back]");
                     email = sc.nextLine();
@@ -133,7 +135,7 @@ public class AccountManager {
                 System.out.println("Password: ");
                 String password = sc.nextLine();
                 //Database_management db = new Database_management();
-                client = db.getClient(email, password);
+                client = clientDao.getClient(email, password);
                 if (client != null) {
                     logged = true;
                     System.out.println("Login successful.\n");
@@ -156,7 +158,7 @@ public class AccountManager {
 
     public Client updateClient() {
         //Database_management db = new Database_management();
-        return db.getClient(client.getEmail(), client.getPassword());
+        return clientDao.getClient(client.getEmail(), client.getPassword());
     }
 
    /* public boolean topUpWallet(float money) {
@@ -465,7 +467,7 @@ public class AccountManager {
 
         if (walletManager.withdrawalWallet(20, client)) {
             client.setIsPremium(1);
-            return db.modifyPremium(client);
+            return clientDao.modifyPremium(client);
         } else {
             System.err.println("Insufficient funds.");
             return false;
@@ -474,7 +476,7 @@ public class AccountManager {
 
     private boolean renewPremium() {
         //Database_management db = new Database_management();
-        if (walletManager.withdrawalWallet(20, client)) return db.modifyPremiumExpiration(client);
+        if (walletManager.withdrawalWallet(20, client)) return clientDao.modifyPremiumExpiration(client);
         else {
             System.err.println("Insufficient funds.");
             return false;
@@ -483,7 +485,7 @@ public class AccountManager {
 
     private void showPremiumExpiration() {
         //Database_management db = new Database_management();
-        Date isPremiumDate = db.getPremiumExpiration(client);
+        Date isPremiumDate = clientDao.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
 

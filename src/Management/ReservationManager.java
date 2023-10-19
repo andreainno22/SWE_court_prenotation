@@ -1,8 +1,9 @@
 package Management;
 
 import Context.*;
-import Database.DatabaseManager;
+//import Database.DatabaseManager;
 import Context.TimeSlot;
+import Database.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -12,14 +13,19 @@ import java.util.List;
 public abstract class ReservationManager {
     protected final int reservationPoints = 10;
     protected final int giftPoints = 100;
-    protected final DatabaseManager db = new DatabaseManager();
+    //protected final DatabaseManager db = new DatabaseManager();
     private final WalletManager walletManager = new WalletManager();
+    private final CourtDaoImpl courtDao = new CourtDaoImpl();
+
+    private final RentingKitDaoImpl rentingKitDao = new RentingKitDaoImpl();
+    private final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
+    private  final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
 
     public abstract boolean makeReservation(Reservation reservation);
 
     public List<TimeSlot> getTimeSlots(Formatter fmt, Date date, int court) {
         //Database_management db = new Database_management();
-        List<TimeSlot> time_slots = (db.getTimeSlots(date, court));
+        List<TimeSlot> time_slots = (timeSlotDao.getTimeSlots(date, court));
         System.out.println(time_slots.size());
         fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
         for (TimeSlot timeSlot : time_slots) {
@@ -31,7 +37,7 @@ public abstract class ReservationManager {
 
     public List<Court> getCourt(Formatter fmt, boolean showDiscount) {
         //Database_management db = new Database_management();
-        List<Court> court_type_prices = db.getCourt();
+        List<Court> court_type_prices = courtDao.getCourt();
         if (!showDiscount)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
@@ -44,17 +50,17 @@ public abstract class ReservationManager {
 
     public void printAllReservations(Client client) {
         //Database_management db = new Database_management();
-        db.printAllReservations(client.getId());
+        reservationDao.printAllReservations(client.getId());
     }
 
     public ArrayList<Integer> getReservationsId(Client client) {
         //Database_management db = new Database_management();
-        return db.getReservationsId(client.getId());
+        return reservationDao.getReservationsId(client.getId());
     }
 
     public Reservation getReservationById(int id) {
         //Database_management db = new Database_management();
-        return db.getReservationById(id);
+        return reservationDao.getReservationById(id);
     }
 
     public boolean deleteReservation(Reservation reservation, Client client) {
@@ -63,17 +69,17 @@ public abstract class ReservationManager {
         if (reservation.getPrice() == 0)
             client.setPoints(client.getPoints() + giftPoints);
         //Database_management db = new Database_management();
-        return db.deleteReservation(reservation, client);
+        return reservationDao.deleteReservation(reservation, client);
     }
 
     public void printAllFutureReservations(Client client) {
         //Database_management db = new Database_management();
-        db.printAllFutureReservations(client.getId());
+        reservationDao.printAllFutureReservations(client.getId());
     }
 
     public RentingKit getRentingKit(String type) {
         //Database_management db = new Database_management();
-        return db.getRentingKit(type);
+        return rentingKitDao.getRentingKit(type);
     }
 
     protected boolean makeReservation(Reservation reservation, float price, boolean isPremium) {
@@ -86,7 +92,7 @@ public abstract class ReservationManager {
             //Database_management db = new Database_management();
             //reservation.getClient().getWallet().removeMoney(price);
             walletManager.withdrawalWallet(price, reservation.getClient());
-            return db.makeReservation(reservation, isPremium, true);
+            return reservationDao.makeReservation(reservation, isPremium, true);
         }
     }
 }
