@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 
 import de.jollyday.*;
 import Context.*;
-import Database.Database_management;
+import Database.DatabaseManager;
 
 import java.sql.Date;
 
@@ -18,8 +18,12 @@ public class AccountManager {
     private boolean logged = false;
     private boolean startMenu = true;
     private final Scanner sc;
+    private Client client;
+    private final DatabaseManager db;
+    private final WalletManager walletManager = new WalletManager();
 
     public AccountManager() {
+        this.db = new DatabaseManager();
         sc = new Scanner(System.in);
     }
 
@@ -81,8 +85,8 @@ public class AccountManager {
             String email = sc.nextLine();
             System.out.println("Password: ");
             String password = sc.nextLine();
-            Client client = new Client(name, surname, email, password);
-            Database_management db = new Database_management();
+            Client newClient = new Client(name, surname, email, password);
+            //Database_management db = new Database_management();
             int telephoneNumber;
             boolean telephoneNumberValid = false;
             while (!telephoneNumberValid) {
@@ -90,7 +94,7 @@ public class AccountManager {
                     System.out.println("Telephone number [0 = not provided]: ");
                     telephoneNumber = sc.nextInt();
                     sc.nextLine();
-                    if (telephoneNumber != 0) client.setTelephoneNumber(telephoneNumber);
+                    if (telephoneNumber != 0) newClient.setTelephoneNumber(telephoneNumber);
                     telephoneNumberValid = true;
                 } catch (InputMismatchException e) {
                     System.err.println("Wrong telephone number format. Retry.");
@@ -99,18 +103,18 @@ public class AccountManager {
             }
             while (!valid) {
                 // fatto controllo sulla validità dell'email
-                if (!isValidEmail(email) || db.insertClient(client) == -1) {
+                if (!isValidEmail(email) || db.insertClient(newClient) == -1) {
                     System.err.println("Email already used or wrong email format. Retry.");
                     System.out.println("Type another email: [0 = Go Back]");
                     email = sc.nextLine();
                     if (email.equals("0")) break;
-                    client.setEmail(email);
+                    newClient.setEmail(email);
                 } else {
                     valid = true;
                 }
             }
             if (valid) {
-                sendEmail(client.getEmail(), "Registration successful", "Hi, " + client.getName() + " " + client.getSurname() + "!\nWelcome to Court Prenotation Manager." + "\nThank you for registering to our service!");
+                sendEmail(newClient.getEmail(), "Registration successful", "Hi, " + newClient.getName() + " " + newClient.getSurname() + "!\nWelcome to Court Prenotation Manager." + "\nThank you for registering to our service!");
                 System.out.println("Registration successful.");
                 System.out.println("You can now login.\n");
                 startMenu = true;
@@ -128,13 +132,13 @@ public class AccountManager {
                 String email = sc.nextLine();
                 System.out.println("Password: ");
                 String password = sc.nextLine();
-                Database_management db = new Database_management();
-                Client client = db.getClient(email, password);
+                //Database_management db = new Database_management();
+                client = db.getClient(email, password);
                 if (client != null) {
                     logged = true;
                     System.out.println("Login successful.\n");
                     while (logged) {
-                        clientMenu(client);
+                        clientMenu();
                     }
                     startMenu = true;
                     return;
@@ -150,19 +154,19 @@ public class AccountManager {
         }
     }
 
-    public Client updateClient(Client client) {
-        Database_management db = new Database_management();
+    public Client updateClient() {
+        //Database_management db = new Database_management();
         return db.getClient(client.getEmail(), client.getPassword());
     }
 
-    public boolean topUpWallet(Client client, float money) {
-        Database_management db = new Database_management();
+   /* public boolean topUpWallet(float money) {
+        //Database_management db = new Database_management();
         client.getWallet().addMoney(money);
         return db.modifyBalance(client, null);
-    }
+    }*/
 
-    private void clientMenu(Client client) {
-        client = updateClient(client);
+    private void clientMenu() {
+        client = updateClient();
         System.out.println("\nHello " + client.getName() + " " + client.getSurname() + "!");
         if (client.getIsPremium() == 0) {
             System.out.println("You are not subscribed to Premium.");
@@ -397,7 +401,7 @@ public class AccountManager {
                         System.err.println("Wrong input format. Going back to Main Menu...");
                         break;
                     }
-                    if (topUpWallet(client, money)) {
+                    if (walletManager.topUpWallet(money, client)) {
                         System.out.println("Money added successfully.");
                         String dateTime = getDateTimeUTC();
                         sendEmail(client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
@@ -412,7 +416,7 @@ public class AccountManager {
                     System.out.println("Do you want to upgrade to premium? The cost is 20€ for one year and then " + "you can book your court with a\n 10% discount and you unlock a points system for getting bookings for free![y/N]");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
-                        if (setIsPremium(client)) {
+                        if (setIsPremium()) {
                             System.out.println("Upgrade successful.");
                             sendEmail(client.getEmail(), "Premium Subscription", "Your account has been upgraded to Premium.\nThank you for choosing us!");
                         } else {
@@ -424,11 +428,11 @@ public class AccountManager {
                     }
                 } else {
                     // manage premium subscription
-                    showPremiumExpiration(client);
+                    showPremiumExpiration();
                     System.out.println("Do you want to renew your subscription? [y/N]");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
-                        if (renewPremium(client)) {
+                        if (renewPremium()) {
                             System.out.println("Renewal successful.");
                             sendEmail(client.getEmail(), "Premium Subscription", "Your premium subscription has been renewed.\nThank you for choosing us!");
                         } else {
@@ -456,10 +460,10 @@ public class AccountManager {
         }
     }
 
-    private boolean setIsPremium(Client client) {
-        Database_management db = new Database_management();
+    private boolean setIsPremium() {
+        //Database_management db = new Database_management();
 
-        if (client.getWallet().removeMoney(20)) {
+        if (walletManager.withdrawalWallet(20, client)) {
             client.setIsPremium(1);
             return db.modifyPremium(client);
         } else {
@@ -468,17 +472,17 @@ public class AccountManager {
         }
     }
 
-    private boolean renewPremium(Client client) {
-        Database_management db = new Database_management();
-        if (client.getWallet().removeMoney(20)) return db.modifyPremiumExpiration(client);
+    private boolean renewPremium() {
+        //Database_management db = new Database_management();
+        if (walletManager.withdrawalWallet(20, client)) return db.modifyPremiumExpiration(client);
         else {
             System.err.println("Insufficient funds.");
             return false;
         }
     }
 
-    private void showPremiumExpiration(Client client) {
-        Database_management db = new Database_management();
+    private void showPremiumExpiration() {
+        //Database_management db = new Database_management();
         Date isPremiumDate = db.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }

@@ -3,7 +3,7 @@ package Test;
 import java.io.ByteArrayInputStream;
 
 import Context.Client;
-import Database.Database_management;
+import Database.DatabaseManager;
 import Management.AccountManager;
 import org.junit.jupiter.api.*;
 import org.junitpioneer.jupiter.DisableIfTestFails;
@@ -31,7 +31,7 @@ public class AccountTest {
     @Test
     public void TestARegistration() {
         simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n3\n";
-        Database_management db = new Database_management();
+        DatabaseManager db = new DatabaseManager();
         setUp();
         Client client = db.getClient("test1@email", "password");
         assertNotNull(client);
@@ -107,13 +107,13 @@ public class AccountTest {
         String date = "2025-01-01";
         simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
         setUp();
-        Database_management db = new Database_management();
+        DatabaseManager db = new DatabaseManager();
         assertFalse(db.checkTestReservation(testClient, Date.valueOf(date)));
     }
 
     @Test
     public void TestMDeleteReservation() {
-        Database_management db = new Database_management();
+        DatabaseManager db = new DatabaseManager();
         ArrayList<Integer> reservationsId = db.getReservationsId(testClient.getId());
         int reservationId = reservationsId.get(0);
         simulatedUserInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
@@ -131,7 +131,7 @@ public class AccountTest {
 
     @AfterAll
     static void tearDown() {
-        Database_management db = new Database_management();
+        DatabaseManager db = new DatabaseManager();
         db.deleteTestClient("test1@email");
     }
 

@@ -1,6 +1,6 @@
 package Management;
 
-import Database.Database_management;
+import Database.DatabaseManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.logging.SimpleFormatter;
 
 public class GeneralLogging {
 
-    private final Logger logger = Logger.getLogger(Database_management.class.getName());
+    private final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
 
     private FileHandler fh = null;
     SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");

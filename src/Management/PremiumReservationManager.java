@@ -1,7 +1,6 @@
 package Management;
 
 import Context.Reservation;
-import Database.Database_management;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -22,7 +21,7 @@ public class PremiumReservationManager extends ReservationManager {
                 System.out.println("Final price: 0€");
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
                 reservation.setPrice(0);
-                Database_management db = new Database_management();
+                //Database_management db = new Database_management();
                 return db.makeReservation(reservation, true, false);
             }
         }

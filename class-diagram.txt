@@ -27,8 +27,6 @@ class Context.RentingKit {
 	{field} -type : String
 	{field} -unitPrice : float
 	{method} +getTotPrice () : float
-	{method} +getTotalPrice () : float
-	{method} +modifyNumOfRents ( paramint1 : int ) : void
 }
 
 
@@ -56,12 +54,12 @@ class Context.Wallet {
 }
 
 
-class Database.Database_management {
+class Database.DatabaseManager {
 	{field} {static} ~DB_URL : String
 	{field} {static} ~PASS : String
 	{field} {static} ~USER : String
 	{field} ~conn : java.sql.Connection
-	{field} {static} ~logging : Database.Database_management$Logging
+	{field} {static} ~logging : Database.DatabaseManager$Logging
 	{method} +checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean
 	{method} -commitTransaction () : boolean
 	{method} -connect () : java.sql.Statement
@@ -94,18 +92,17 @@ class Management.AccountManager {
 	{field} -logged : boolean
 	{field} -sc : java.util.Scanner
 	{field} -startMenu : boolean
-	{method} -clientMenu ( paramClient1 : Context.Client ) : void
+	{method} -clientMenu () : void
 	{method} -getDateTimeUTC () : String
 	{method}  {static} -isValidEmail ( paramString1 : String ) : boolean
 	{method} +loginAccount () : void
 	{method} +registerAccount () : void
-	{method} -renewPremium ( paramClient1 : Context.Client ) : boolean
+	{method} -renewPremium () : boolean
 	{method} -sendEmail ( paramString1 : String , paramString2 : String , paramString3 : String ) : void
-	{method} -setIsPremium ( paramClient1 : Context.Client ) : boolean
-	{method} -showPremiumExpiration ( paramClient1 : Context.Client ) : void
+	{method} -setIsPremium () : boolean
+	{method} -showPremiumExpiration () : void
 	{method} +startMenu () : void
-	{method} +topUpWallet ( paramClient1 : Context.Client , paramfloat2 : float ) : boolean
-	{method} +updateClient ( paramClient1 : Context.Client ) : Context.Client
+	{method} +updateClient () : Context.Client
 }
 
 
@@ -154,6 +151,13 @@ class Management.StandardReservationManager {
 }
 
 
+class Management.WalletManager {
+	{method} +getWalletBalance ( paramClient1 : Context.Client ) : float
+	{method} +topUpWallet ( paramfloat1 : float , paramClient2 : Context.Client ) : boolean
+	{method} +withdrawalWallet ( paramfloat1 : float , paramClient2 : Context.Client ) : boolean
+}
+
+
 
 
 Context.Client -->  Context.Wallet : wallet
@@ -162,8 +166,14 @@ Context.Reservation -->  Context.Client : client
 Context.Reservation -->  Context.Court : court
 Context.Reservation -->  Context.RentingKit : rentingKit
 Context.Reservation -->  Context.TimeSlot : time_slot
+Management.AccountManager *--  Database.DatabaseManager : db
+Management.AccountManager *--  Management.WalletManager : walletManager
+Management.AccountManager -->  Context.Client : client
 Management.PremiumReservationManager --|>  Management.ReservationManager
+Management.ReservationManager *--  Database.DatabaseManager : db
+Management.ReservationManager *--  Management.WalletManager : walletManager
 Management.StandardReservationManager --|>  Management.ReservationManager
+Management.WalletManager *--  Database.DatabaseManager : db
 
 hide 
 
