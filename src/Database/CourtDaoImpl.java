@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourtDaoImpl implements CourtDao{
-    private final DatabaseManager db = new DatabaseManager();
+   // private final DatabaseManager db = new DatabaseManager();
 
     @Override
     public List<Court> getCourt() {

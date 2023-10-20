@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 public class ClientDaoImpl implements ClientDao {
-    private final DatabaseManager db = new DatabaseManager();
+   // private final DatabaseManager db = new DatabaseManager();
     @Override
     public void deleteTestClient(String email) {
         try {

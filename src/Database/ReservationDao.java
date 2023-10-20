@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Formatter;
 
-public interface ReservationDao {
+public interface ReservationDao extends GeneralDaoSettings{
     void printAllReservations(int Client);
     void printAllFutureReservations(int Client);
     Reservation getReservationById(int id);

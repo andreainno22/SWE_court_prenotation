@@ -9,7 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
 public class WalletDaoImpl implements WalletDao{
-    private final DatabaseManager db = new DatabaseManager();
+    //private final DatabaseManager db = new DatabaseManager();
 
     @Override
     public Wallet getWallet(int id, Statement stmt) {

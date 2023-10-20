@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeSlotDaoImpl implements TimeSlotDao{
-    private final DatabaseManager db = new DatabaseManager();
+    //private final DatabaseManager db = new DatabaseManager();
 
     @Override
     public List<TimeSlot> getTimeSlots(Date date, int court_id) {

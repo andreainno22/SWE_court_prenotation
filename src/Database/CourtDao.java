@@ -8,6 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface CourtDao {
+public interface CourtDao extends GeneralDaoSettings{
     List<Court> getCourt();
 }

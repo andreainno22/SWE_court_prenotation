@@ -16,7 +16,7 @@ import java.util.Formatter;
 
 public class ReservationDaoImpl implements ReservationDao {
 
-    private final DatabaseManager db = new DatabaseManager();
+    //private final DatabaseManager db = new DatabaseManager();
     @Override
     public void printAllReservations(int Client) {
         try {

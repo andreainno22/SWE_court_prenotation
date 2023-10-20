@@ -5,7 +5,7 @@ import Context.Wallet;
 
 import java.sql.Statement;
 
-public interface WalletDao {
+public interface WalletDao extends GeneralDaoSettings {
     Wallet getWallet(int id, Statement stmt);
 
     boolean modifyBalance(Client client, Statement transactionStmt);

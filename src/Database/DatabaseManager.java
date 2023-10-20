@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 
-class DatabaseManager {
+ class DatabaseManager {
     private static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
     private static final String USER = "swecourtprentiondb_recordfell";
     private static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";

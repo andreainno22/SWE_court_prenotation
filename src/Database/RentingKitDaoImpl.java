@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class RentingKitDaoImpl implements RentingKitDao{
-    private final DatabaseManager db = new DatabaseManager();
+    //private final DatabaseManager db = new DatabaseManager();
     @Override
     public RentingKit getRentingKit(String type) {
         try {

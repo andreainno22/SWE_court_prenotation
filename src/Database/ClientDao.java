@@ -5,7 +5,7 @@ import Context.Client;
 import java.sql.Date;
 import java.sql.Statement;
 
-public interface ClientDao {
+public interface ClientDao extends GeneralDaoSettings {
     void deleteTestClient(String email);
     Client getClient(String email, String password);
     int insertClient(Client client);
