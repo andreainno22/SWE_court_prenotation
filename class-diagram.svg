@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xml="http://www.w3.org/XML/1998/namespace" width="3524px" height="485px" viewBox="0, 0, 3524, 485" preserveAspectRatio="none" contentStyleType="text/css" zoomAndPan="magnify" style="background:#FFFFFF;">
+  <defs />
+  <g>
+    <g id="cluster_Database">
+      <path d="M8.5 6 L74.5 6 A3.75 3.75 0 0 1 77 8.5 L84 29.6094 L3514.5 29.6094 A2.5 2.5 0 0 1 3517 32.1094 L3517 475.5 A2.5 2.5 0 0 1 3514.5 478 L8.5 478 A2.5 2.5 0 0 1 6 475.5 L6 8.5 A2.5 2.5 0 0 1 8.5 6" stroke-width="1.5" style="fill:none;stroke:black;" />
+      <line x1="6" y1="29.6094" x2="84" y2="29.6094" stroke-width="1.5" style="stroke:black;" />
+      <text x="10" y="22.5332" textLength="65" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-weight="bold" style="fill:black;">Database</text>
+    </g>
+    <g id="elem_Database.ClientDao">
+      <rect x="2794.5" y="291" width="705" height="171.2656" rx="2.5" ry="2.5" id="Database.ClientDao" stroke-width="0.5" codeLine="2" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="3111.75" cy="307" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M3112.703 303.6406 L3112.703 310.2969 L3114.422 310.2969 Q3115.031 310.2969 3115.297 310.5313 Q3115.563 310.7656 3115.563 311.1563 Q3115.563 311.5313 3115.297 311.7656 Q3115.031 312 3114.422 312 L3109.281 312 Q3108.672 312 3108.406 311.7656 Q3108.141 311.5313 3108.141 311.1406 Q3108.141 310.7656 3108.406 310.5313 Q3108.672 310.2969 3109.281 310.2969 L3111 310.2969 L3111 303.6406 L3109.281 303.6406 Q3108.672 303.6406 3108.406 303.4063 Q3108.141 303.1719 3108.141 302.7813 Q3108.141 302.4063 3108.406 302.1719 Q3108.672 301.9375 3109.281 301.9375 L3114.422 301.9375 Q3115.031 301.9375 3115.297 302.1719 Q3115.563 302.4063 3115.563 302.7813 Q3115.563 303.1719 3115.297 303.4063 Q3115.031 303.6406 3114.422 303.6406 L3112.703 303.6406 Z" style="fill:black;" />
+      <text x="3132.25" y="312.7285" textLength="62" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">ClientDao</text>
+      <line x1="2795.5" y1="323" x2="3498.5" y2="323" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="2795.5" y1="331" x2="3498.5" y2="331" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2805.5" cy="345.3047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="349.5332" textLength="296" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">deleteTestClient ( paramString1 : String ) : void</text>
+      <ellipse cx="2805.5" cy="362.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="367.1426" textLength="458" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getClient ( paramString1 : String , paramString2 : String ) : Context.Client</text>
+      <ellipse cx="2805.5" cy="380.5234" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="384.752" textLength="436" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getPremiumExpiration ( paramClient1 : Context.Client ) : java.sql.Date</text>
+      <ellipse cx="2805.5" cy="398.1328" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="402.3613" textLength="304" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">insertClient ( paramClient1 : Context.Client ) : int</text>
+      <ellipse cx="2805.5" cy="415.7422" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="419.9707" textLength="365" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">modifyPremium ( paramClient1 : Context.Client ) : boolean</text>
+      <ellipse cx="2805.5" cy="433.3516" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="437.5801" textLength="427" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">modifyPremiumExpiration ( paramClient1 : Context.Client ) : boolean</text>
+      <ellipse cx="2805.5" cy="450.9609" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2814.5" y="455.1895" textLength="679" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">updatePoints ( paramint1 : int , paramClient2 : Context.Client , paramStatement3 : java.sql.Statement ) : void</text>
+    </g>
+    <g id="elem_Database.ClientDaoImpl">
+      <rect x="2793.5" y="42" width="707" height="188.875" rx="2.5" ry="2.5" id="Database.ClientDaoImpl" stroke-width="0.5" codeLine="13" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="3099.25" cy="58" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M3102.016 53.875 Q3102.172 53.6563 3102.359 53.5469 Q3102.547 53.4375 3102.766 53.4375 Q3103.141 53.4375 3103.375 53.7031 Q3103.609 53.9531 3103.609 54.5625 L3103.609 56.0156 Q3103.609 56.625 3103.375 56.8906 Q3103.141 57.1563 3102.766 57.1563 Q3102.422 57.1563 3102.219 56.9531 Q3102.016 56.7656 3101.906 56.25 Q3101.859 55.8906 3101.672 55.7031 Q3101.344 55.3281 3100.734 55.1094 Q3100.125 54.8906 3099.5 54.8906 Q3098.734 54.8906 3098.094 55.2188 Q3097.469 55.5469 3096.969 56.2969 Q3096.484 57.0469 3096.484 58.0781 L3096.484 59.1719 Q3096.484 60.4063 3097.375 61.2344 Q3098.266 62.0469 3099.859 62.0469 Q3100.797 62.0469 3101.453 61.7969 Q3101.844 61.6406 3102.266 61.2031 Q3102.531 60.9375 3102.672 60.8594 Q3102.828 60.7813 3103.031 60.7813 Q3103.359 60.7813 3103.609 61.0469 Q3103.875 61.2969 3103.875 61.6406 Q3103.875 61.9844 3103.531 62.3906 Q3103.031 62.9688 3102.234 63.2969 Q3101.156 63.75 3099.859 63.75 Q3098.344 63.75 3097.141 63.125 Q3096.156 62.625 3095.469 61.5625 Q3094.781 60.4844 3094.781 59.2031 L3094.781 58.0469 Q3094.781 56.7188 3095.391 55.5781 Q3096.016 54.4219 3097.109 53.8125 Q3098.203 53.1875 3099.438 53.1875 Q3100.172 53.1875 3100.813 53.3594 Q3101.469 53.5156 3102.016 53.875 Z" style="fill:black;" />
+      <text x="3119.75" y="63.7285" textLength="87" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">ClientDaoImpl</text>
+      <line x1="2794.5" y1="74" x2="3499.5" y2="74" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="2801.5" y="85.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="2813.5" y="92.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="2794.5" y1="99.6094" x2="3499.5" y2="99.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2804.5" cy="113.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="118.1426" textLength="297" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">deleteTestClient ( paramString1 : String ) : void</text>
+      <ellipse cx="2804.5" cy="131.5234" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="135.752" textLength="458" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getClient ( paramString1 : String , paramString2 : String ) : Context.Client</text>
+      <ellipse cx="2804.5" cy="149.1328" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="153.3613" textLength="437" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getPremiumExpiration ( paramClient1 : Context.Client ) : java.sql.Date</text>
+      <ellipse cx="2804.5" cy="166.7422" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="170.9707" textLength="304" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">insertClient ( paramClient1 : Context.Client ) : int</text>
+      <ellipse cx="2804.5" cy="184.3516" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="188.5801" textLength="365" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">modifyPremium ( paramClient1 : Context.Client ) : boolean</text>
+      <ellipse cx="2804.5" cy="201.9609" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="206.1895" textLength="427" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">modifyPremiumExpiration ( paramClient1 : Context.Client ) : boolean</text>
+      <ellipse cx="2804.5" cy="219.5703" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2813.5" y="223.7988" textLength="681" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">updatePoints ( paramint1 : int , paramClient2 : Context.Client , paramStatement3 : java.sql.Statement ) : void</text>
+    </g>
+    <g id="elem_Database.CourtDao">
+      <rect x="2550" y="343.5" width="180" height="65.6094" rx="2.5" ry="2.5" id="Database.CourtDao" stroke-width="0.5" codeLine="25" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="2605.25" cy="359.5" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M2606.203 356.1406 L2606.203 362.7969 L2607.922 362.7969 Q2608.531 362.7969 2608.797 363.0313 Q2609.063 363.2656 2609.063 363.6563 Q2609.063 364.0313 2608.797 364.2656 Q2608.531 364.5 2607.922 364.5 L2602.781 364.5 Q2602.172 364.5 2601.906 364.2656 Q2601.641 364.0313 2601.641 363.6406 Q2601.641 363.2656 2601.906 363.0313 Q2602.172 362.7969 2602.781 362.7969 L2604.5 362.7969 L2604.5 356.1406 L2602.781 356.1406 Q2602.172 356.1406 2601.906 355.9063 Q2601.641 355.6719 2601.641 355.2813 Q2601.641 354.9063 2601.906 354.6719 Q2602.172 354.4375 2602.781 354.4375 L2607.922 354.4375 Q2608.531 354.4375 2608.797 354.6719 Q2609.063 354.9063 2609.063 355.2813 Q2609.063 355.6719 2608.797 355.9063 Q2608.531 356.1406 2607.922 356.1406 L2606.203 356.1406 Z" style="fill:black;" />
+      <text x="2625.75" y="365.2285" textLength="61" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">CourtDao</text>
+      <line x1="2551" y1="375.5" x2="2729" y2="375.5" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="2551" y1="383.5" x2="2729" y2="383.5" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2561" cy="397.8047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2570" y="402.0332" textLength="154" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getCourt () : java.util.List</text>
+    </g>
+    <g id="elem_Database.CourtDaoImpl">
+      <rect x="2522" y="95" width="236" height="83.2188" rx="2.5" ry="2.5" id="Database.CourtDaoImpl" stroke-width="0.5" codeLine="30" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="2592.75" cy="111" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M2595.516 106.875 Q2595.672 106.6563 2595.859 106.5469 Q2596.047 106.4375 2596.266 106.4375 Q2596.641 106.4375 2596.875 106.7031 Q2597.109 106.9531 2597.109 107.5625 L2597.109 109.0156 Q2597.109 109.625 2596.875 109.8906 Q2596.641 110.1563 2596.266 110.1563 Q2595.922 110.1563 2595.719 109.9531 Q2595.516 109.7656 2595.406 109.25 Q2595.359 108.8906 2595.172 108.7031 Q2594.844 108.3281 2594.234 108.1094 Q2593.625 107.8906 2593 107.8906 Q2592.234 107.8906 2591.594 108.2188 Q2590.969 108.5469 2590.469 109.2969 Q2589.984 110.0469 2589.984 111.0781 L2589.984 112.1719 Q2589.984 113.4063 2590.875 114.2344 Q2591.766 115.0469 2593.359 115.0469 Q2594.297 115.0469 2594.953 114.7969 Q2595.344 114.6406 2595.766 114.2031 Q2596.031 113.9375 2596.172 113.8594 Q2596.328 113.7813 2596.531 113.7813 Q2596.859 113.7813 2597.109 114.0469 Q2597.375 114.2969 2597.375 114.6406 Q2597.375 114.9844 2597.031 115.3906 Q2596.531 115.9688 2595.734 116.2969 Q2594.656 116.75 2593.359 116.75 Q2591.844 116.75 2590.641 116.125 Q2589.656 115.625 2588.969 114.5625 Q2588.281 113.4844 2588.281 112.2031 L2588.281 111.0469 Q2588.281 109.7188 2588.891 108.5781 Q2589.516 107.4219 2590.609 106.8125 Q2591.703 106.1875 2592.938 106.1875 Q2593.672 106.1875 2594.313 106.3594 Q2594.969 106.5156 2595.516 106.875 Z" style="fill:black;" />
+      <text x="2613.25" y="116.7285" textLength="86" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">CourtDaoImpl</text>
+      <line x1="2523" y1="127" x2="2757" y2="127" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="2530" y="138.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="2542" y="145.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="2523" y1="152.6094" x2="2757" y2="152.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2533" cy="166.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2542" y="171.1426" textLength="155" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getCourt () : java.util.List</text>
+    </g>
+    <g id="elem_Database.RentingKitDao">
+      <rect x="2091" y="343.5" width="396" height="65.6094" rx="2.5" ry="2.5" id="Database.RentingKitDao" stroke-width="0.5" codeLine="36" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="2239.25" cy="359.5" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M2240.203 356.1406 L2240.203 362.7969 L2241.922 362.7969 Q2242.531 362.7969 2242.797 363.0313 Q2243.063 363.2656 2243.063 363.6563 Q2243.063 364.0313 2242.797 364.2656 Q2242.531 364.5 2241.922 364.5 L2236.781 364.5 Q2236.172 364.5 2235.906 364.2656 Q2235.641 364.0313 2235.641 363.6406 Q2235.641 363.2656 2235.906 363.0313 Q2236.172 362.7969 2236.781 362.7969 L2238.5 362.7969 L2238.5 356.1406 L2236.781 356.1406 Q2236.172 356.1406 2235.906 355.9063 Q2235.641 355.6719 2235.641 355.2813 Q2235.641 354.9063 2235.906 354.6719 Q2236.172 354.4375 2236.781 354.4375 L2241.922 354.4375 Q2242.531 354.4375 2242.797 354.6719 Q2243.063 354.9063 2243.063 355.2813 Q2243.063 355.6719 2242.797 355.9063 Q2242.531 356.1406 2241.922 356.1406 L2240.203 356.1406 Z" style="fill:black;" />
+      <text x="2259.75" y="365.2285" textLength="91" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">RentingKitDao</text>
+      <line x1="2092" y1="375.5" x2="2486" y2="375.5" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="2092" y1="383.5" x2="2486" y2="383.5" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2102" cy="397.8047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2111" y="402.0332" textLength="370" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getRentingKit ( paramString1 : String ) : Context.RentingKit</text>
+    </g>
+    <g id="elem_Database.RentingKitDaoImpl">
+      <rect x="2091" y="95" width="396" height="83.2188" rx="2.5" ry="2.5" id="Database.RentingKitDaoImpl" stroke-width="0.5" codeLine="41" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="2226.75" cy="111" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M2229.516 106.875 Q2229.672 106.6563 2229.859 106.5469 Q2230.047 106.4375 2230.266 106.4375 Q2230.641 106.4375 2230.875 106.7031 Q2231.109 106.9531 2231.109 107.5625 L2231.109 109.0156 Q2231.109 109.625 2230.875 109.8906 Q2230.641 110.1563 2230.266 110.1563 Q2229.922 110.1563 2229.719 109.9531 Q2229.516 109.7656 2229.406 109.25 Q2229.359 108.8906 2229.172 108.7031 Q2228.844 108.3281 2228.234 108.1094 Q2227.625 107.8906 2227 107.8906 Q2226.234 107.8906 2225.594 108.2188 Q2224.969 108.5469 2224.469 109.2969 Q2223.984 110.0469 2223.984 111.0781 L2223.984 112.1719 Q2223.984 113.4063 2224.875 114.2344 Q2225.766 115.0469 2227.359 115.0469 Q2228.297 115.0469 2228.953 114.7969 Q2229.344 114.6406 2229.766 114.2031 Q2230.031 113.9375 2230.172 113.8594 Q2230.328 113.7813 2230.531 113.7813 Q2230.859 113.7813 2231.109 114.0469 Q2231.375 114.2969 2231.375 114.6406 Q2231.375 114.9844 2231.031 115.3906 Q2230.531 115.9688 2229.734 116.2969 Q2228.656 116.75 2227.359 116.75 Q2225.844 116.75 2224.641 116.125 Q2223.656 115.625 2222.969 114.5625 Q2222.281 113.4844 2222.281 112.2031 L2222.281 111.0469 Q2222.281 109.7188 2222.891 108.5781 Q2223.516 107.4219 2224.609 106.8125 Q2225.703 106.1875 2226.938 106.1875 Q2227.672 106.1875 2228.313 106.3594 Q2228.969 106.5156 2229.516 106.875 Z" style="fill:black;" />
+      <text x="2247.25" y="116.7285" textLength="116" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">RentingKitDaoImpl</text>
+      <line x1="2092" y1="127" x2="2486" y2="127" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="2099" y="138.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="2111" y="145.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="2092" y1="152.6094" x2="2486" y2="152.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="2102" cy="166.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="2111" y="171.1426" textLength="370" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getRentingKit ( paramString1 : String ) : Context.RentingKit</text>
+    </g>
+    <g id="elem_Database.ReservationDao">
+      <rect x="1223.5" y="291" width="831" height="171.2656" rx="2.5" ry="2.5" id="Database.ReservationDao" stroke-width="0.5" codeLine="47" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="1584.25" cy="307" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M1585.203 303.6406 L1585.203 310.2969 L1586.922 310.2969 Q1587.531 310.2969 1587.797 310.5313 Q1588.063 310.7656 1588.063 311.1563 Q1588.063 311.5313 1587.797 311.7656 Q1587.531 312 1586.922 312 L1581.781 312 Q1581.172 312 1580.906 311.7656 Q1580.641 311.5313 1580.641 311.1406 Q1580.641 310.7656 1580.906 310.5313 Q1581.172 310.2969 1581.781 310.2969 L1583.5 310.2969 L1583.5 303.6406 L1581.781 303.6406 Q1581.172 303.6406 1580.906 303.4063 Q1580.641 303.1719 1580.641 302.7813 Q1580.641 302.4063 1580.906 302.1719 Q1581.172 301.9375 1581.781 301.9375 L1586.922 301.9375 Q1587.531 301.9375 1587.797 302.1719 Q1588.063 302.4063 1588.063 302.7813 Q1588.063 303.1719 1587.797 303.4063 Q1587.531 303.6406 1586.922 303.6406 L1585.203 303.6406 Z" style="fill:black;" />
+      <text x="1604.75" y="312.7285" textLength="101" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">ReservationDao</text>
+      <line x1="1224.5" y1="323" x2="2053.5" y2="323" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="1224.5" y1="331" x2="2053.5" y2="331" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="1234.5" cy="345.3047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="349.5332" textLength="593" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean</text>
+      <ellipse cx="1234.5" cy="362.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="367.1426" textLength="657" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean</text>
+      <ellipse cx="1234.5" cy="380.5234" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="384.752" textLength="374" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getReservationById ( paramint1 : int ) : Context.Reservation</text>
+      <ellipse cx="1234.5" cy="398.1328" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="402.3613" textLength="345" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getReservationsId ( paramint1 : int ) : java.util.ArrayList</text>
+      <ellipse cx="1234.5" cy="415.7422" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="419.9707" textLength="805" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean</text>
+      <ellipse cx="1234.5" cy="433.3516" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="437.5801" textLength="316" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">printAllFutureReservations ( paramint1 : int ) : void</text>
+      <ellipse cx="1234.5" cy="450.9609" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1243.5" y="455.1895" textLength="274" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">printAllReservations ( paramint1 : int ) : void</text>
+    </g>
+    <g id="elem_Database.ReservationDaoImpl">
+      <rect x="1222.5" y="42" width="833" height="188.875" rx="2.5" ry="2.5" id="Database.ReservationDaoImpl" stroke-width="0.5" codeLine="58" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="1571.25" cy="58" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M1574.016 53.875 Q1574.172 53.6563 1574.359 53.5469 Q1574.547 53.4375 1574.766 53.4375 Q1575.141 53.4375 1575.375 53.7031 Q1575.609 53.9531 1575.609 54.5625 L1575.609 56.0156 Q1575.609 56.625 1575.375 56.8906 Q1575.141 57.1563 1574.766 57.1563 Q1574.422 57.1563 1574.219 56.9531 Q1574.016 56.7656 1573.906 56.25 Q1573.859 55.8906 1573.672 55.7031 Q1573.344 55.3281 1572.734 55.1094 Q1572.125 54.8906 1571.5 54.8906 Q1570.734 54.8906 1570.094 55.2188 Q1569.469 55.5469 1568.969 56.2969 Q1568.484 57.0469 1568.484 58.0781 L1568.484 59.1719 Q1568.484 60.4063 1569.375 61.2344 Q1570.266 62.0469 1571.859 62.0469 Q1572.797 62.0469 1573.453 61.7969 Q1573.844 61.6406 1574.266 61.2031 Q1574.531 60.9375 1574.672 60.8594 Q1574.828 60.7813 1575.031 60.7813 Q1575.359 60.7813 1575.609 61.0469 Q1575.875 61.2969 1575.875 61.6406 Q1575.875 61.9844 1575.531 62.3906 Q1575.031 62.9688 1574.234 63.2969 Q1573.156 63.75 1571.859 63.75 Q1570.344 63.75 1569.141 63.125 Q1568.156 62.625 1567.469 61.5625 Q1566.781 60.4844 1566.781 59.2031 L1566.781 58.0469 Q1566.781 56.7188 1567.391 55.5781 Q1568.016 54.4219 1569.109 53.8125 Q1570.203 53.1875 1571.438 53.1875 Q1572.172 53.1875 1572.813 53.3594 Q1573.469 53.5156 1574.016 53.875 Z" style="fill:black;" />
+      <text x="1591.75" y="63.7285" textLength="127" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">ReservationDaoImpl</text>
+      <line x1="1223.5" y1="74" x2="2054.5" y2="74" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="1230.5" y="85.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="1242.5" y="92.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="1223.5" y1="99.6094" x2="2054.5" y2="99.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="1233.5" cy="113.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="118.1426" textLength="594" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean</text>
+      <ellipse cx="1233.5" cy="131.5234" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="135.752" textLength="660" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean</text>
+      <ellipse cx="1233.5" cy="149.1328" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="153.3613" textLength="375" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getReservationById ( paramint1 : int ) : Context.Reservation</text>
+      <ellipse cx="1233.5" cy="166.7422" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="170.9707" textLength="346" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getReservationsId ( paramint1 : int ) : java.util.ArrayList</text>
+      <ellipse cx="1233.5" cy="184.3516" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="188.5801" textLength="807" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean</text>
+      <ellipse cx="1233.5" cy="201.9609" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="206.1895" textLength="318" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">printAllFutureReservations ( paramint1 : int ) : void</text>
+      <ellipse cx="1233.5" cy="219.5703" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="1242.5" y="223.7988" textLength="276" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">printAllReservations ( paramint1 : int ) : void</text>
+    </g>
+    <g id="elem_Database.TimeSlotDao">
+      <rect x="698" y="343.5" width="488" height="65.6094" rx="2.5" ry="2.5" id="Database.TimeSlotDao" stroke-width="0.5" codeLine="70" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="897.25" cy="359.5" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M898.2031 356.1406 L898.2031 362.7969 L899.9219 362.7969 Q900.5313 362.7969 900.7969 363.0313 Q901.0625 363.2656 901.0625 363.6563 Q901.0625 364.0313 900.7969 364.2656 Q900.5313 364.5 899.9219 364.5 L894.7813 364.5 Q894.1719 364.5 893.9063 364.2656 Q893.6406 364.0313 893.6406 363.6406 Q893.6406 363.2656 893.9063 363.0313 Q894.1719 362.7969 894.7813 362.7969 L896.5 362.7969 L896.5 356.1406 L894.7813 356.1406 Q894.1719 356.1406 893.9063 355.9063 Q893.6406 355.6719 893.6406 355.2813 Q893.6406 354.9063 893.9063 354.6719 Q894.1719 354.4375 894.7813 354.4375 L899.9219 354.4375 Q900.5313 354.4375 900.7969 354.6719 Q901.0625 354.9063 901.0625 355.2813 Q901.0625 355.6719 900.7969 355.9063 Q900.5313 356.1406 899.9219 356.1406 L898.2031 356.1406 Z" style="fill:black;" />
+      <text x="917.75" y="365.2285" textLength="81" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">TimeSlotDao</text>
+      <line x1="699" y1="375.5" x2="1185" y2="375.5" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="699" y1="383.5" x2="1185" y2="383.5" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="709" cy="397.8047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="718" y="402.0332" textLength="462" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List</text>
+    </g>
+    <g id="elem_Database.TimeSlotDaoImpl">
+      <rect x="697" y="95" width="490" height="83.2188" rx="2.5" ry="2.5" id="Database.TimeSlotDaoImpl" stroke-width="0.5" codeLine="75" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="884.75" cy="111" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M887.5156 106.875 Q887.6719 106.6563 887.8594 106.5469 Q888.0469 106.4375 888.2656 106.4375 Q888.6406 106.4375 888.875 106.7031 Q889.1094 106.9531 889.1094 107.5625 L889.1094 109.0156 Q889.1094 109.625 888.875 109.8906 Q888.6406 110.1563 888.2656 110.1563 Q887.9219 110.1563 887.7188 109.9531 Q887.5156 109.7656 887.4063 109.25 Q887.3594 108.8906 887.1719 108.7031 Q886.8438 108.3281 886.2344 108.1094 Q885.625 107.8906 885 107.8906 Q884.2344 107.8906 883.5938 108.2188 Q882.9688 108.5469 882.4688 109.2969 Q881.9844 110.0469 881.9844 111.0781 L881.9844 112.1719 Q881.9844 113.4063 882.875 114.2344 Q883.7656 115.0469 885.3594 115.0469 Q886.2969 115.0469 886.9531 114.7969 Q887.3438 114.6406 887.7656 114.2031 Q888.0313 113.9375 888.1719 113.8594 Q888.3281 113.7813 888.5313 113.7813 Q888.8594 113.7813 889.1094 114.0469 Q889.375 114.2969 889.375 114.6406 Q889.375 114.9844 889.0313 115.3906 Q888.5313 115.9688 887.7344 116.2969 Q886.6563 116.75 885.3594 116.75 Q883.8438 116.75 882.6406 116.125 Q881.6563 115.625 880.9688 114.5625 Q880.2813 113.4844 880.2813 112.2031 L880.2813 111.0469 Q880.2813 109.7188 880.8906 108.5781 Q881.5156 107.4219 882.6094 106.8125 Q883.7031 106.1875 884.9375 106.1875 Q885.6719 106.1875 886.3125 106.3594 Q886.9688 106.5156 887.5156 106.875 Z" style="fill:black;" />
+      <text x="905.25" y="116.7285" textLength="106" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">TimeSlotDaoImpl</text>
+      <line x1="698" y1="127" x2="1186" y2="127" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="705" y="138.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="717" y="145.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="698" y1="152.6094" x2="1186" y2="152.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="708" cy="166.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="717" y="171.1426" textLength="464" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List</text>
+    </g>
+    <g id="elem_Database.WalletDao">
+      <rect x="23" y="335" width="638" height="83.2188" rx="2.5" ry="2.5" id="Database.WalletDao" stroke-width="0.5" codeLine="81" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="304.75" cy="351" rx="11" ry="11" stroke-width="1" style="fill:#B4A7E5;stroke:#181818;" />
+      <path d="M305.7031 347.6406 L305.7031 354.2969 L307.4219 354.2969 Q308.0313 354.2969 308.2969 354.5313 Q308.5625 354.7656 308.5625 355.1563 Q308.5625 355.5313 308.2969 355.7656 Q308.0313 356 307.4219 356 L302.2813 356 Q301.6719 356 301.4063 355.7656 Q301.1406 355.5313 301.1406 355.1406 Q301.1406 354.7656 301.4063 354.5313 Q301.6719 354.2969 302.2813 354.2969 L304 354.2969 L304 347.6406 L302.2813 347.6406 Q301.6719 347.6406 301.4063 347.4063 Q301.1406 347.1719 301.1406 346.7813 Q301.1406 346.4063 301.4063 346.1719 Q301.6719 345.9375 302.2813 345.9375 L307.4219 345.9375 Q308.0313 345.9375 308.2969 346.1719 Q308.5625 346.4063 308.5625 346.7813 Q308.5625 347.1719 308.2969 347.4063 Q308.0313 347.6406 307.4219 347.6406 L305.7031 347.6406 Z" style="fill:black;" />
+      <text x="325.25" y="356.7285" textLength="66" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">WalletDao</text>
+      <line x1="24" y1="367" x2="660" y2="367" stroke-width="0.5" style="stroke:#181818;" />
+      <line x1="24" y1="375" x2="660" y2="375" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="34" cy="389.3047" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="43" y="393.5332" textLength="527" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet</text>
+      <ellipse cx="34" cy="406.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="43" y="411.1426" textLength="612" lengthAdjust="spacing" font-family="sans-serif" font-size="14" font-style="italic" style="fill:black;">modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean</text>
+    </g>
+    <g id="elem_Database.WalletDaoImpl">
+      <rect x="22.5" y="86" width="639" height="100.8281" rx="2.5" ry="2.5" id="Database.WalletDaoImpl" stroke-width="0.5" codeLine="87" style="fill:#F1F1F1;stroke:#181818;" />
+      <ellipse cx="292.75" cy="102" rx="11" ry="11" stroke-width="1" style="fill:#ADD1B2;stroke:#181818;" />
+      <path d="M295.5156 97.875 Q295.6719 97.6563 295.8594 97.5469 Q296.0469 97.4375 296.2656 97.4375 Q296.6406 97.4375 296.875 97.7031 Q297.1094 97.9531 297.1094 98.5625 L297.1094 100.0156 Q297.1094 100.625 296.875 100.8906 Q296.6406 101.1563 296.2656 101.1563 Q295.9219 101.1563 295.7188 100.9531 Q295.5156 100.7656 295.4063 100.25 Q295.3594 99.8906 295.1719 99.7031 Q294.8438 99.3281 294.2344 99.1094 Q293.625 98.8906 293 98.8906 Q292.2344 98.8906 291.5938 99.2188 Q290.9688 99.5469 290.4688 100.2969 Q289.9844 101.0469 289.9844 102.0781 L289.9844 103.1719 Q289.9844 104.4063 290.875 105.2344 Q291.7656 106.0469 293.3594 106.0469 Q294.2969 106.0469 294.9531 105.7969 Q295.3438 105.6406 295.7656 105.2031 Q296.0313 104.9375 296.1719 104.8594 Q296.3281 104.7813 296.5313 104.7813 Q296.8594 104.7813 297.1094 105.0469 Q297.375 105.2969 297.375 105.6406 Q297.375 105.9844 297.0313 106.3906 Q296.5313 106.9688 295.7344 107.2969 Q294.6563 107.75 293.3594 107.75 Q291.8438 107.75 290.6406 107.125 Q289.6563 106.625 288.9688 105.5625 Q288.2813 104.4844 288.2813 103.2031 L288.2813 102.0469 Q288.2813 100.7188 288.8906 99.5781 Q289.5156 98.4219 290.6094 97.8125 Q291.7031 97.1875 292.9375 97.1875 Q293.6719 97.1875 294.3125 97.3594 Q294.9688 97.5156 295.5156 97.875 Z" style="fill:black;" />
+      <text x="313.25" y="107.7285" textLength="90" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">WalletDaoImpl</text>
+      <line x1="23.5" y1="118" x2="660.5" y2="118" stroke-width="0.5" style="stroke:#181818;" />
+      <rect x="30.5" y="129.3047" width="6" height="6" stroke-width="1" style="fill:none;stroke:#C82930;" />
+      <text x="42.5" y="136.5332" textLength="210" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">db : Database.DatabaseManager</text>
+      <line x1="23.5" y1="143.6094" x2="660.5" y2="143.6094" stroke-width="0.5" style="stroke:#181818;" />
+      <ellipse cx="33.5" cy="157.9141" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="42.5" y="162.1426" textLength="526" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet</text>
+      <ellipse cx="33.5" cy="175.5234" rx="3" ry="3" stroke-width="1" style="fill:#84BE84;stroke:#038048;" />
+      <text x="42.5" y="179.752" textLength="613" lengthAdjust="spacing" font-family="sans-serif" font-size="14" style="fill:black;">modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean</text>
+    </g>
+    <g id="link_Database.ClientDaoImpl_Database.ClientDao">
+      <path d="M3147 231.22 C3147 244.11 3147 257.42 3147 270.49" id="Database.ClientDaoImpl-to-Database.ClientDao" stroke-width="1" stroke-dasharray="7 7" codeLine="96" style="fill:none;stroke:#181818;" />
+      <polygon points="3154,270.76 3147,290.76 3140,270.76 3154,270.76" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+    <g id="link_Database.CourtDaoImpl_Database.CourtDao">
+      <path d="M2640 178.14 C2640 218.21 2640 279.62 2640 323.29" id="Database.CourtDaoImpl-to-Database.CourtDao" stroke-width="1" stroke-dasharray="7 7" codeLine="97" style="fill:none;stroke:#181818;" />
+      <polygon points="2647,323.42 2640,343.42 2633,323.42 2647,323.42" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+    <g id="link_Database.RentingKitDaoImpl_Database.RentingKitDao">
+      <path d="M2289 178.14 C2289 218.21 2289 279.62 2289 323.29" id="Database.RentingKitDaoImpl-to-Database.RentingKitDao" stroke-width="1" stroke-dasharray="7 7" codeLine="98" style="fill:none;stroke:#181818;" />
+      <polygon points="2296,323.42 2289,343.42 2282,323.42 2296,323.42" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+    <g id="link_Database.ReservationDaoImpl_Database.ReservationDao">
+      <path d="M1639 231.22 C1639 244.11 1639 257.42 1639 270.49" id="Database.ReservationDaoImpl-to-Database.ReservationDao" stroke-width="1" stroke-dasharray="7 7" codeLine="99" style="fill:none;stroke:#181818;" />
+      <polygon points="1646,270.76 1639,290.76 1632,270.76 1646,270.76" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+    <g id="link_Database.TimeSlotDaoImpl_Database.TimeSlotDao">
+      <path d="M942 178.14 C942 218.21 942 279.62 942 323.29" id="Database.TimeSlotDaoImpl-to-Database.TimeSlotDao" stroke-width="1" stroke-dasharray="7 7" codeLine="100" style="fill:none;stroke:#181818;" />
+      <polygon points="949,323.42 942,343.42 935,323.42 949,323.42" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+    <g id="link_Database.WalletDaoImpl_Database.WalletDao">
+      <path d="M342 187.1 C342 224.17 342 275.05 342 314.59" id="Database.WalletDaoImpl-to-Database.WalletDao" stroke-width="1" stroke-dasharray="7 7" codeLine="101" style="fill:none;stroke:#181818;" />
+      <polygon points="349,314.66 342,334.66 335,314.66 349,314.66" stroke-width="1" style="fill:none;stroke:#181818;" />
+    </g>
+  </g>
+</svg>

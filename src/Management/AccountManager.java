@@ -17,30 +17,17 @@ import java.sql.Date;
 public class AccountManager {
     /*private boolean logged = false;
     private boolean startMenu = true;
-    private final Scanner sc = new Scanner(System.in);
-    private Client client;
-    //private final DatabaseManager db;*/
+    private final Scanner sc = new Scanner(System.in);*/
+    public Client client;
+    //private final DatabaseManager db;
 
-    private static final ClientDaoImpl clientDao = new ClientDaoImpl();
-    private static final WalletManager walletManager = new WalletManager();
+    private final ClientDaoImpl clientDao = new ClientDaoImpl();
+    private final WalletManager walletManager = new WalletManager();
 
     /*public AccountManager() {
         //this.db = new DatabaseManager();
         sc = new Scanner(System.in);
     }*/
-
-    public static boolean isValidEmail(String email) {
-        String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
-
-        // Crea un oggetto Pattern basato sulla regex
-        Pattern pattern = Pattern.compile(regex);
-
-        // Crea un oggetto Matcher per confrontare l'indirizzo email con il modello
-        Matcher matcher = pattern.matcher(email);
-
-        // Restituisce true se l'indirizzo email corrisponde al modello regex
-        return matcher.matches();
-    }
 
     /*public void startMenu() {
         while (startMenu) {
@@ -156,10 +143,25 @@ public class AccountManager {
         }
     }*/
 
-    public static Client updateClient(Client client) {
+    /*public Client updateClient(Client client) {
         //Database_management db = new Database_management();
         return clientDao.getClient(client.getEmail(), client.getPassword());
+    }*/
+
+    public void updateClient() {
+        //Database_management db = new Database_management();
+        client = clientDao.getClient(client.getEmail(), client.getPassword());
     }
+
+    public Client login(String email, String password) {
+        //Database_management db = new Database_management();
+        return client = clientDao.getClient(email, password);
+    }
+
+    public int register(Client newClient){
+        return clientDao.insertClient(newClient);
+    }
+
 
    /* public boolean topUpWallet(float money) {
         //Database_management db = new Database_management();
@@ -462,7 +464,7 @@ public class AccountManager {
         }
     }*/
 
-    public static boolean setIsPremium(Client client) {
+    public boolean setIsPremium(Client client) {
         //Database_management db = new Database_management();
 
         if (walletManager.withdrawalWallet(20, client)) {
@@ -474,7 +476,7 @@ public class AccountManager {
         }
     }
 
-    public static boolean renewPremium(Client client) {
+    public boolean renewPremium(Client client) {
         //Database_management db = new Database_management();
         if (walletManager.withdrawalWallet(20, client)) return clientDao.modifyPremiumExpiration(client);
         else {
@@ -483,26 +485,11 @@ public class AccountManager {
         }
     }
 
-    public static void showPremiumExpiration(Client client) {
+    public void showPremiumExpiration(Client client) {
         //Database_management db = new Database_management();
         Date isPremiumDate = clientDao.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
-
-    public static String getDateTimeUTC() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        Instant instant = Instant.now();
-        ZoneId zone = ZoneId.of("UTC");
-        return instant.atZone(zone).format(dtf);
-    }
-
-    public static void sendEmail(String email, String subject, String text) {
-        MailManager mailManager = new MailManager();
-        if (mailManager.createAndSendEmailMessage(email, subject, text))
-            System.out.println("A confirmation email has been sent.");
-        else System.err.println("Error sending the email.");
-    }
-
 }
 
 
