@@ -1,5 +1,16 @@
 @startuml
 
+class ApplicationLayer.GraphicInterfaceManager {
+	{field} -logged : boolean
+	{field} -sc : java.util.Scanner
+	{field} -startMenu : boolean
+	{method} -clientMenu () : void
+	{method} +loginAccount () : void
+	{method} +registerAccount () : void
+	{method} +startMenu () : void
+}
+
+
 class Context.Client {
 	{field} +email : String
 	{field} -id : int
@@ -13,9 +24,9 @@ class Context.Client {
 
 
 class Context.Court {
-	{field} #id : int
-	{field} #price : float
-	{field} #terrain_type : String
+	{field} -id : int
+	{field} -price : float
+	{field} -terrain_type : String
 	{field} +type : String
 	{method} +printAllCourt ( paramFormatter1 : java.util.Formatter , paramboolean2 : boolean ) : void
 }
@@ -54,55 +65,106 @@ class Context.Wallet {
 }
 
 
-class Database.DatabaseManager {
-	{field} {static} ~DB_URL : String
-	{field} {static} ~PASS : String
-	{field} {static} ~USER : String
-	{field} ~conn : java.sql.Connection
-	{field} {static} ~logging : Database.DatabaseManager$Logging
-	{method} +checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean
-	{method} -commitTransaction () : boolean
-	{method} -connect () : java.sql.Statement
-	{method} -connectTransaction () : java.sql.Statement
-	{method} -dbError ( paramException1 : Exception ) : void
-	{method} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
+interface Database.ClientDao {
+	{method}  {abstract} +deleteTestClient ( paramString1 : String ) : void
+	{method}  {abstract} +getClient ( paramString1 : String , paramString2 : String ) : Context.Client
+	{method}  {abstract} +getPremiumExpiration ( paramClient1 : Context.Client ) : java.sql.Date
+	{method}  {abstract} +insertClient ( paramClient1 : Context.Client ) : int
+	{method}  {abstract} +modifyPremium ( paramClient1 : Context.Client ) : boolean
+	{method}  {abstract} +modifyPremiumExpiration ( paramClient1 : Context.Client ) : boolean
+	{method}  {abstract} +updatePoints ( paramint1 : int , paramClient2 : Context.Client , paramStatement3 : java.sql.Statement ) : void
+}
+
+
+class Database.ClientDaoImpl {
+	{field} -db : Database.DatabaseManager
 	{method} +deleteTestClient ( paramString1 : String ) : void
-	{method} -disconnect () : void
 	{method} +getClient ( paramString1 : String , paramString2 : String ) : Context.Client
-	{method} +getCourt () : java.util.List
 	{method} +getPremiumExpiration ( paramClient1 : Context.Client ) : java.sql.Date
-	{method} +getRentingKit ( paramString1 : String ) : Context.RentingKit
-	{method} +getReservationById ( paramint1 : int ) : Context.Reservation
-	{method} +getReservationsId ( paramint1 : int ) : java.util.ArrayList
-	{method} +getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List
-	{method} ~getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet
 	{method} +insertClient ( paramClient1 : Context.Client ) : int
-	{method} +makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean
-	{method} +modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean
 	{method} +modifyPremium ( paramClient1 : Context.Client ) : boolean
 	{method} +modifyPremiumExpiration ( paramClient1 : Context.Client ) : boolean
-	{method} -newStatement () : java.sql.Statement
-	{method} +printAllFutureReservations ( paramint1 : int ) : void
-	{method} +printAllReservations ( paramint1 : int ) : void
 	{method} +updatePoints ( paramint1 : int , paramClient2 : Context.Client , paramStatement3 : java.sql.Statement ) : void
 }
 
 
+interface Database.CourtDao {
+	{method}  {abstract} +getCourt () : java.util.List
+}
+
+
+class Database.CourtDaoImpl {
+	{field} -db : Database.DatabaseManager
+	{method} +getCourt () : java.util.List
+}
+
+
+interface Database.RentingKitDao {
+	{method}  {abstract} +getRentingKit ( paramString1 : String ) : Context.RentingKit
+}
+
+
+class Database.RentingKitDaoImpl {
+	{field} -db : Database.DatabaseManager
+	{method} +getRentingKit ( paramString1 : String ) : Context.RentingKit
+}
+
+
+interface Database.ReservationDao {
+	{method}  {abstract} +checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean
+	{method}  {abstract} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
+	{method}  {abstract} +getReservationById ( paramint1 : int ) : Context.Reservation
+	{method}  {abstract} +getReservationsId ( paramint1 : int ) : java.util.ArrayList
+	{method}  {abstract} +makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean
+	{method}  {abstract} +printAllFutureReservations ( paramint1 : int ) : void
+	{method}  {abstract} +printAllReservations ( paramint1 : int ) : void
+}
+
+
+class Database.ReservationDaoImpl {
+	{field} -db : Database.DatabaseManager
+	{method} +checkTestReservation ( paramClient1 : Context.Client , paramDate2 : java.sql.Date ) : boolean
+	{method} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
+	{method} +getReservationById ( paramint1 : int ) : Context.Reservation
+	{method} +getReservationsId ( paramint1 : int ) : java.util.ArrayList
+	{method} +makeReservation ( paramReservation1 : Context.Reservation , paramboolean2 : boolean , paramboolean3 : boolean ) : boolean
+	{method} +printAllFutureReservations ( paramint1 : int ) : void
+	{method} +printAllReservations ( paramint1 : int ) : void
+}
+
+
+interface Database.TimeSlotDao {
+	{method}  {abstract} +getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List
+}
+
+
+class Database.TimeSlotDaoImpl {
+	{field} -db : Database.DatabaseManager
+	{method} +getTimeSlots ( paramDate1 : java.sql.Date , paramint2 : int ) : java.util.List
+}
+
+
+interface Database.WalletDao {
+	{method}  {abstract} +getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet
+	{method}  {abstract} +modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean
+}
+
+
+class Database.WalletDaoImpl {
+	{field} -db : Database.DatabaseManager
+	{method} +getWallet ( paramint1 : int , paramStatement2 : java.sql.Statement ) : Context.Wallet
+	{method} +modifyBalance ( paramClient1 : Context.Client , paramStatement2 : java.sql.Statement ) : boolean
+}
+
+
 class Management.AccountManager {
-	{field} -logged : boolean
-	{field} -sc : java.util.Scanner
-	{field} -startMenu : boolean
-	{method} -clientMenu () : void
-	{method} -getDateTimeUTC () : String
-	{method}  {static} -isValidEmail ( paramString1 : String ) : boolean
-	{method} +loginAccount () : void
-	{method} +registerAccount () : void
-	{method} -renewPremium () : boolean
-	{method} -sendEmail ( paramString1 : String , paramString2 : String , paramString3 : String ) : void
-	{method} -setIsPremium () : boolean
-	{method} -showPremiumExpiration () : void
-	{method} +startMenu () : void
-	{method} +updateClient () : Context.Client
+	{method}  {static} +getDateTimeUTC () : String
+	{method}  {static} +isValidEmail ( paramString1 : String ) : boolean
+	{method}  {static} +renewPremium ( paramClient1 : Context.Client ) : boolean
+	{method}  {static} +sendEmail ( paramString1 : String , paramString2 : String , paramString3 : String ) : void
+	{method}  {static} +setIsPremium ( paramClient1 : Context.Client ) : boolean
+	{method}  {static} +showPremiumExpiration ( paramClient1 : Context.Client ) : void
+	{method}  {static} +updateClient ( paramClient1 : Context.Client ) : Context.Client
 }
 
 
@@ -160,20 +222,31 @@ class Management.WalletManager {
 
 
 
+ApplicationLayer.GraphicInterfaceManager *--  Database.ClientDaoImpl : clientDao
+ApplicationLayer.GraphicInterfaceManager *--  Management.WalletManager : walletManager
+ApplicationLayer.GraphicInterfaceManager -->  Context.Client : client
 Context.Client -->  Context.Wallet : wallet
 Context.Client -->  Management.ReservationManager : reservationManager
 Context.Reservation -->  Context.Client : client
 Context.Reservation -->  Context.Court : court
 Context.Reservation -->  Context.RentingKit : rentingKit
 Context.Reservation -->  Context.TimeSlot : time_slot
-Management.AccountManager *--  Database.DatabaseManager : db
+Database.ClientDaoImpl ..|>  Database.ClientDao
+Database.CourtDaoImpl ..|>  Database.CourtDao
+Database.RentingKitDaoImpl ..|>  Database.RentingKitDao
+Database.ReservationDaoImpl ..|>  Database.ReservationDao
+Database.TimeSlotDaoImpl ..|>  Database.TimeSlotDao
+Database.WalletDaoImpl ..|>  Database.WalletDao
+Management.AccountManager *--  Database.ClientDaoImpl : clientDao
 Management.AccountManager *--  Management.WalletManager : walletManager
-Management.AccountManager -->  Context.Client : client
 Management.PremiumReservationManager --|>  Management.ReservationManager
-Management.ReservationManager *--  Database.DatabaseManager : db
+Management.ReservationManager *--  Database.CourtDaoImpl : courtDao
+Management.ReservationManager *--  Database.RentingKitDaoImpl : rentingKitDao
+Management.ReservationManager *--  Database.ReservationDaoImpl : reservationDao
+Management.ReservationManager *--  Database.TimeSlotDaoImpl : timeSlotDao
 Management.ReservationManager *--  Management.WalletManager : walletManager
 Management.StandardReservationManager --|>  Management.ReservationManager
-Management.WalletManager *--  Database.DatabaseManager : db
+Management.WalletManager *--  Database.WalletDaoImpl : walletDao
 
 hide 
 

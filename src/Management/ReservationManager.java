@@ -18,7 +18,7 @@ public abstract class ReservationManager {
     private final CourtDaoImpl courtDao = new CourtDaoImpl();
 
     private final RentingKitDaoImpl rentingKitDao = new RentingKitDaoImpl();
-    private final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
+    protected final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
     private  final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
 
     public abstract boolean makeReservation(Reservation reservation);

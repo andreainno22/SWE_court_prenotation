@@ -2,6 +2,7 @@ package Test;
 
 import java.io.ByteArrayInputStream;
 
+import ApplicationLayer.GraphicInterfaceManager;
 import Context.Client;
 import Database.ClientDaoImpl;
 import Database.ReservationDaoImpl;
@@ -19,14 +20,17 @@ import java.util.ArrayList;
 @DisableIfTestFails
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class AccountTest {
-    private static AccountManager account;
+    //private static AccountManager account;
+    private static GraphicInterfaceManager gim;
     private String simulatedUserInput;
     private static Client testClient;
 
     public void setUp() {
         System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
-        account = new AccountManager();
-        assertDoesNotThrow(() -> account.startMenu());
+        //account = new AccountManager();
+        //assertDoesNotThrow(() -> account.startMenu());
+        gim = new GraphicInterfaceManager();
+        assertDoesNotThrow(() -> gim.startMenu());
     }
 
     @Test
