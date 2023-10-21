@@ -16,7 +16,6 @@ public abstract class ReservationManager {
     //protected final DatabaseManager db = new DatabaseManager();
     private final WalletManager walletManager = new WalletManager();
     private final CourtDaoImpl courtDao = new CourtDaoImpl();
-
     private final RentingKitDaoImpl rentingKitDao = new RentingKitDaoImpl();
     protected final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
     private  final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();

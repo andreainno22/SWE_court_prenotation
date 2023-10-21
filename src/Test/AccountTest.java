@@ -102,13 +102,19 @@ public class AccountTest {
     }
 
     @Test
-    public void TestKMakeReservationPremiumRentingKit() {
+    public void TestKMakeReservationAlreadyBookedSlot() {
+        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n1\n2025-01-02\n1\n2\n2\n7\n0\n7\n3\n";
+        setUp();
+    }
+
+    @Test
+    public void TestLMakeReservationPremiumRentingKit() {
         simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n3\n2\n3\n1\n7\n3\n";
         setUp();
     }
 
     @Test
-    public void TestLMakeReservationOnHoliday() {
+    public void TestMMakeReservationOnHoliday() {
         String date = "2025-01-01";
         simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
         setUp();
@@ -117,7 +123,7 @@ public class AccountTest {
     }
 
     @Test
-    public void TestMDeleteReservation() {
+    public void TestNDeleteReservation() {
         ReservationDaoImpl reservationDao = new ReservationDaoImpl();
         ArrayList<Integer> reservationsId = reservationDao.getReservationsId(testClient.getId());
         int reservationId = reservationsId.get(0);
@@ -126,10 +132,13 @@ public class AccountTest {
         int premiumReservationId = reservationsId.get(1);
         simulatedUserInput = "1\ntest1@email\npassword\n2\n" + premiumReservationId + "\n7\n3\n";
         setUp();
+        int resAfterAlreadyBookedSlot = reservationsId.get(2);
+        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n2\n" + resAfterAlreadyBookedSlot + "\n7\n3\n";
+        setUp();
     }
 
     @Test
-    public void TestNRenewPremium() {
+    public void TestORenewPremium() {
         simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n5\ny\n7\n3\n";
         setUp();
     }

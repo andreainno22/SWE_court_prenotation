@@ -16,7 +16,7 @@ public class CourtDaoImpl implements CourtDao{
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, prices.price FROM court JOIN type_of_court ON court.type = type_of_court.id JOIN prices ON prices.type = type_of_court.id");
+            ResultSet rs = stmt.executeQuery("SELECT court.id, type_of_court.type_of_court, type_of_court.price FROM court JOIN type_of_court ON court.type = type_of_court.id");
             List<Court> court_type_prices = new ArrayList<>();
             while (rs.next()) {
                 court_type_prices.add(new Court(rs.getInt(1), rs.getFloat(3)));

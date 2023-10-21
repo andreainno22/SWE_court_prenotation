@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        /*try {
+        try {
             GraphicInterfaceManager gim = new GraphicInterfaceManager();
             gim.startMenu();
         } catch (Exception e) {
@@ -21,16 +21,17 @@ public class Main {
             logger.log(e);
             System.err.println("App shutdown.");
         }
-        try {
+    }
+        /*try {
             AccountManager am = new AccountManager();
             am.startMenu();
         } catch (Exception e){
             GeneralLogging logger = new GeneralLogging();
             logger.log(e);
             System.err.println("App shutdown.");
-        }*/
+        }
 
-        List<String> scanPackages = new ArrayList<>();
+        /*List<String> scanPackages = new ArrayList<>();
         scanPackages.add("Management");
         scanPackages.add("Context");
         scanPackages.add("Database");
@@ -46,5 +47,5 @@ public class Main {
         PrintWriter writer = new PrintWriter("class-diagram.txt", "UTF-8");
         writer.print(result);
         writer.close();
-    }
+    }*/
 }
