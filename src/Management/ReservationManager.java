@@ -12,6 +12,10 @@ import java.util.List;
 
 public abstract class ReservationManager {
     protected final int reservationPoints = 10;
+    private List<Court> court_type_prices;
+    private List<TimeSlot> time_slots;
+
+    private RentingKit rentingKit;
     protected final int giftPoints = 100;
     //protected final DatabaseManager db = new DatabaseManager();
     private final WalletManager walletManager = new WalletManager();
@@ -20,23 +24,67 @@ public abstract class ReservationManager {
     protected final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
     private  final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
 
-    public abstract boolean makeReservation(Reservation reservation);
+    protected Reservation reservation;
+    public abstract boolean makeReservation();
 
-    public List<TimeSlot> getTimeSlots(Formatter fmt, Date date, int court) {
-        //Database_management db = new Database_management();
-        List<TimeSlot> time_slots = (timeSlotDao.getTimeSlots(date, court));
-        System.out.println(time_slots.size());
-        fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
-        for (TimeSlot timeSlot : time_slots) {
-            if (timeSlot != null)
-                timeSlot.printAllTimeSlots(fmt);
-        }
-        return time_slots;
+    public void createReservation(Client client, Date date){
+        reservation = new Reservation(client, date);
     }
 
-    public List<Court> getCourt(Formatter fmt, boolean showDiscount) {
+    public void setReservationCourt(int courtId){
+        Court court = court_type_prices.get(courtId - 1);
+        reservation.setCourt(court);
+    }
+
+    public void setReservationTimeSlot(int timeSlot){
+        TimeSlot ts = time_slots.get(timeSlot - 1);
+        reservation.setTime_slot(ts);
+    }
+
+    public RentingKit getRentingKit(){
+        return rentingKit;
+    }
+
+    public Reservation getReservation(){
+        return reservation;
+    }
+
+    public void getRentingKitInfo(){
+        rentingKit = reservation.getClient().getReservationManager().getRentingKit(reservation.getCourt().getType());
+    }
+
+    public void setReservationRentingKit(int numOfRentingKits){
+        if(numOfRentingKits == 0) {
+            reservation.setRentingKit(null);
+        }else{
+            rentingKit.setNumOfRents(numOfRentingKits);
+            reservation.setRentingKit(rentingKit);
+        }
+
+    }
+
+    public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
         //Database_management db = new Database_management();
-        List<Court> court_type_prices = courtDao.getCourt();
+        time_slots = timeSlotDao.getTimeSlots(date, court);
+        //System.out.println(time_slots.size());
+        fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
+        boolean[] availableSlotIds = new boolean[time_slots.size()];
+        int id = 0;
+        for (TimeSlot timeSlot : time_slots) {
+            if (timeSlot != null) {
+                timeSlot.printAllTimeSlots(fmt);
+                availableSlotIds[id] = true;
+            }else{
+                availableSlotIds[id] = false;
+            }
+            id++;
+        }
+        return availableSlotIds;
+    }
+
+    public int getCourts(Formatter fmt, boolean showDiscount) {
+        //Database_management db = new Database_management();
+        court_type_prices = courtDao.getCourts();
         if (!showDiscount)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
@@ -44,7 +92,7 @@ public abstract class ReservationManager {
         for (Court court_type_price : court_type_prices) {
             court_type_price.printAllCourt(fmt, showDiscount);
         }
-        return court_type_prices;
+        return court_type_prices.size();
     }
 
     public void printAllReservations(Client client) {
@@ -81,7 +129,7 @@ public abstract class ReservationManager {
         return rentingKitDao.getRentingKit(type);
     }
 
-    protected boolean makeReservation(Reservation reservation, float price, boolean isPremium) {
+    protected boolean makeReservation(float price, boolean isPremium) {
         System.out.println("Final price: " + String.format("%.2f", price) + "€");
         if (walletManager.getWalletBalance(reservation.getClient()) < price) {
             System.out.println("Insufficient balance to proceed with the booking. Please add funds to your wallet!");

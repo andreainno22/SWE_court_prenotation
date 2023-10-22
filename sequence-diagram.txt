@@ -1,0 +1,166 @@
+@startuml
+
+participant AccountManager
+participant WalletManager
+participant Client
+participant Wallet
+participant ClientDaoImpl
+participant DatabaseManager
+participant WalletDaoImpl
+
+activate AccountManager
+	AccountManager -> WalletManager : withdrawalWallet
+	activate WalletManager
+		WalletManager -> Client : getWallet
+		activate Client
+			Client --> WalletManager : Wallet
+		deactivate Client
+		WalletManager -> Wallet : removeMoney
+		activate Wallet
+			Wallet --> WalletManager : boolean
+		deactivate Wallet
+		WalletManager --> AccountManager : boolean
+	deactivate WalletManager
+	AccountManager -> Client : setIsPremium
+	activate Client
+		Client --> AccountManager : void
+	deactivate Client
+	AccountManager -> ClientDaoImpl : modifyPremium
+	activate ClientDaoImpl
+		ClientDaoImpl -> DatabaseManager : connectTransaction
+		activate DatabaseManager
+			DatabaseManager -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> DatabaseManager : void
+			deactivate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : Statement
+		deactivate DatabaseManager
+		ClientDaoImpl -> Client : getIsPremium
+		activate Client
+			Client --> ClientDaoImpl : int
+		deactivate Client
+		ClientDaoImpl -> Client : getId
+		activate Client
+			Client --> ClientDaoImpl : int
+		deactivate Client
+		ClientDaoImpl -> Client : getId
+		activate Client
+			Client --> ClientDaoImpl : int
+		deactivate Client
+		ClientDaoImpl -> WalletDaoImpl : modifyBalance
+		activate WalletDaoImpl
+			WalletDaoImpl -> DatabaseManager : connect
+			activate DatabaseManager
+				DatabaseManager -> DatabaseManager : dbError
+				activate DatabaseManager
+					DatabaseManager --> DatabaseManager : void
+				deactivate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : Statement
+			deactivate DatabaseManager
+			WalletDaoImpl -> Client : getWallet
+			activate Client
+				Client --> WalletDaoImpl : Wallet
+			deactivate Client
+			WalletDaoImpl -> Wallet : getBalance
+			activate Wallet
+				Wallet --> WalletDaoImpl : float
+			deactivate Wallet
+			WalletDaoImpl -> Client : getWallet
+			activate Client
+				Client --> WalletDaoImpl : Wallet
+			deactivate Client
+			WalletDaoImpl -> Wallet : getId
+			activate Wallet
+				Wallet --> WalletDaoImpl : int
+			deactivate Wallet
+			WalletDaoImpl -> DatabaseManager : disconnect
+			activate DatabaseManager
+				DatabaseManager -> DatabaseManager : dbError
+				activate DatabaseManager
+					DatabaseManager --> DatabaseManager : void
+				deactivate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : void
+			deactivate DatabaseManager
+			WalletDaoImpl -> Client : getWallet
+			activate Client
+				Client --> WalletDaoImpl : Wallet
+			deactivate Client
+			WalletDaoImpl -> Wallet : getBalance
+			activate Wallet
+				Wallet --> WalletDaoImpl : float
+			deactivate Wallet
+			WalletDaoImpl -> Client : getWallet
+			activate Client
+				Client --> WalletDaoImpl : Wallet
+			deactivate Client
+			WalletDaoImpl -> Wallet : getId
+			activate Wallet
+				Wallet --> WalletDaoImpl : int
+			deactivate Wallet
+			WalletDaoImpl -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : void
+			deactivate DatabaseManager
+			WalletDaoImpl -> DatabaseManager : disconnect
+			activate DatabaseManager
+				DatabaseManager -> DatabaseManager : dbError
+				activate DatabaseManager
+					DatabaseManager --> DatabaseManager : void
+				deactivate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : void
+			deactivate DatabaseManager
+			WalletDaoImpl -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : void
+			deactivate DatabaseManager
+			WalletDaoImpl -> DatabaseManager : disconnect
+			activate DatabaseManager
+				DatabaseManager -> DatabaseManager : dbError
+				activate DatabaseManager
+					DatabaseManager --> DatabaseManager : void
+				deactivate DatabaseManager
+				DatabaseManager --> WalletDaoImpl : void
+			deactivate DatabaseManager
+			WalletDaoImpl --> ClientDaoImpl : boolean
+		deactivate WalletDaoImpl
+		ClientDaoImpl -> DatabaseManager : commitTransaction
+		activate DatabaseManager
+			DatabaseManager -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> DatabaseManager : void
+			deactivate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : boolean
+		deactivate DatabaseManager
+		ClientDaoImpl -> DatabaseManager : disconnect
+		activate DatabaseManager
+			DatabaseManager -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> DatabaseManager : void
+			deactivate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : void
+		deactivate DatabaseManager
+		ClientDaoImpl -> DatabaseManager : dbError
+		activate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : void
+		deactivate DatabaseManager
+		ClientDaoImpl -> DatabaseManager : disconnect
+		activate DatabaseManager
+			DatabaseManager -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> DatabaseManager : void
+			deactivate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : void
+		deactivate DatabaseManager
+		ClientDaoImpl -> DatabaseManager : disconnect
+		activate DatabaseManager
+			DatabaseManager -> DatabaseManager : dbError
+			activate DatabaseManager
+				DatabaseManager --> DatabaseManager : void
+			deactivate DatabaseManager
+			DatabaseManager --> ClientDaoImpl : void
+		deactivate DatabaseManager
+		ClientDaoImpl --> AccountManager : boolean
+	deactivate ClientDaoImpl
+deactivate AccountManager
+
+@enduml

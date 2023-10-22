@@ -12,7 +12,7 @@ public class CourtDaoImpl implements CourtDao{
    // private final DatabaseManager db = new DatabaseManager();
 
     @Override
-    public List<Court> getCourt() {
+    public List<Court> getCourts() {
         try {
             Statement stmt = db.connect();
             assert stmt != null;

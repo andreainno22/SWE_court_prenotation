@@ -1,14 +1,5 @@
 package Management;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
-import de.jollyday.*;
 import Context.*;
 import Database.ClientDaoImpl;
 
@@ -28,6 +19,13 @@ public class AccountManager {
         //this.db = new DatabaseManager();
         sc = new Scanner(System.in);
     }*/
+
+    public int register(String name, String surname, String email, String password, int telephoneNumber){
+        Client newClient = new Client(name, surname, email, password);
+        if(telephoneNumber != 0)
+            newClient.setTelephoneNumber(telephoneNumber);
+        return clientDao.insertClient(newClient);
+    }
 
     /*public void startMenu() {
         while (startMenu) {
@@ -151,6 +149,8 @@ public class AccountManager {
     public void updateClient() {
         //Database_management db = new Database_management();
         client = clientDao.getClient(client.getEmail(), client.getPassword());
+        if (client.getIsPremium() == 0) client.setReservationManager(new StandardReservationManager());
+        else client.setReservationManager(new PremiumReservationManager());
     }
 
     public Client login(String email, String password) {
@@ -158,9 +158,9 @@ public class AccountManager {
         return client = clientDao.getClient(email, password);
     }
 
-    public int register(Client newClient){
+    /*private int register(Client newClient){
         return clientDao.insertClient(newClient);
-    }
+    }*/
 
 
    /* public boolean topUpWallet(float money) {

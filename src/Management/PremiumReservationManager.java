@@ -10,8 +10,7 @@ public class PremiumReservationManager extends ReservationManager {
     private final float discount = 0.9f;
 
     @Override
-    public boolean makeReservation(Reservation reservation) {
-
+    public boolean makeReservation() {
         reservation.setIsPremium(1);
         if (reservation.getClient().getPoints() >= giftPoints) {
             System.out.println("Congrats! You reached " + giftPoints + " points so you are eligible for a free booking. Do you want to use these for this booking? (y/N)");
@@ -34,7 +33,7 @@ public class PremiumReservationManager extends ReservationManager {
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
         reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You will earn " + reservationPoints + " points for this booking.");
-        return super.makeReservation(reservation, price, isPremium);
+        return super.makeReservation(price, isPremium);
 
     }
 }

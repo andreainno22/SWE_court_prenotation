@@ -12,6 +12,11 @@ public class Reservation {
         this.isPremium = isPremium;
     }
 
+    public Reservation(Client client, Date date) {
+        this.client = client;
+        this.date = date;
+    }
+
     public void setIsPremium(int isPremium) {
         this.isPremium = isPremium;
     }
@@ -73,11 +78,11 @@ public class Reservation {
         return price;
     }
 
-    public float getPrice(Client client) {
+    /*public float getPrice(Client client) {
         if (client.getIsPremium() == 1)
             return getPrice() * 0.9f;
         return getPrice();
-    }
+    }*/
 
     public int getIsPremium() {
         return isPremium;

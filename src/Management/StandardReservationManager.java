@@ -4,9 +4,9 @@ import Context.*;
 
 public class StandardReservationManager extends ReservationManager {
     @Override
-    public boolean makeReservation(Reservation reservation) {
+    public boolean makeReservation() {
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
-        return super.makeReservation(reservation, reservation.getPrice(), isPremium);
+        return super.makeReservation(reservation.getPrice(), isPremium);
     }
 
 }
