@@ -45,7 +45,7 @@ public class Court {
             fmt.format("%-15d%-15s%-15.2f\n", id, terrain_type, price);
     }
 
-    private int id;
+    private final int id;
     private String type;
     private String terrain_type;
     private float price;

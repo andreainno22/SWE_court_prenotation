@@ -84,10 +84,10 @@ public class Client {
         return wallet;
     }
 
-    private String name;
-    private String surname;
+    private final String name;
+    private final String surname;
     private String email;
-    private String password;
+    private final String password;
     private Wallet wallet;
     private int telephoneNumber;
     private int id;
