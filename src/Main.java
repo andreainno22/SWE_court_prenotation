@@ -1,15 +1,7 @@
 import ApplicationLayer.GraphicInterfaceManager;
-import Management.AccountManager;
 import Management.GeneralLogging;
-import de.elnarion.util.plantuml.generator.classdiagram.*;
-import de.elnarion.util.plantuml.generator.classdiagram.config.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Main {
     public static void main(String[] args) throws IOException {

@@ -39,8 +39,8 @@ public class MailManager {
             this.subject = subject;
         }
 
-        private void setSender(String sender) {
-            this.sender = sender;
+        private void setSender() {
+            this.sender = MailManager.sender;
         }
     }
 
@@ -48,7 +48,7 @@ public class MailManager {
         try {
             Email email = new Email();
             email.setRecipient(recipient + "");
-            email.setSender(sender + "");
+            email.setSender();
             email.setSubject(subject + "");
             email.setMessageContent(messageContent + "");
             sendEmailMessage(email);

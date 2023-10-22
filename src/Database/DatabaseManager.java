@@ -1,53 +1,16 @@
 package Database;
 
-import Context.*;
-
-import java.io.File;
-import java.io.IOException;
 import java.sql.*;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 
  class DatabaseManager {
     private static final String DB_URL = "jdbc:mysql://40s.h.filess.io:3307/swecourtprentiondb_recordfell";
     private static final String USER = "swecourtprentiondb_recordfell";
     private static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
-    private static Logging logging = null;
-
-    private static class Logging {
-
-        private final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
-
-        private FileHandler fh = null;
-        SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
-        private String FILENAME = System.getProperty("user.dir") + "/logs/DatabaseLogFile_" + format.format(Calendar.getInstance().getTime()) + ".log";
-
-        private File file = new File(FILENAME);
-
-        public Logging() {
-            //just to make our log file nicer :)
-            try {
-                file.createNewFile();
-                fh = new FileHandler(FILENAME);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            fh.setFormatter(new SimpleFormatter());
-            logger.addHandler(fh);
-            logger.setUseParentHandlers(false);
-        }
-    }
+    private static DatabaseLogging logging = null;
 
     void dbError(Exception e) {
-        if (logging == null) logging = new Logging();
+        if (logging == null) logging = new DatabaseLogging();
         System.err.println("Database responded with an error. See log file for more information.");
         logging.logger.severe("Exception: " + e);
     }

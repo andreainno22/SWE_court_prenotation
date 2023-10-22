@@ -1,13 +1,9 @@
 package Management;
 
-import Context.Reservation;
-import Database.ReservationDaoImpl;
-
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class PremiumReservationManager extends ReservationManager {
-    private final float discount = 0.9f;
 
     @Override
     public boolean makeReservation() {
@@ -28,6 +24,8 @@ public class PremiumReservationManager extends ReservationManager {
         }
         float price;
         DecimalFormat df = new DecimalFormat("#.##");
+        //Premium Discount 10%
+        float discount = 0.9f;
         price = reservation.getPrice() * discount;
         df.format(price);
         boolean isPremium = reservation.getClient().getIsPremium() == 1;

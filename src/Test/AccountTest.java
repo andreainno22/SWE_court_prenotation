@@ -6,7 +6,6 @@ import ApplicationLayer.GraphicInterfaceManager;
 import Context.Client;
 import Database.ClientDaoImpl;
 import Database.ReservationDaoImpl;
-import Management.AccountManager;
 import org.junit.jupiter.api.*;
 import org.junitpioneer.jupiter.DisableIfTestFails;
 
