@@ -153,9 +153,9 @@ public class AccountManager {
         else client.setReservationManager(new PremiumReservationManager());
     }
 
-    public Client login(String email, String password) {
+    public void login(String email, String password) {
         //Database_management db = new Database_management();
-        return client = clientDao.getClient(email, password);
+        client = clientDao.getClient(email, password);
     }
 
     /*private int register(Client newClient){
@@ -476,7 +476,7 @@ public class AccountManager {
         }
     }
 
-    public boolean renewPremium(Client client) {
+    public boolean renewPremium() {
         //Database_management db = new Database_management();
         if (walletManager.withdrawalWallet(20, client)) return clientDao.modifyPremiumExpiration(client);
         else {
@@ -485,7 +485,7 @@ public class AccountManager {
         }
     }
 
-    public void showPremiumExpiration(Client client) {
+    public void showPremiumExpiration() {
         //Database_management db = new Database_management();
         Date isPremiumDate = clientDao.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);

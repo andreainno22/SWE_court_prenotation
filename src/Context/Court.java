@@ -33,7 +33,7 @@ public class Court {
         return id;
     }
 
-    public void printAllCourt(Formatter fmt, boolean showDiscount) {
+    public void printAllCourts(Formatter fmt, boolean showDiscount) {
         if (this.type.equals("padel"))
             if (showDiscount)
                 fmt.format("%-15d%-15s%-15.2f%-15.2f\n", id, type, price, price * 0.9);

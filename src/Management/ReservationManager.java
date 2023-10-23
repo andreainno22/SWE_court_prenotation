@@ -50,7 +50,7 @@ public abstract class ReservationManager {
     }
 
     public void getRentingKitInfo(){
-        rentingKit = reservation.getClient().getReservationManager().getRentingKit(reservation.getCourt().getType());
+        rentingKit = rentingKitDao.getRentingKit(reservation.getCourt().getType());
     }
 
     public void setReservationRentingKit(int numOfRentingKits){
@@ -82,15 +82,15 @@ public abstract class ReservationManager {
         return availableSlotIds;
     }
 
-    public int getCourts(Formatter fmt, boolean showDiscount) {
+    public int getCourts(Formatter fmt) {
         //Database_management db = new Database_management();
-        court_type_prices = courtDao.getCourts();
-        if (!showDiscount)
+        if (reservation.getClient().getIsPremium() == 0)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
             fmt.format("%-15s%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]", "YOUR PRICE (-10%) [€]");
+        court_type_prices = courtDao.getCourts();
         for (Court court_type_price : court_type_prices) {
-            court_type_price.printAllCourt(fmt, showDiscount);
+            court_type_price.printAllCourts(fmt, reservation.getClient().getIsPremium() == 1);
         }
         return court_type_prices.size();
     }
@@ -124,10 +124,10 @@ public abstract class ReservationManager {
         reservationDao.printAllFutureReservations(client.getId());
     }
 
-    public RentingKit getRentingKit(String type) {
+    /*public RentingKit getRentingKit(String type) {
         //Database_management db = new Database_management();
         return rentingKitDao.getRentingKit(type);
-    }
+    }*/
 
     protected boolean makeReservation(float price, boolean isPremium) {
         System.out.println("Final price: " + String.format("%.2f", price) + "€");

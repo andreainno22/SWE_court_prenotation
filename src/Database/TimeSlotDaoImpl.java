@@ -21,17 +21,14 @@ public class TimeSlotDaoImpl implements TimeSlotDao{
             List<TimeSlot> timeSlots = new ArrayList<>();
             int id = 1;
             while (rs.next()) {
-                if (rs.getInt(1) == id) {
-                    timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
-                    id++;
-                } else {
+                if (rs.getInt(1) != id) {
                     do {
                         timeSlots.add(null);
                         id++;
                     } while (rs.getInt(1) != id);
-                    timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
-                    id++;
                 }
+                timeSlots.add(new TimeSlot(rs.getInt(1), rs.getString(2), rs.getString(3)));
+                id++;
             }
             rs.close();
             return timeSlots;
