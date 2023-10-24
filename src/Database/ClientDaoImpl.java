@@ -4,6 +4,7 @@ import Context.Client;
 
 import java.sql.*;
 import java.util.Calendar;
+import java.util.Formatter;
 import java.util.TimeZone;
 
 public class ClientDaoImpl implements ClientDao {
@@ -32,7 +33,6 @@ public class ClientDaoImpl implements ClientDao {
             }
             ResultSet rs = stmt.executeQuery("select * from client where email = '" + email + "' and password = '" + password + "'");
             if (!rs.next()) {
-                System.err.println("Wrong email or password. Retry.");
                 rs.close();
                 db.disconnect();
                 return null;
@@ -158,6 +158,28 @@ public class ClientDaoImpl implements ClientDao {
             WalletDaoImpl walletDao = new WalletDaoImpl();
             walletDao.modifyBalance(client, stmt);
             db.commitTransaction();
+            return true;
+        } catch (SQLException e) {
+            db.dbError(e);
+            return false;
+        } finally {
+            db.disconnect();
+        }
+    }
+
+    @Override
+    public boolean getAllClients() {
+        try {
+            Statement stmt = db.connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("select id, name, surname, email, telephone_number, is_premium, points from client");
+            Formatter fmt = new Formatter();
+            fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
+            while (rs.next()) {
+                fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), (rs.getInt(6) == 1), rs.getInt(7));
+            }
+            System.out.println(fmt);
+            rs.close();
             return true;
         } catch (SQLException e) {
             db.dbError(e);

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-public abstract class ReservationManager {
+public abstract class ClientReservationManager {
     protected final int reservationPoints = 10;
     private List<Court> court_type_prices;
     private List<TimeSlot> time_slots;
@@ -97,7 +97,7 @@ public abstract class ReservationManager {
 
     public void printAllReservations(Client client) {
         //Database_management db = new Database_management();
-        reservationDao.printAllReservations(client.getId());
+        reservationDao.printClientAllReservations(client.getId());
     }
 
     public ArrayList<Integer> getReservationsId(Client client) {
@@ -121,7 +121,7 @@ public abstract class ReservationManager {
 
     public void printAllFutureReservations(Client client) {
         //Database_management db = new Database_management();
-        reservationDao.printAllFutureReservations(client.getId());
+        reservationDao.printAllClientFutureReservations(client.getId());
     }
 
     /*public RentingKit getRentingKit(String type) {

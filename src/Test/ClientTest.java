@@ -18,7 +18,7 @@ import java.util.ArrayList;
 // make all tests
 @DisableIfTestFails
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class AccountTest {
+public class ClientTest {
     //private static AccountManager account;
     private static GraphicInterfaceManager gim;
     private String simulatedUserInput;

@@ -5,16 +5,16 @@ import java.util.Formatter;
 public class TimeSlot {
     String start_hour;
     String finish_hour;
-    int ts;
+    int id;
 
     public TimeSlot(int ts, String start_hour, String finish_hour) {
         this.start_hour = start_hour;
         this.finish_hour = finish_hour;
-        this.ts = ts;
+        this.id = ts;
     }
 
-    public int getTs() {
-        return ts;
+    public int getId() {
+        return id;
     }
 
     public String getStart_hour() {
@@ -26,6 +26,6 @@ public class TimeSlot {
     }
 
     public void printAllTimeSlots(Formatter fmt) {
-        fmt.format("%-15d%-15s%-15s\n", ts, start_hour, finish_hour);
+        fmt.format("%-15d%-15s%-15s\n", id, start_hour, finish_hour);
     }
 }

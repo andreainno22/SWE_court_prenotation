@@ -186,13 +186,13 @@ class Management.MailManager {
 }
 
 
-class Management.PremiumReservationManager {
+class Management.PremiumClientReservationManager {
 	{field} -discount : float
 	{method} +makeReservation ( paramReservation1 : Context.Reservation ) : boolean
 }
 
 
-abstract class Management.ReservationManager {
+abstract class Management.ClientReservationManager {
 	{field} #giftPoints : int
 	{field} #reservationPoints : int
 	{method} +deleteReservation ( paramReservation1 : Context.Reservation , paramClient2 : Context.Client ) : boolean
@@ -208,7 +208,7 @@ abstract class Management.ReservationManager {
 }
 
 
-class Management.StandardReservationManager {
+class Management.StandardClientReservationManager {
 	{method} +makeReservation ( paramReservation1 : Context.Reservation ) : boolean
 }
 
@@ -226,7 +226,7 @@ ApplicationLayer.GraphicInterfaceManager *--  Database.ClientDaoImpl : clientDao
 ApplicationLayer.GraphicInterfaceManager *--  Management.WalletManager : walletManager
 ApplicationLayer.GraphicInterfaceManager -->  Context.Client : client
 Context.Client -->  Context.Wallet : wallet
-Context.Client -->  Management.ReservationManager : reservationManager
+Context.Client -->  Management.ClientReservationManager : clientReservationManager
 Context.Reservation -->  Context.Client : client
 Context.Reservation -->  Context.Court : court
 Context.Reservation -->  Context.RentingKit : rentingKit
@@ -239,15 +239,13 @@ Database.TimeSlotDaoImpl ..|>  Database.TimeSlotDao
 Database.WalletDaoImpl ..|>  Database.WalletDao
 Management.AccountManager *--  Database.ClientDaoImpl : clientDao
 Management.AccountManager *--  Management.WalletManager : walletManager
-Management.PremiumReservationManager --|>  Management.ReservationManager
-Management.ReservationManager *--  Database.CourtDaoImpl : courtDao
-Management.ReservationManager *--  Database.RentingKitDaoImpl : rentingKitDao
-Management.ReservationManager *--  Database.ReservationDaoImpl : reservationDao
-Management.ReservationManager *--  Database.TimeSlotDaoImpl : timeSlotDao
-Management.ReservationManager *--  Management.WalletManager : walletManager
-Management.StandardReservationManager --|>  Management.ReservationManager
+Management.PremiumClientReservationManager --|>  Management.ClientReservationManager
+Management.ClientReservationManager *--  Database.CourtDaoImpl : courtDao
+Management.ClientReservationManager *--  Database.RentingKitDaoImpl : rentingKitDao
+Management.ClientReservationManager *--  Database.ReservationDaoImpl : reservationDao
+Management.ClientReservationManager *--  Database.TimeSlotDaoImpl : timeSlotDao
+Management.ClientReservationManager *--  Management.WalletManager : walletManager
+Management.StandardClientReservationManager --|>  Management.ClientReservationManager
 Management.WalletManager *--  Database.WalletDaoImpl : walletDao
-
-hide 
 
 @enduml

@@ -4,15 +4,13 @@ import Context.Client;
 import Context.Reservation;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Formatter;
 
 public interface ReservationDao extends GeneralDaoSettings{
-    void printAllReservations(int Client);
-    void printAllFutureReservations(int Client);
+    void printClientAllReservations(int Client);
+    void printAllClientFutureReservations(int Client);
+    void printAllReservations();
+    void printAllFutureReservations();
     Reservation getReservationById(int id);
     ArrayList<Integer> getReservationsId(int Client);
     boolean checkTestReservation(Client client, Date date);

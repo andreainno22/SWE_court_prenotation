@@ -2,6 +2,7 @@ package Management;
 
 import Context.*;
 import Database.ClientDaoImpl;
+import Database.SuperUserDaoImpl;
 
 import java.sql.Date;
 
@@ -11,18 +12,19 @@ public class AccountManager {
     private final Scanner sc = new Scanner(System.in);*/
     public Client client;
     //private final DatabaseManager db;
-
+    public SuperUser superUser;
     private final ClientDaoImpl clientDao = new ClientDaoImpl();
     private final WalletManager walletManager = new WalletManager();
+    private final SuperUserDaoImpl superUserDao = new SuperUserDaoImpl();
 
     /*public AccountManager() {
         //this.db = new DatabaseManager();
         sc = new Scanner(System.in);
     }*/
 
-    public int register(String name, String surname, String email, String password, int telephoneNumber){
+    public int register(String name, String surname, String email, String password, int telephoneNumber) {
         Client newClient = new Client(name, surname, email, password);
-        if(telephoneNumber != 0)
+        if (telephoneNumber != 0)
             newClient.setTelephoneNumber(telephoneNumber);
         return clientDao.insertClient(newClient);
     }
@@ -148,14 +150,17 @@ public class AccountManager {
 
     public void updateClient() {
         //Database_management db = new Database_management();
-        client = clientDao.getClient(client.getEmail(), client.getPassword());
-        if (client.getIsPremium() == 0) client.setReservationManager(new StandardReservationManager());
-        else client.setReservationManager(new PremiumReservationManager());
+        client = clientDao.getClient(this.client.getEmail(), this.client.getPassword());
+
+        if (client.getIsPremium() == 0) client.setReservationManager(new StandardClientReservationManager());
+        else client.setReservationManager(new PremiumClientReservationManager());
+
     }
 
     public void login(String email, String password) {
         //Database_management db = new Database_management();
         client = clientDao.getClient(email, password);
+        superUser = superUserDao.getSuperUser(email, password);
     }
 
     /*private int register(Client newClient){
@@ -489,6 +494,14 @@ public class AccountManager {
         //Database_management db = new Database_management();
         Date isPremiumDate = clientDao.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
+    }
+
+    public boolean checkSuperUser(String email) {
+        return superUserDao.checkSuperUser(email);
+    }
+
+    public void printAllClients() {
+        clientDao.getAllClients();
     }
 }
 

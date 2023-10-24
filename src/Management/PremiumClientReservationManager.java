@@ -3,7 +3,7 @@ package Management;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
-public class PremiumReservationManager extends ReservationManager {
+public class PremiumClientReservationManager extends ClientReservationManager {
 
     @Override
     public boolean makeReservation() {

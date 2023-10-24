@@ -5,12 +5,13 @@ import Context.Client;
 import java.sql.Date;
 import java.sql.Statement;
 
-public interface ClientDao extends GeneralDaoSettings {
+public interface ClientDao extends GeneralDaoSettings{
     void deleteTestClient(String email);
-    Client getClient(String email, String password);
     int insertClient(Client client);
+    Client getClient(String email, String password);
     Date getPremiumExpiration(Client client);
     void updatePoints(int points, Client client, Statement transactionStmt);
     boolean modifyPremiumExpiration(Client client);
     boolean modifyPremium(Client client);
+    boolean getAllClients();
 }

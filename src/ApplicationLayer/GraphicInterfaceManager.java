@@ -18,6 +18,9 @@ public class GraphicInterfaceManager {
     //private Client client;
     private final AccountManager accountManager = new AccountManager();
     private final WalletManager walletManager = new WalletManager();
+    private final CourtManager courtManager = new CourtManager();
+    private final TimeSlotManager timeSlotManager = new TimeSlotManager();
+    private final SuperUserReservationManager superUserReservationManager = new SuperUserReservationManager();
 
     public void startMenu() {
         while (startMenu) {
@@ -78,13 +81,13 @@ public class GraphicInterfaceManager {
             while (!valid) {
                 // fatto controllo sulla validità dell'email
                 int result;
-                if (!Utils.isValidEmail(email) || (result = accountManager.register(name, surname, email, password, telephoneNumber)) == -1) {
+                if (!Utils.isValidEmail(email) || accountManager.checkSuperUser(email) || (result = accountManager.register(name, surname, email, password, telephoneNumber)) == -1) {
                     System.err.println("Email already used or wrong email format. Retry.");
                     System.out.println("Type another email: [0 = Go Back]");
                     email = sc.nextLine();
                     if (email.equals("0")) break;
                     //newClient.setEmail(email);
-                } else if(result == 0){
+                } else if (result == 0) {
                     valid = true;
                 } else {
                     System.err.println("Error during registration. Retry.");
@@ -120,6 +123,14 @@ public class GraphicInterfaceManager {
                     }
                     startMenu = true;
                     return;
+                } else if (accountManager.superUser != null) {
+                    logged = true;
+                    System.out.println("Login successful.\n");
+                    while (logged) {
+                        superUserMenu();
+                    }
+                    startMenu = true;
+                    return;
                 } else {
                     System.out.println("Login Failed. Retry? (Y/n)");
                     String value = sc.nextLine();
@@ -132,7 +143,7 @@ public class GraphicInterfaceManager {
         }
     }
 
-    private void caseMakeReservation(){
+    private void caseMakeReservation() {
         int choice;
         Date date;
         int court;
@@ -169,7 +180,7 @@ public class GraphicInterfaceManager {
         Formatter fmt = new Formatter();
         int num_courts = accountManager.client.getReservationManager().getCourts(fmt);
         while (court_selection) {
-            System.out.println("Available Courts: ");
+            System.out.println("Courts: ");
             System.out.println(fmt);
             System.out.println("Select a Court [0 = Back to Main Menu]: ");
             while (true) {
@@ -281,7 +292,7 @@ public class GraphicInterfaceManager {
         //break;
     }
 
-    private void caseDeleteReservation(){
+    private void caseDeleteReservation() {
         // gestione della cancellazione della prenotazione
         accountManager.client.getReservationManager().printAllFutureReservations(accountManager.client);
         System.out.println("Note: you can delete your reservation by the day before the booking date!");
@@ -313,7 +324,7 @@ public class GraphicInterfaceManager {
         } else System.err.println("Reservation not found or non-cancellable.");
     }
 
-    private void caseWalletManagement(){
+    private void caseWalletManagement() {
         // gestione del portafoglio
         System.out.println("Your balance is: " + accountManager.client.getWallet().getBalance() + "€");
         System.out.println("Do you want to add money? [y/N]");
@@ -339,14 +350,14 @@ public class GraphicInterfaceManager {
         }
     }
 
-    private void casePremiumUpgradeRenewal(){
+    private void casePremiumUpgradeRenewal() {
         if (accountManager.client.getIsPremium() == 0) { // upgrade to premium
             System.out.println("""
-                            Do you want to upgrade to premium?\s
-                            You will pay 20€ for one year and then you will have a
-                            10% discount for every prenotation and you unlock a points system
-                            for getting bookings for free every 100 points accumulated!
-                            [y/N]""");
+                    Do you want to upgrade to premium?\s
+                    You will pay 20€ for one year and then you will have a
+                    10% discount for every prenotation and you unlock a points system
+                    for getting bookings for free every 100 points accumulated!
+                    [y/N]""");
             String answer = sc.nextLine();
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                 if (accountManager.setIsPremium(accountManager.client)) {
@@ -382,8 +393,7 @@ public class GraphicInterfaceManager {
         accountManager.updateClient();
         System.out.println("\nHello " + accountManager.client.getName() + " " + accountManager.client.getSurname() + "!");
         if (accountManager.client.getIsPremium() == 0) {
-            System.out.println("You are not subscribed to Premium.");
-            System.out.println("Please select an option:");
+            System.out.println("You are not subscribed to Premium.\nPlease select an option:");
             System.out.println("""
                     1. Make a reservation
                     2. Delete a reservation
@@ -393,8 +403,7 @@ public class GraphicInterfaceManager {
                     6. Your points
                     7. Logout""");
         } else {
-            System.out.println("You are subscribed to Premium.");
-            System.out.println("Please select an option:");
+            System.out.println("You are subscribed to Premium.\nPlease select an option:");
             System.out.println("""
                     1. Make a reservation
                     2. Delete a reservation
@@ -436,5 +445,259 @@ public class GraphicInterfaceManager {
             }
             default -> System.err.println("Wrong choice.");
         }
+    }
+
+    private void superUserMenu() {
+        System.out.println("\nHello " + accountManager.superUser.getName() + " " + accountManager.superUser.getSurname() + "!");
+//insert court, delete court, insert timeslot, delete timeslot, see all reservations, see all future reservations, see all clients, see all superusers, see all courts, see all timeslots, see all rentingkits, see all rentingkits reservations, see all rentingkits reservations by rentingkit, see all rentingkits reservations by reservation, see all rentingkits reservations by client, see all rentingkits reservations by rentingkit and client, see all rentingkits reservations by rentingkit and reservation, see all rentingkits reservations by client and reservation, see all rentingkits reservations by rentingkit, client and reservation, see all rentingkits reservations by rentingkit and client and reservation, see all rentingkits reservations by rentingkit and client and reservation and date, see all rentingkits reservations by rentingkit and client and reservation and date and timeslot, see all rentingkits reservations by rentingkit and client and reservation and date and timeslot and rentingkit
+        System.out.println("You are super user.\nPlease select an option:");
+        System.out.println("""
+                1. Insert a court
+                2. Delete a court
+                3. Modify price of a court
+                4. Insert a time slot
+                5. Delete a time slot
+                6. See all reservations
+                7. See all future reservations
+                8. See all clients       
+                9. Logout""");
+        int choice;
+
+        while (true) {
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                break;
+            } catch (InputMismatchException ex) {
+                System.err.println("Wrong choice format. Retry.");
+                sc.nextLine();
+            }
+        }
+        switch (choice) {
+            case 1 -> caseInsertCourt();
+            case 2 -> caseDeleteCourt();
+            case 3 -> caseModifyCourtTypePrice();
+            case 4 -> caseInsertTimeSlot();
+            case 5 -> caseDeleteTimeSlot();
+            case 6 -> superUserReservationManager.printAllReservations();
+            case 7 -> superUserReservationManager.printAllFutureReservations();
+            case 8 -> accountManager.printAllClients();
+            case 9 -> {
+                logged = false;
+                System.out.println("Logout successful.\n");
+            }
+            default -> System.err.println("Wrong choice.");
+        }
+    }
+
+    private void caseInsertCourt() {
+        List<Court> courts = courtManager.printCourts();
+        System.out.println("Insert new court id: ");
+        int id = 0;
+        String type = "";
+        boolean valid = false;
+        while (!valid) {
+            try {
+                id = sc.nextInt();
+                for (Court court : courts) {
+                    if (court.getId() == id) {
+                        System.err.println("Court already exists. Retry.");
+                        System.out.println("Insert court id: ");
+                        id = sc.nextInt();
+                        while (id < 0) {
+                            System.err.println("Wrong id format. Retry.");
+                            System.out.println("Insert court id: ");
+                            id = sc.nextInt();
+                        }
+                    }
+                }
+                String[] types = courtManager.getTypes();
+                System.out.println("Insert court type: ");
+                type = sc.next();
+                while (!valid) {
+                    for (String t : types) {
+                        if (t.equals(type)) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    if (!valid) {
+                        System.err.println("Wrong type format. Retry.");
+                        System.out.println("Insert court type: ");
+                        type = sc.nextLine();
+                    }
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Wrong id format. Retry.");
+                sc.nextLine();
+            }
+        }
+        courtManager.insertCourt(id, type);
+    }
+
+    private void caseDeleteCourt() {
+        courtManager.deleteCourt(findCourt());
+    }
+
+    private int findCourt() {
+        List<Court> courts = courtManager.printCourts();
+        System.out.println("Insert court id: ");
+        int id = 0;
+        boolean found = false;
+        while (!found) {
+            try {
+                id = sc.nextInt();
+                for (Court court : courts) {
+                    if (court.getId() == id) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.err.println("Court not found. Retry.");
+                    System.out.println("Insert court id: ");
+                    id = sc.nextInt();
+                    while (id < 0) {
+                        System.err.println("Wrong id format. Retry.");
+                        System.out.println("Insert court id: ");
+                        id = sc.nextInt();
+                    }
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Wrong id format. Retry.");
+                sc.nextLine();
+            }
+        }
+        return id;
+    }
+
+    private void caseModifyCourtTypePrice() {
+        courtManager.printCourts();
+        String[] types = courtManager.getTypes();
+        System.out.println("Insert type: ");
+        String type = "";
+        boolean found = false;
+        while (!found) {
+                type = sc.next();
+                for (String t : types) {
+                    if (t.equals(type)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.err.println("Type not found. Retry.");
+                    System.out.println("Insert type: ");
+                    type = sc.nextLine();
+                }
+        }
+        System.out.println("Insert new price: ");
+        float price = 0;
+        boolean valid = false;
+        while (!valid)
+            try {
+                price = sc.nextFloat();
+                while (price < 0) {
+                    System.err.println("Wrong price format. Retry.");
+                    System.out.println("Insert new price: ");
+                    price = sc.nextFloat();
+                }
+                valid = true;
+            } catch (InputMismatchException e) {
+                System.err.println("Wrong price format. Retry.");
+                sc.nextLine();
+            }
+        courtManager.updatePrice(type, price);
+    }
+
+    private void caseInsertTimeSlot() {
+        List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
+        int start_hour = 0;
+        int end_hour = 0;
+        int id = 0;
+        boolean valid = false;
+        while (!valid) {
+            try {
+                System.out.println("Insert time slot id: ");
+                id = sc.nextInt();
+                for (TimeSlot timeSlot : timeSlots) {
+                    if (timeSlot.getId() == id) {
+                        System.err.println("Id already exists. Retry");
+                        System.out.println("Insert time slot id: ");
+                        id = sc.nextInt();
+                        while (id < 0) {
+                            System.err.println("Wrong id format. Retry.");
+                            System.out.println("Insert time slot id: ");
+                            id = sc.nextInt();
+                        }
+                    }
+                }
+                    System.out.println("Insert start hour: ");
+                    start_hour = sc.nextInt();
+                    for (TimeSlot ts : timeSlots) {
+                        if (start_hour == Integer.parseInt(ts.getStart_hour())) {
+                            System.err.println("This start hour already exists. Retry.");
+                            System.out.println("Insert start hour ");
+                            start_hour = sc.nextInt();
+                            while (start_hour < 0) {
+                                System.err.println("Wrong id format. Retry.");
+                                System.out.println("Insert start hour: ");
+                                start_hour = sc.nextInt();
+                            }
+                        }
+                    }
+                    System.out.println("Insert end hour: ");
+                    end_hour = sc.nextInt();
+                    for (TimeSlot ts2 : timeSlots) {
+                        if (end_hour == Integer.parseInt(ts2.getFinish_hour())) {
+                            System.err.println("This end hour already exists. Retry.");
+                            System.out.println("Insert end hour ");
+                            end_hour = sc.nextInt();
+                            while (end_hour < 0) {
+                                System.err.println("Wrong id format. Retry.");
+                                System.out.println("Insert end hour: ");
+                                end_hour = sc.nextInt();
+                            }
+                        }
+                    }
+                valid = true;
+            } catch (InputMismatchException e) {
+                System.err.println("Wrong id format. Retry.");
+                sc.nextLine();
+            }
+        }
+        timeSlotManager.insertTimeSlot(id, String.valueOf(start_hour), String.valueOf(end_hour));
+    }
+
+    private void caseDeleteTimeSlot() {
+        List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
+        System.out.println("Insert time slot id: ");
+        int id = 0;
+        boolean found = false;
+        while (!found) {
+            try {
+                id = sc.nextInt();
+                for (TimeSlot timeSlot : timeSlots) {
+                    if (timeSlot.getId() == id) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.err.println("Time slot not found. Retry.");
+                    System.out.println("Insert time slot id: ");
+                    id = sc.nextInt();
+                    while (id < 0) {
+                        System.err.println("Wrong id format. Retry.");
+                        System.out.println("Insert time slot id: ");
+                        id = sc.nextInt();
+                    }
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Wrong id format. Retry.");
+                sc.nextLine();
+            }
+        }
+        timeSlotManager.deleteTimeSlot(id);
     }
 }

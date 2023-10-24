@@ -1,16 +1,11 @@
 package Context;
 
-import Management.ReservationManager;
+import Management.ClientReservationManager;
 
-public class Client {
+public class Client extends Person{
     // Constructor for testing
     public Client(int id, String name, String surname, String email, String password, int telephoneNumber, int isPremium, int points, Wallet wallet) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.telephoneNumber = telephoneNumber;
+        super(id, name, surname, email, password, telephoneNumber);
         this.points = points;
         this.isPremium = isPremium;
         this.wallet = wallet;
@@ -40,8 +35,8 @@ public class Client {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public void setReservationManager(ReservationManager reservationManager) {
-        this.reservationManager = reservationManager;
+    public void setReservationManager(ClientReservationManager clientReservationManager) {
+        this.clientReservationManager = clientReservationManager;
     }
 
     public String getEmail() {
@@ -72,8 +67,8 @@ public class Client {
         this.points = points;
     }
 
-    public ReservationManager getReservationManager() {
-        return reservationManager;
+    public ClientReservationManager getReservationManager() {
+        return clientReservationManager;
     }
 
     public void setIsPremium(int isPremium) {
@@ -84,14 +79,8 @@ public class Client {
         return wallet;
     }
 
-    private final String name;
-    private final String surname;
-    private String email;
-    private final String password;
     private Wallet wallet;
-    private int telephoneNumber;
-    private int id;
     private int points;
     private int isPremium;
-    private ReservationManager reservationManager;
+    private ClientReservationManager clientReservationManager;
 }
