@@ -2,8 +2,11 @@ package Test;
 
 import ApplicationLayer.GraphicInterfaceManager;
 import Context.Client;
+import Context.SuperUser;
 import Database.ClientDaoImpl;
+import Database.CourtDaoImpl;
 import Database.ReservationDaoImpl;
+import Database.SuperUserDaoImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -23,121 +26,64 @@ public class SuperUserTest {
     // make all tests
     private static GraphicInterfaceManager gim;
     private String simulatedUserInput;
-    private static Client testClient;
+    private static final SuperUserDaoImpl superUserDao = new SuperUserDaoImpl();
+    private static final CourtDaoImpl courtDao = new CourtDaoImpl();
+    private SuperUser superUser;
 
     public void setUp() {
-
+        superUser = new SuperUser("name", "surname", "test@test", "password", 0);
+        superUserDao.insertSuperUser(superUser);
     }
+
     public void assertion() {
         System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
         gim = new GraphicInterfaceManager();
         assertDoesNotThrow(() -> gim.startMenu());
     }
 
-    @Test
-    public void TestBRegistrationWithAlreadyUsedEmail() {
-        // tests if inserting another time the same email makes the program doesn't accept it
-        simulatedUserInput = "2\nName\nSurname\ntest1@email\npassword\n123\n0\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestCRegistrationInvalidEmail() {
-        // tests if inserting another time the same email makes the program doesn't accept it
-        simulatedUserInput = "2\nName\nSurname\nemail\npassword\n123\n0\n3\n";
-        assertion();
-    }
-
     @Test   // login
-    public void TestDLogin() {
-        simulatedUserInput = "1\ntest1@email\npassword\n7\n3\n";
+    public void TestALogin() {
+        simulatedUserInput = "1\na@b\nandre\n9\n3\n";
         assertion();
     }
 
     @Test
-    public void TestEMakeReservationWithoutMoney() {
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n3\n0\n7\n3\n";
+    public void TestBInsertCourt() {
+        simulatedUserInput = "1\na@b\nandre\n1\n20\nclay\n9\n3\n";
         assertion();
     }
 
     @Test
-    public void TestFAddMoney() {
-        simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n150\n7\n3\n";
+    public void TestCDeleteCourt() {
+        simulatedUserInput = "1\na@b\nandre\n2\n20\n9\n3\n";
         assertion();
 
     }
 
     @Test
-    public void TestGMakeReservationStandard() {
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n3\n0\n7\n3\n";
+    public void TestDModifyPrice() {
+        String type = "clay";
+        float price = courtDao.getPrice(type);
+        simulatedUserInput = "1\na@b\nandre\n3\nclay\n25\n9\n3\n";
+        assertion();
+        simulatedUserInput = "1\na@b\nandre\n3\nclay\n" + price + "\n9\n3\n";
+        assertion();
+    }
+    @Test
+    public void TestEInsertTimeSlot() {
+        simulatedUserInput = "1\na@b\nandre\n4\n20\n23\n24\n9\n3\n";
         assertion();
     }
 
     @Test
-    public void TestHMakeReservationStandardRentingKit() {
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n2\n2\n3\n1\n7\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestIUpgradePremium() {
-        simulatedUserInput = "1\ntest1@email\npassword\n5\ny\n7\n3\n";
-        assertion();
-    }
-
-
-    @Test
-    public void TestJMakeReservationPremium() {
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n1\n2\n2\n0\n7\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestKMakeReservationAlreadyBookedSlot() {
-        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n1\n2025-01-02\n1\n2\n2\n7\n0\n7\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestLMakeReservationPremiumRentingKit() {
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n2025-01-02\n3\n2\n3\n1\n7\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestMMakeReservationOnHoliday() {
-        String date = "2025-01-01";
-        simulatedUserInput = "1\ntest1@email\npassword\n1\n" + date + "\n7\n3\n";
-        assertion();
-        ReservationDaoImpl reservationDao = new ReservationDaoImpl();
-        assertFalse(reservationDao.checkTestReservation(testClient, Date.valueOf(date)));
-    }
-
-    @Test
-    public void TestNDeleteReservation() {
-        ReservationDaoImpl reservationDao = new ReservationDaoImpl();
-        ArrayList<Integer> reservationsId = reservationDao.getReservationsId(testClient.getId());
-        int reservationId = reservationsId.get(0);
-        simulatedUserInput = "1\ntest1@email\npassword\n2\n" + reservationId + "\n7\n3\n";
-        assertion();
-        int premiumReservationId = reservationsId.get(1);
-        simulatedUserInput = "1\ntest1@email\npassword\n2\n" + premiumReservationId + "\n7\n3\n";
-        assertion();
-        int resAfterAlreadyBookedSlot = reservationsId.get(2);
-        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n2\n" + resAfterAlreadyBookedSlot + "\n7\n3\n";
-        assertion();
-    }
-
-    @Test
-    public void TestORenewPremium() {
-        simulatedUserInput = "1\n" + testClient.getEmail() + "\npassword\n5\ny\n7\n3\n";
+    public void TestFDeleteTimeSlot() {
+        simulatedUserInput = "1\na@b\nandre\n5\n20\n9\n3\n";
         assertion();
     }
 
     @AfterAll
     static void tearDown() {
-        ClientDaoImpl clientDao = new ClientDaoImpl();
-        clientDao.deleteTestClient("test1@email");
+      superUserDao.deleteSuperUser("test@test");
     }
 
 }

@@ -11,4 +11,5 @@ public interface CourtDao extends GeneralDaoSettings{
     List<Client> deleteCourt(int id);
     String[] getTypes();
     void updatePrice(String id, float price);
+    float getPrice(String type);
 }

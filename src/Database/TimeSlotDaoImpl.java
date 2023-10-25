@@ -82,8 +82,7 @@ public class TimeSlotDaoImpl implements TimeSlotDao {
             db.disconnect();
         }
         return null;
-        //todo: ricontrollare se funziona tutto quando il db parte
-    }//soldi 9927.1
+    }
 
     @Override
     public List<TimeSlot> getAllTimeSlots() {

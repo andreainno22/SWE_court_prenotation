@@ -18,7 +18,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
     //private final DatabaseManager db = new DatabaseManager();
     @Override
-    public void printClientAllReservations(int Client) {
+    public void printAllClientReservations(int Client) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;

@@ -1,19 +1,34 @@
 package Database;
 
 import Context.SuperUser;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SuperUserDaoImpl implements SuperUserDao {
-    public SuperUser getSuperUser(String email, String password)  {
+
+    @Override
+    public void insertSuperUser(SuperUser superUser) {
+        try {
+            Statement stmt = db.connect();
+            assert stmt != null;
+            stmt.executeUpdate("INSERT INTO super_user (name, surname, email, password, telephone_number) VALUES ('" + superUser.getName() + "', '" + superUser.getSurname() + "', '" + superUser.getEmail() + "', '" + superUser.getPassword() + "', '" + superUser.getTelephoneNumber() + "')");
+        } catch (SQLException e) {
+            db.dbError(e);
+        } finally {
+            db.disconnect();
+        }
+    }
+
+    @Override
+    public SuperUser getSuperUser(String email, String password) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select * from super_user where email = '" + email + "' and password = '" + password + "'");
             if (!rs.next()) {
-                System.err.println("Wrong email or password. Retry.");
                 rs.close();
                 db.disconnect();
                 return null;
@@ -27,6 +42,7 @@ public class SuperUserDaoImpl implements SuperUserDao {
         return null;
     }
 
+    @Override
     public boolean checkSuperUser(String email) {
         try {
             Statement stmt = db.connect();
@@ -46,5 +62,19 @@ public class SuperUserDaoImpl implements SuperUserDao {
             db.disconnect();
         }
         return false;
+    }
+
+    @Override
+    public void deleteSuperUser(String email) {
+        try {
+            Statement stmt = db.connect();
+            assert stmt != null;
+            stmt.executeUpdate("DELETE FROM super_user WHERE email = '" + email + "'");
+        } catch (SQLException e) {
+            System.err.println("Error deleting user from database.");
+            System.err.println("ERROR: " + e);
+        } finally {
+            db.disconnect();
+        }
     }
 }

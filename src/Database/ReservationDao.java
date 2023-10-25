@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public interface ReservationDao extends GeneralDaoSettings{
-    void printClientAllReservations(int Client);
+    void printAllClientReservations(int Client);
     void printAllClientFutureReservations(int Client);
     void printAllReservations();
     void printAllFutureReservations();

@@ -71,14 +71,14 @@ public class CourtDaoImpl implements CourtDao {
             for (Client client : clients) {
                 walletDao.modifyBalance(client, stmt1);
             }
-            stmt.executeUpdate("DELETE FROM court WHERE id = " + id);
+            stmt1.executeUpdate("DELETE FROM court WHERE id = " + id);
+            db.commitTransaction();
             return clients;
         } catch (SQLException e) {
             db.dbError(e);
         } finally {
             db.disconnect();
         }
-        //todo: ricontrollare se funziona tutto quando il db parte
         return null;
     }
 
@@ -110,6 +110,24 @@ public class CourtDaoImpl implements CourtDao {
             stmt.executeUpdate("UPDATE type_of_court SET price = " + price + " WHERE type_of_court = '" + type + "'");
         } catch (SQLException e) {
             db.dbError(e);
+        } finally {
+            db.disconnect();
+        }
+    }
+
+    @Override
+    public float getPrice(String type){
+        try {
+            Statement stmt = db.connect();
+            assert stmt != null;
+            ResultSet rs = stmt.executeQuery("SELECT price FROM type_of_court WHERE type_of_court = '" + type + "'");
+            rs.next();
+            float price = rs.getFloat(1);
+            rs.close();
+            return price;
+        } catch (SQLException e) {
+            db.dbError(e);
+            return -1;
         } finally {
             db.disconnect();
         }

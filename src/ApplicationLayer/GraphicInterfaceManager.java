@@ -52,7 +52,7 @@ public class GraphicInterfaceManager {
         }
     }
 
-    public void registerAccount() {
+    private void registerAccount() {
         while (!startMenu) {
             boolean valid = false;
             System.out.println("Name: ");
@@ -106,7 +106,7 @@ public class GraphicInterfaceManager {
         }
     }
 
-    public void loginAccount() {
+    private void loginAccount() {
         while (!startMenu) {
             while (!logged) {
                 System.out.println("Email: ");
@@ -449,7 +449,6 @@ public class GraphicInterfaceManager {
 
     private void superUserMenu() {
         System.out.println("\nHello " + accountManager.superUser.getName() + " " + accountManager.superUser.getSurname() + "!");
-//insert court, delete court, insert timeslot, delete timeslot, see all reservations, see all future reservations, see all clients, see all superusers, see all courts, see all timeslots, see all rentingkits, see all rentingkits reservations, see all rentingkits reservations by rentingkit, see all rentingkits reservations by reservation, see all rentingkits reservations by client, see all rentingkits reservations by rentingkit and client, see all rentingkits reservations by rentingkit and reservation, see all rentingkits reservations by client and reservation, see all rentingkits reservations by rentingkit, client and reservation, see all rentingkits reservations by rentingkit and client and reservation, see all rentingkits reservations by rentingkit and client and reservation and date, see all rentingkits reservations by rentingkit and client and reservation and date and timeslot, see all rentingkits reservations by rentingkit and client and reservation and date and timeslot and rentingkit
         System.out.println("You are super user.\nPlease select an option:");
         System.out.println("""
                 1. Insert a court
@@ -492,7 +491,7 @@ public class GraphicInterfaceManager {
 
     private void caseInsertCourt() {
         List<Court> courts = courtManager.printCourts();
-        System.out.println("Insert new court id: ");
+        System.out.println("Insert new court id: (press a letter to go back) ");
         int id = 0;
         String type = "";
         boolean valid = false;
@@ -528,8 +527,9 @@ public class GraphicInterfaceManager {
                     }
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Wrong id format. Retry.");
+                System.out.println("Back to menu...");
                 sc.nextLine();
+                break;
             }
         }
         courtManager.insertCourt(id, type);
@@ -541,7 +541,7 @@ public class GraphicInterfaceManager {
 
     private int findCourt() {
         List<Court> courts = courtManager.printCourts();
-        System.out.println("Insert court id: ");
+        System.out.println("Insert court id: (press a letter to go back) ");
         int id = 0;
         boolean found = false;
         while (!found) {
@@ -564,8 +564,9 @@ public class GraphicInterfaceManager {
                     }
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Wrong id format. Retry.");
+                System.out.println("Back to menu...");
                 sc.nextLine();
+                break;
             }
         }
         return id;
@@ -591,7 +592,7 @@ public class GraphicInterfaceManager {
                     type = sc.nextLine();
                 }
         }
-        System.out.println("Insert new price: ");
+        System.out.println("Insert new price: (press a letter to go back) ");
         float price = 0;
         boolean valid = false;
         while (!valid)
@@ -604,8 +605,9 @@ public class GraphicInterfaceManager {
                 }
                 valid = true;
             } catch (InputMismatchException e) {
-                System.err.println("Wrong price format. Retry.");
+                System.out.println("Back to menu...");
                 sc.nextLine();
+                break;
             }
         courtManager.updatePrice(type, price);
     }
@@ -618,7 +620,7 @@ public class GraphicInterfaceManager {
         boolean valid = false;
         while (!valid) {
             try {
-                System.out.println("Insert time slot id: ");
+                System.out.println("Insert time slot id: (press a letter to go back)");
                 id = sc.nextInt();
                 for (TimeSlot timeSlot : timeSlots) {
                     if (timeSlot.getId() == id) {
@@ -662,8 +664,9 @@ public class GraphicInterfaceManager {
                     }
                 valid = true;
             } catch (InputMismatchException e) {
-                System.err.println("Wrong id format. Retry.");
+                System.out.println("Back to menu...");
                 sc.nextLine();
+                break;
             }
         }
         timeSlotManager.insertTimeSlot(id, String.valueOf(start_hour), String.valueOf(end_hour));
@@ -671,7 +674,7 @@ public class GraphicInterfaceManager {
 
     private void caseDeleteTimeSlot() {
         List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
-        System.out.println("Insert time slot id: ");
+        System.out.println("Insert time slot id: (press a letter to go back)");
         int id = 0;
         boolean found = false;
         while (!found) {
@@ -694,8 +697,9 @@ public class GraphicInterfaceManager {
                     }
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Wrong id format. Retry.");
+                System.out.println("Back to menu...");
                 sc.nextLine();
+                break;
             }
         }
         timeSlotManager.deleteTimeSlot(id);

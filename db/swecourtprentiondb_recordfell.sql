@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 40s.h.filess.io:3307
--- Generation Time: Oct 23, 2023 at 04:04 PM
+-- Generation Time: Oct 25, 2023 at 11:11 AM
 -- Server version: 8.0.29-21
 -- PHP Version: 8.2.4
 
@@ -44,7 +44,7 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`id`, `name`, `surname`, `email`, `password`, `telephone_number`, `is_premium`, `points`, `wallet`) VALUES
-(160, 'Andrea', 'Innocenti', 'Andreinno2218@gmail.com', 'andre', 0, 1, 20, 160),
+(160, 'Andrea', 'Innocenti', 'Andreinno2218@gmail.com', 'andre', 0, 1, 30, 160),
 (180, 'Kevin', 'Madrigali', 'madrigali541@gmail.com', 'kevin', 0, 1, 10, 180),
 (207, 'Nome', 'Cognome', 'mail@email.com', 'mail', 0, 0, 0, 207);
 
@@ -113,10 +113,9 @@ CREATE TABLE `rentingkit_reservation` (
 --
 
 INSERT INTO `rentingkit_reservation` (`id`, `reservation`, `renting_kit`, `num_of_rents`) VALUES
-(63, 147, 1, 2),
-(64, 148, 1, 4),
 (65, 149, 1, 2),
-(66, 150, 1, 1);
+(66, 150, 1, 1),
+(75, 171, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -159,12 +158,31 @@ CREATE TABLE `reservation` (
 --
 
 INSERT INTO `reservation` (`id`, `date`, `court`, `client`, `time_slot`, `price`, `isPremium`) VALUES
-(145, '2023-11-11', 1, 160, 5, 27, 1),
-(146, '2023-10-30', 10, 160, 6, 30.6, 1),
-(147, '2023-11-07', 3, 160, 8, 27, 1),
-(148, '2023-11-20', 4, 160, 5, 0, 1),
 (149, '2023-11-15', 6, 160, 9, 25.2, 1),
-(150, '2023-12-03', 6, 160, 9, 20.7, 1);
+(150, '2023-12-03', 6, 160, 9, 20.7, 1),
+(171, '2023-11-11', 9, 160, 10, 30.6, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `super_user`
+--
+
+CREATE TABLE `super_user` (
+  `id` smallint NOT NULL,
+  `name` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `surname` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `telephone_number` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `super_user`
+--
+
+INSERT INTO `super_user` (`id`, `name`, `surname`, `email`, `password`, `telephone_number`) VALUES
+(1, 'andrea', 'innocenti', 'a@b', 'andre', 0);
 
 -- --------------------------------------------------------
 
@@ -187,8 +205,6 @@ INSERT INTO `time_slots` (`id`, `start_hour`, `finish_hour`) VALUES
 (2, '9', '10'),
 (3, '10', '11'),
 (4, '11', '12'),
-(5, '12', '13'),
-(6, '13', '14'),
 (7, '14', '15'),
 (8, '15', '16'),
 (9, '16', '17'),
@@ -215,7 +231,7 @@ CREATE TABLE `type_of_court` (
 --
 
 INSERT INTO `type_of_court` (`id`, `type_of_court`, `price`) VALUES
-(1, 'clay', 20),
+(1, 'clay', 0),
 (2, 'hard', 18),
 (3, 'grass', 22),
 (4, 'padel', 20);
@@ -237,7 +253,7 @@ CREATE TABLE `wallet` (
 --
 
 INSERT INTO `wallet` (`id`, `balance`, `client`) VALUES
-(160, 9927.1, 160),
+(160, 9954.1, 160),
 (180, 12.8, 180),
 (207, 0, 207);
 
@@ -287,7 +303,15 @@ ALTER TABLE `renting_kits`
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `client_idx` (`client`),
-  ADD KEY `reservation_time_slot` (`time_slot`) USING BTREE;
+  ADD KEY `reservation_time_slot` (`time_slot`) USING BTREE,
+  ADD KEY `reservation_court` (`court`);
+
+--
+-- Indexes for table `super_user`
+--
+ALTER TABLE `super_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `time_slots`
@@ -316,19 +340,19 @@ ALTER TABLE `wallet`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
 
 --
 -- AUTO_INCREMENT for table `premium_subs`
 --
 ALTER TABLE `premium_subs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `rentingkit_reservation`
 --
 ALTER TABLE `rentingkit_reservation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `renting_kits`
@@ -340,7 +364,13 @@ ALTER TABLE `renting_kits`
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+
+--
+-- AUTO_INCREMENT for table `super_user`
+--
+ALTER TABLE `super_user`
+  MODIFY `id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -376,6 +406,7 @@ ALTER TABLE `rentingkit_reservation`
 --
 ALTER TABLE `reservation`
   ADD CONSTRAINT `client_idx` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `reservation_court` FOREIGN KEY (`court`) REFERENCES `court` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reservation_time_slot` FOREIGN KEY (`time_slot`) REFERENCES `time_slots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

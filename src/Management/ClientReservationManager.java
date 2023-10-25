@@ -97,7 +97,7 @@ public abstract class ClientReservationManager {
 
     public void printAllReservations(Client client) {
         //Database_management db = new Database_management();
-        reservationDao.printClientAllReservations(client.getId());
+        reservationDao.printAllClientReservations(client.getId());
     }
 
     public ArrayList<Integer> getReservationsId(Client client) {
