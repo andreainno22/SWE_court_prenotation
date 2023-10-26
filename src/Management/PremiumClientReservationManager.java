@@ -29,9 +29,11 @@ public class PremiumClientReservationManager extends ClientReservationManager {
         price = reservation.getPrice() * discount;
         df.format(price);
         boolean isPremium = reservation.getClient().getIsPremium() == 1;
-        reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
         System.out.println("You will earn " + reservationPoints + " points for this booking.");
-        return super.makeReservation(price, isPremium);
-
+        if(super.makeReservation(price, isPremium)) {
+            reservation.getClient().setPoints(reservation.getClient().getPoints() + reservationPoints);
+            return true;
+        }
+        return false;
     }
 }
