@@ -29,7 +29,7 @@ public class TimeSlotManager {
         List<Client> clients = timeSlotDao.deleteTimeSlot(id);
         if (clients != null)
             for (Client c : clients) {
-            Utils.sendEmail(c.getEmail(), "Time slot " + id + " is not longer available.", "Time slot" + id + " is not longer available. All your reservation for this time slot are deleted and your money has been refunded. We are sorry for the inconvenience.");
+            Utils.sendEmail(c.getEmail(), "Time slot " + id + " is not longer available.", "Time slot " + id + " is not longer available. All your reservation for this time slot are deleted and your money has been refunded. We are sorry for the inconvenience.");
         }
     }
 }
