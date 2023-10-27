@@ -15,7 +15,6 @@ public class GraphicInterfaceManager {
     private boolean logged = false;
     private boolean startMenu = true;
     private final Scanner sc = new Scanner(System.in);
-    //private Client client;
     private final AccountManager accountManager = new AccountManager();
     private final WalletManager walletManager = new WalletManager();
     private final CourtManager courtManager = new CourtManager();
@@ -63,8 +62,6 @@ public class GraphicInterfaceManager {
             String email = sc.nextLine();
             System.out.println("Password: ");
             String password = sc.nextLine();
-            //Client newClient = new Client(name, surname, email, password);
-            //Database_management db = new Database_management();
             int telephoneNumber = 0;
             boolean telephoneNumberValid = false;
             while (!telephoneNumberValid) {
@@ -113,7 +110,6 @@ public class GraphicInterfaceManager {
                 String email = sc.nextLine();
                 System.out.println("Password: ");
                 String password = sc.nextLine();
-                //Database_management db = new Database_management();
                 accountManager.login(email, password);
                 if (accountManager.client != null) {
                     logged = true;
@@ -147,7 +143,6 @@ public class GraphicInterfaceManager {
         int choice;
         Date date;
         int court;
-        //Reservation res = new Reservation(accountManager.client);
         System.out.println("Date (yyyy-mm-dd): ");
         try {
             // controllo sul fatto che la data non sia nel passato o presente
@@ -159,21 +154,17 @@ public class GraphicInterfaceManager {
 
             if (!date.after(italianZonedDate)) {
                 System.err.println("You can book at least for tomorrow.");
-                //break;
                 return;
             }
             HolidayManager holidayManager = HolidayManager.getInstance(HolidayCalendar.ITALY);
             if (holidayManager.isHoliday(date.toLocalDate())) {
                 System.err.println("You can't book on a holiday. Retry.");
-                //break;
                 return;
             }
             // aggiunta data a reservation
-            //res.setDate(date);
             accountManager.client.getReservationManager().createReservation(accountManager.client, date);
         } catch (IllegalArgumentException e) {
             System.err.println("Wrong date format.");
-            //break;
             return;
         }
         boolean court_selection = true;
@@ -201,7 +192,6 @@ public class GraphicInterfaceManager {
                 break;
             }
             // aggiunta di court a reservation
-            //res.setCourt(courts.get(court - 1));
             accountManager.client.getReservationManager().setReservationCourt(court);
             Formatter fmt2 = new Formatter();
             boolean[] available_slots = accountManager.client.getReservationManager().getTimeSlots(fmt2, date, court);
@@ -250,10 +240,7 @@ public class GraphicInterfaceManager {
                     if (slot == 0) break;
 
                     // aggiunta time slot a reservation
-                    //TimeSlot ts = available_slots.get(slot - 1);
-                    //res.setTime_slot(ts);
                     accountManager.client.getReservationManager().setReservationTimeSlot(slot);
-                    //RentingKit rentingKit = accountManager.client.getReservationManager().getRentingKit(res.getCourt().getType());
                     accountManager.client.getReservationManager().getRentingKitInfo();
                     if (accountManager.client.getIsPremium() == 0)
                         System.out.println("How many " + accountManager.client.getReservationManager().getRentingKit().getType() + " kits do you want to rent? [Unit price = " + accountManager.client.getReservationManager().getRentingKit().getUnitPrice() + "€] [0 = None]");
@@ -266,8 +253,6 @@ public class GraphicInterfaceManager {
                             sc.nextLine();
                             rentIsValid = true;
                             // aggiunta renting kit a reservation
-                            //rentingKit.setNumOfRents(numOfRent);
-                            //res.setRentingKit(rentingKit);
                             accountManager.client.getReservationManager().setReservationRentingKit(numOfRent);
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong input format. Retry");
@@ -289,7 +274,6 @@ public class GraphicInterfaceManager {
                     break;
             }
         }
-        //break;
     }
 
     private void caseDeleteReservation() {
@@ -414,9 +398,6 @@ public class GraphicInterfaceManager {
                     7. Logout""");
         }
         int choice;
-
-        /*if (accountManager.client.getIsPremium() == 0) accountManager.client.setReservationManager(new StandardReservationManager());
-        else accountManager.client.setReservationManager(new PremiumReservationManager());*/
 
         while (true) {
             try {

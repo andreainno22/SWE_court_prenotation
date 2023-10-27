@@ -1,8 +1,12 @@
 package Database;
 
 import Context.Client;
+import Context.Reservation;
 import Context.TimeSlot;
 import Context.Wallet;
+import Management.ClientReservationManager;
+import Management.PremiumClientReservationManager;
+import Management.StandardClientReservationManager;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -57,25 +61,32 @@ public class TimeSlotDaoImpl implements TimeSlotDao {
     }
 
     @Override
-    public List<Client> deleteTimeSlot(int id) {
+    public List<Reservation> deleteTimeSlot(int id) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select client.*, wallet.balance, reservation.price from client, reservation, wallet where wallet.client = client.id and client.id = reservation.client and reservation.time_slot = '" + id + "'");
-            List<Client> clients = new ArrayList<>();
+            List<Reservation> reservations = new ArrayList<>();
             while (rs.next()) {
-                clients.add(new Client(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), new Wallet(rs.getInt(9), rs.getFloat(10) + rs.getFloat(11))));
+                Client c = new Client(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), new Wallet(rs.getInt(9), rs.getFloat(10) + rs.getFloat(11)));
+                reservations.add(new Reservation(rs.getFloat(11), c));
             }
             rs.close();
             db.disconnect();
             Statement stmt1 = db.connectTransaction();
             WalletDaoImpl walletDao = new WalletDaoImpl();
-            for (Client client : clients) {
-                walletDao.modifyBalance(client, stmt1);
+            ClientDaoImpl clientDao = new ClientDaoImpl();
+            for (Reservation r : reservations) {
+                if(r.getPrice() != 0)
+                   walletDao.modifyBalance(r.getClient(), stmt1);
+                else {
+                    int points = r.getClient().getPoints() + 100;
+                    clientDao.updatePoints(points, r.getClient(), stmt1);
+                }
             }
             stmt1.executeUpdate("DELETE FROM time_slots WHERE id = " + id);
             db.commitTransaction();
-            return clients;
+            return reservations;
         } catch (SQLException e) {
             db.dbError(e);
         } finally {

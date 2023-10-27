@@ -12,6 +12,11 @@ public class Reservation {
         this.isPremium = isPremium;
     }
 
+    public Reservation(float price, Client client){
+        this.price = price;
+        this.client = client;
+    }
+
     public Reservation(int id, Date date, float price){
         this.id = id;
         this.date = date;
