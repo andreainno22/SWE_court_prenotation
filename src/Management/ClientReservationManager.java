@@ -4,11 +4,8 @@ import Context.*;
 //import Database.DatabaseManager;
 import Context.TimeSlot;
 import Database.*;
-
+import java.util.*;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
 
 public abstract class ClientReservationManager {
     protected final int reservationPoints = 10;
@@ -63,26 +60,33 @@ public abstract class ClientReservationManager {
 
     }
 
-    public boolean[] getTimeSlots(Formatter fmt, Date date, int court) {
+    public void getTimeSlots(Formatter fmt, Date date, int court) {
         //Database_management db = new Database_management();
         time_slots = timeSlotDao.getTimeSlots(date, court);
         //System.out.println(time_slots.size());
         fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
-        boolean[] availableSlotIds = new boolean[time_slots.size()];
-        int id = 0;
         for (TimeSlot timeSlot : time_slots) {
-            if (timeSlot != null) {
+            if (timeSlot != null)
                 timeSlot.printAllTimeSlots(fmt);
-                availableSlotIds[id] = true;
-            }else{
-                availableSlotIds[id] = false;
-            }
-            id++;
         }
-        return availableSlotIds;
     }
 
-    public int getCourts(Formatter fmt) {
+    public boolean verifyValidTimeSlot(int timeslot_id){
+        if(timeslot_id <= 0)
+            return false;
+        int[] timeslots_ids = new int[time_slots.size()];
+        int scan = 0;
+        for(TimeSlot timeSlot : time_slots){
+            if(timeSlot != null)
+                timeslots_ids[scan] = timeSlot.getId();
+            scan++;
+        }
+        Arrays.sort(timeslots_ids);
+        int result = Arrays.binarySearch(timeslots_ids, timeslot_id);
+        return (result >= 0);
+    }
+
+    public void getCourts(Formatter fmt) {
         //Database_management db = new Database_management();
         if (reservation.getClient().getIsPremium() == 0)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
@@ -92,7 +96,20 @@ public abstract class ClientReservationManager {
         for (Court court_type_price : court_type_prices) {
             court_type_price.printAllCourts(fmt, reservation.getClient().getIsPremium() == 1);
         }
-        return court_type_prices.size();
+    }
+
+    public boolean verifyValidCourt(int court_id){
+        if(court_id <= 0)
+            return false;
+        int[] court_ids = new int[court_type_prices.size()];
+        int scan = 0;
+        for(Court court : court_type_prices){
+            court_ids[scan] = court.getId();
+            scan++;
+        }
+        Arrays.sort(court_ids);
+        int result = Arrays.binarySearch(court_ids, court_id);
+        return (result >= 0);
     }
 
     public void printAllReservations(Client client) {

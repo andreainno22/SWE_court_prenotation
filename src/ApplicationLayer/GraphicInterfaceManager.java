@@ -2,13 +2,10 @@ package ApplicationLayer;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-
 import java.util.*;
-
 import Management.*;
 import de.jollyday.*;
 import Context.*;
-
 import java.sql.Date;
 
 public class GraphicInterfaceManager {
@@ -143,8 +140,8 @@ public class GraphicInterfaceManager {
         int choice;
         Date date;
         int court;
-        System.out.println("Date (yyyy-mm-dd): ");
         try {
+            System.out.println("Date (yyyy-mm-dd): ");
             // controllo sul fatto che la data non sia nel passato o presente
             date = Date.valueOf(sc.nextLine());
             ZoneId italyZone = ZoneId.of("Europe/Rome");
@@ -158,7 +155,7 @@ public class GraphicInterfaceManager {
             }
             HolidayManager holidayManager = HolidayManager.getInstance(HolidayCalendar.ITALY);
             if (holidayManager.isHoliday(date.toLocalDate())) {
-                System.err.println("You can't book on a holiday. Retry.");
+                System.err.println("You can't book on a holiday.");
                 return;
             }
             // aggiunta data a reservation
@@ -169,7 +166,7 @@ public class GraphicInterfaceManager {
         }
         boolean court_selection = true;
         Formatter fmt = new Formatter();
-        int num_courts = accountManager.client.getReservationManager().getCourts(fmt);
+        accountManager.client.getReservationManager().getCourts(fmt);
         while (court_selection) {
             System.out.println("Courts: ");
             System.out.println(fmt);
@@ -178,7 +175,8 @@ public class GraphicInterfaceManager {
                 try {
                     court = sc.nextInt();
                     sc.nextLine();
-                    if (court > num_courts || court < 0) {
+                    if(court == 0) break;
+                    if (!accountManager.client.getReservationManager().verifyValidCourt(court)) {
                         System.err.println("You selected a wrong Court. Retry.");
                     } else {
                         break;
@@ -194,18 +192,20 @@ public class GraphicInterfaceManager {
             // aggiunta di court a reservation
             accountManager.client.getReservationManager().setReservationCourt(court);
             Formatter fmt2 = new Formatter();
-            boolean[] available_slots = accountManager.client.getReservationManager().getTimeSlots(fmt2, date, court);
+            accountManager.client.getReservationManager().getTimeSlots(fmt2, date, court);
             System.out.println("Available Time Slots: ");
             System.out.println(fmt2);
             System.out.println("Select an option:");
             System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
-            try {
-                choice = sc.nextInt();
-                sc.nextLine();
-            } catch (InputMismatchException e) {
-                System.err.println("Wrong choice format. Going back to Main Menu...");
-                sc.nextLine();
-                break;
+            while(true) {
+                try {
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    break;
+                } catch (InputMismatchException e) {
+                    System.err.println("Wrong choice format. Retry.");
+                    sc.nextLine();
+                }
             }
             switch (choice) {
                 case 1:
@@ -213,32 +213,23 @@ public class GraphicInterfaceManager {
                 case 2:
                     int slot = 0;
                     System.out.println("ID of desired Time Slot [0 = Go Back to Court Selection]: ");
-                    boolean valid = false;
-                    while (!valid) {
+                    while (true) {
                         try {
                             slot = sc.nextInt();
                             sc.nextLine();
-                            if (slot > available_slots.length || slot < 0) {
-                                System.err.println("Given Time Slot is wrong. Retry.");
-                                continue;
+                            if(slot == 0) break;
+                            while (!accountManager.client.getReservationManager().verifyValidTimeSlot(slot)) {
+                                System.err.println("Given Time Slot is wrong or not available. Retry.");
+                                slot = sc.nextInt();
+                                sc.nextLine();
                             }
-                            valid = true;
-                            if (slot != 0) {
-                                while (!available_slots[slot - 1]) {
-                                    System.err.println("Given Time Slot is not available. Retry.");
-                                    System.out.println("ID of desired Time Slot: ");
-                                    slot = sc.nextInt();
-                                    sc.nextLine();
-                                }
-                            }
+                            break;
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong input format. Retry");
                             sc.nextLine();
-                            break;
                         }
                     }
                     if (slot == 0) break;
-
                     // aggiunta time slot a reservation
                     accountManager.client.getReservationManager().setReservationTimeSlot(slot);
                     accountManager.client.getReservationManager().getRentingKitInfo();
