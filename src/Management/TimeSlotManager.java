@@ -1,6 +1,5 @@
 package Management;
 
-import Context.Client;
 import Context.Reservation;
 import Context.TimeSlot;
 import Database.TimeSlotDaoImpl;
@@ -31,9 +30,9 @@ public class TimeSlotManager {
         if (reservations != null)
             for (Reservation r : reservations) {
                 if (r.getPrice() == 0)
-                    Utils.sendEmail(r.getClient().getEmail(), "Time slot " + id + " is not longer available.", "Time slot " + id + " is not longer available. Your reservation for this time slot is deleted and your gift points used are refunded. We are sorry for the inconvenience.");
+                    Utils.sendEmail(r.getClient().getEmail(), "Important update for your reservation", "Time slot " + id + " is not longer available. Your reservation for this time slot is deleted and your gift points used are refunded. We are sorry for the inconvenience.");
                 else
-                    Utils.sendEmail(r.getClient().getEmail(), "Time slot " + id + " is not longer available.", "Time slot " + id + " is not longer available. Your reservation for this time slot is deleted and your money has been refunded. We are sorry for the inconvenience.");
+                    Utils.sendEmail(r.getClient().getEmail(), "Important update for your reservation", "Time slot " + id + " is not longer available. Your reservation for this time slot is deleted and your money has been refunded. We are sorry for the inconvenience.");
             }
     }
 }

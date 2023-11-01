@@ -42,11 +42,11 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public void printAllReservations() {
+    public void printAllReservationsAtDate(java.sql.Date date) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where reservation.date = '"+date.toString()+"'");
 
             Formatter fmt = new Formatter();
             formatOutput(fmt, rs);
@@ -69,7 +69,7 @@ public class ReservationDaoImpl implements ReservationDao {
             // Crea una data nel fuso orario italiano
             LocalDate today = LocalDate.now(italyZone);
             //Date today = Date.from(italianDate.atStartOfDay().atZone(italyZone).toInstant());
-            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where date > '" + today + "'");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where date > '" + today + "' order by date");
             Formatter fmt = new Formatter();
             formatOutput(fmt, rs);
             System.out.println(fmt);

@@ -428,7 +428,7 @@ public class GraphicInterfaceManager {
                 3. Modify price of a court
                 4. Insert a time slot
                 5. Delete a time slot
-                6. See all reservations
+                6. See all today reservations
                 7. See all future reservations
                 8. See all clients       
                 9. Logout""");
@@ -450,7 +450,7 @@ public class GraphicInterfaceManager {
             case 3 -> caseModifyCourtTypePrice();
             case 4 -> caseInsertTimeSlot();
             case 5 -> caseDeleteTimeSlot();
-            case 6 -> superUserReservationManager.printAllReservations();
+            case 6 -> superUserReservationManager.printAllTodayReservations();
             case 7 -> superUserReservationManager.printAllFutureReservations();
             case 8 -> accountManager.printAllClients();
             case 9 -> {
@@ -463,7 +463,7 @@ public class GraphicInterfaceManager {
 
     private void caseInsertCourt() {
         List<Court> courts = courtManager.printCourts();
-        System.out.println("Insert new court id: (press a letter to go back) ");
+        System.out.println("Insert new court id: [insert a random letter to go back] ");
         int id = 0;
         String type = "";
         boolean valid = false;
@@ -509,11 +509,12 @@ public class GraphicInterfaceManager {
 
     private void caseDeleteCourt() {
         courtManager.deleteCourt(findCourt());
+        System.out.println("Court deleted successfully.");
     }
 
     private int findCourt() {
         List<Court> courts = courtManager.printCourts();
-        System.out.println("Insert court id: (press a letter to go back) ");
+        System.out.println("Insert court id: [insert a random letter to go back] ");
         int id = 0;
         boolean found = false;
         while (!found) {
@@ -564,7 +565,7 @@ public class GraphicInterfaceManager {
                     type = sc.nextLine();
                 }
         }
-        System.out.println("Insert new price: (press a letter to go back) ");
+        System.out.println("Insert new price: [insert a random letter to go back] ");
         float price = 0;
         boolean valid = false;
         while (!valid)
@@ -592,7 +593,7 @@ public class GraphicInterfaceManager {
         boolean valid = false;
         while (!valid) {
             try {
-                System.out.println("Insert time slot id: (press a letter to go back)");
+                System.out.println("Insert time slot id: [insert a random letter to go back]");
                 id = sc.nextInt();
                 for (TimeSlot timeSlot : timeSlots) {
                     if (timeSlot.getId() == id) {
@@ -646,7 +647,7 @@ public class GraphicInterfaceManager {
 
     private void caseDeleteTimeSlot() {
         List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
-        System.out.println("Insert time slot id: (press a letter to go back)");
+        System.out.println("Insert time slot id: [insert a random letter to go back]");
         int id = 0;
         boolean found = false;
         while (!found) {
@@ -675,5 +676,6 @@ public class GraphicInterfaceManager {
             }
         }
         timeSlotManager.deleteTimeSlot(id);
+        System.out.println("Time slot deleted successfully.");
     }
 }
