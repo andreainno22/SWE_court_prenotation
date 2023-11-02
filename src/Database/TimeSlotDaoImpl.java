@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeSlotDaoImpl implements TimeSlotDao {
-    //private final DatabaseManager db = new DatabaseManager();
     private final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
 
     @Override

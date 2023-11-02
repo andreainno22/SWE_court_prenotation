@@ -5,8 +5,6 @@ import Context.Client;
 import Database.WalletDaoImpl;
 
 public class WalletManager {
-    //private final DatabaseManager db = new DatabaseManager();
-
     private final WalletDaoImpl walletDao = new WalletDaoImpl();
     public boolean topUpWallet(float money, Client client) {
         client.getWallet().addMoney(money);
