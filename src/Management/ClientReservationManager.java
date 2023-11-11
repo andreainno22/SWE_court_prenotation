@@ -1,7 +1,6 @@
 package Management;
 
 import Context.*;
-//import Database.DatabaseManager;
 import Context.TimeSlot;
 import Database.*;
 import java.util.*;
@@ -11,10 +10,8 @@ public abstract class ClientReservationManager {
     protected final int reservationPoints = 10;
     private List<Court> court_type_prices;
     private List<TimeSlot> time_slots;
-
     private RentingKit rentingKit;
     protected final int giftPoints = 100;
-    //protected final DatabaseManager db = new DatabaseManager();
     private final WalletManager walletManager = new WalletManager();
     private final CourtDaoImpl courtDao = new CourtDaoImpl();
     private final RentingKitDaoImpl rentingKitDao = new RentingKitDaoImpl();
@@ -61,9 +58,7 @@ public abstract class ClientReservationManager {
     }
 
     public void getTimeSlots(Formatter fmt, Date date, int court) {
-        //Database_management db = new Database_management();
         time_slots = timeSlotDao.getTimeSlots(date, court);
-        //System.out.println(time_slots.size());
         fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
         for (TimeSlot timeSlot : time_slots) {
             if (timeSlot != null)
@@ -87,7 +82,6 @@ public abstract class ClientReservationManager {
     }
 
     public void getCourts(Formatter fmt) {
-        //Database_management db = new Database_management();
         if (reservation.getClient().getIsPremium() == 0)
             fmt.format("%-15s%-15s%-15s\n", "ID", "TYPE", "PRICE [€]");
         else
@@ -113,17 +107,15 @@ public abstract class ClientReservationManager {
     }
 
     public void printAllReservations(Client client) {
-        //Database_management db = new Database_management();
-        reservationDao.printAllClientReservations(client.getId());
+        List<Reservation> reservations = reservationDao.getAllClientReservations(client.getId());
+        System.out.println(Utils.formatOutput(reservations));
     }
 
     public ArrayList<Integer> getReservationsId(Client client) {
-        //Database_management db = new Database_management();
         return reservationDao.getReservationsId(client.getId());
     }
 
     public Reservation getReservationById(int id) {
-        //Database_management db = new Database_management();
         return reservationDao.getReservationById(id);
     }
 
@@ -132,19 +124,13 @@ public abstract class ClientReservationManager {
             client.setPoints(client.getPoints() - reservationPoints);
         if (reservation.getPrice() == 0)
             client.setPoints(client.getPoints() + giftPoints);
-        //Database_management db = new Database_management();
         return reservationDao.deleteReservation(reservation, client);
     }
 
     public void printAllFutureReservations(Client client) {
-        //Database_management db = new Database_management();
-        reservationDao.printAllClientFutureReservations(client.getId());
+        List<Reservation> reservations = reservationDao.getAllClientFutureReservations(client.getId());
+        System.out.println(Utils.formatOutput(reservations));
     }
-
-    /*public RentingKit getRentingKit(String type) {
-        //Database_management db = new Database_management();
-        return rentingKitDao.getRentingKit(type);
-    }*/
 
     protected boolean makeReservation(float price, boolean isPremium) {
         System.out.println("Final price: " + String.format("%.2f", price) + "€");
@@ -153,10 +139,8 @@ public abstract class ClientReservationManager {
             return false;
         } else {
             reservation.setPrice(price);
-            //Database_management db = new Database_management();
-            //reservation.getClient().getWallet().removeMoney(price);
             walletManager.withdrawalWallet(price, reservation.getClient());
-            return reservationDao.makeReservation(reservation, isPremium, true);
+            return reservationDao.insertReservation(reservation, isPremium, true);
         }
     }
 }

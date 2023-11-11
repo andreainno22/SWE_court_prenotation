@@ -567,6 +567,7 @@ public class GraphicInterfaceManager {
         }
         System.out.println("Insert new price: [insert a random letter to go back] ");
         float price = 0;
+        sc.useLocale(Locale.US);
         boolean valid = false;
         while (!valid)
             try {
@@ -578,9 +579,9 @@ public class GraphicInterfaceManager {
                 }
                 valid = true;
             } catch (InputMismatchException e) {
-                System.out.println("Back to menu...");
+                System.err.println("Back to menu...");
                 sc.nextLine();
-                break;
+                return;
             }
         courtManager.updatePrice(type, price);
     }

@@ -72,7 +72,6 @@ public class ClientTest {
     public void TestFAddMoney() {
         simulatedUserInput = "1\ntest1@email\npassword\n4\ny\n150\n7\n3\n";
         setUp();
-
     }
 
     @Test

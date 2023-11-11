@@ -1,6 +1,6 @@
 package Context;
 
-public class Person {
+public abstract class Person {
     protected int id;
     protected String name;
     protected String surname;

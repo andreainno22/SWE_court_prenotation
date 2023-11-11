@@ -13,6 +13,11 @@ public class TimeSlot {
         this.id = ts;
     }
 
+    public TimeSlot(String start_hour, String finish_hour) {
+        this.start_hour = start_hour;
+        this.finish_hour = finish_hour;
+    }
+
     public int getId() {
         return id;
     }

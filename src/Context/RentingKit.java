@@ -8,6 +8,10 @@ public class RentingKit {
         this.unitPrice = unitPrice;
     }
 
+    public RentingKit(int numOfRents) {
+        this.numOfRents = numOfRents;
+    }
+
     public int getNumOfRents() {
         return numOfRents;
     }
@@ -32,9 +36,9 @@ public class RentingKit {
         this.numOfRents = numOfRents;
     }
 
-    private final float unitPrice;
+    private float unitPrice;
     private int numOfRents;
-    private final int id;
-    private final String type;
+    private int id;
+    private String type;
 
 }

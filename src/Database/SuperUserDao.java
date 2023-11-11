@@ -2,7 +2,7 @@ package Database;
 
 import Context.SuperUser;
 
-public interface SuperUserDao extends GeneralDaoSettings {
+public interface SuperUserDao extends Dao {
     SuperUser getSuperUser(String email, String password);
 
     boolean checkSuperUser(String email);

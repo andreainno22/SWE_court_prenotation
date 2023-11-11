@@ -1,5 +1,5 @@
 package Database;
 
-interface GeneralDaoSettings {
+interface Dao<T, id> {
     DatabaseManager db = new DatabaseManager();
 }

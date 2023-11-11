@@ -17,7 +17,7 @@ public class PremiumClientReservationManager extends ClientReservationManager {
                 System.out.println("Final price: 0€");
                 reservation.getClient().setPoints(reservation.getClient().getPoints() - giftPoints);
                 reservation.setPrice(0);
-                return reservationDao.makeReservation(reservation, true, false);
+                return reservationDao.insertReservation(reservation, true, false);
             }
         }
         float price;

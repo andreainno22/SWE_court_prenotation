@@ -1,12 +1,11 @@
 package Database;
 
-import Context.Client;
 import Context.Court;
 import Context.Reservation;
 
 import java.util.List;
 
-public interface CourtDao extends GeneralDaoSettings{
+public interface CourtDao extends Dao {
     List<Court> getCourts();
     void insertCourt(int id, String type);
     List<Reservation> deleteCourt(int id);
