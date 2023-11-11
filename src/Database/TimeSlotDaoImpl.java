@@ -47,11 +47,11 @@ public class TimeSlotDaoImpl implements TimeSlotDao {
     }
 
     @Override
-    public void insertTimeSlot(int id, String start_time, String end_time) {
+    public void insertTimeSlot(TimeSlot timeSlot) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            stmt.executeUpdate("INSERT INTO time_slots VALUES (" + id + ", '" + start_time + "', '" + end_time + "')");
+            stmt.executeUpdate("INSERT INTO time_slots VALUES (" + timeSlot.getId() + ", '" + timeSlot.getStart_hour() + "', '" + timeSlot.getFinish_hour() + "')");
         } catch (SQLException e) {
             db.dbError(e);
         } finally {

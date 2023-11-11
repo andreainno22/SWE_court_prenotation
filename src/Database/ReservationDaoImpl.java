@@ -14,16 +14,12 @@ import java.util.List;
 
 public class ReservationDaoImpl implements ReservationDao {
 
-    //private final DatabaseManager db = new DatabaseManager();
     @Override
     public List<Reservation> getAllClientReservations(int Client) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + Client + "'");
-            /*Formatter fmt = new Formatter();
-            formatOutput(fmt, rs);
-            System.out.println(fmt);*/
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;
@@ -34,13 +30,6 @@ public class ReservationDaoImpl implements ReservationDao {
         }
         return null;
     }
-
-   /* private void formatOutput(Formatter fmt, ResultSet rs) throws SQLException{
-        fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME", "PRICE [€]", "NUMBER OF RENTING KITS");
-        while (rs.next()) {
-            fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", rs.getInt(1), rs.getDate(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getFloat(6), rs.getInt(7));
-        }
-    }*/
 
     private List<Reservation> makeReservationsList(ResultSet rs) throws SQLException{
         List<Reservation> reservations = new ArrayList<>();
@@ -56,10 +45,6 @@ public class ReservationDaoImpl implements ReservationDao {
             Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where reservation.date = '"+date.toString()+"'");
-
-            /*Formatter fmt = new Formatter();
-            formatOutput(fmt, rs);
-            System.out.println(fmt);*/
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;
@@ -76,15 +61,10 @@ public class ReservationDaoImpl implements ReservationDao {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            //Date today = new Date(Calendar.getInstance().getTimeInMillis());
             ZoneId italyZone = ZoneId.of("Europe/Rome");
             // Crea una data nel fuso orario italiano
             LocalDate today = LocalDate.now(italyZone);
-            //Date today = Date.from(italianDate.atStartOfDay().atZone(italyZone).toInstant());
             ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where date > '" + today + "' order by date");
-            /*Formatter fmt = new Formatter();
-            formatOutput(fmt, rs);
-            System.out.println(fmt);*/
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;
@@ -101,15 +81,10 @@ public class ReservationDaoImpl implements ReservationDao {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            //Date today = new Date(Calendar.getInstance().getTimeInMillis());
             ZoneId italyZone = ZoneId.of("Europe/Rome");
             // Crea una data nel fuso orario italiano
             LocalDate today = LocalDate.now(italyZone);
-            //Date today = Date.from(italianDate.atStartOfDay().atZone(italyZone).toInstant());
             ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + Client + "' and date > '" + today + "'");
-            /*Formatter fmt = new Formatter();
-            formatOutput(fmt, rs);
-            System.out.println(fmt);*/
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;

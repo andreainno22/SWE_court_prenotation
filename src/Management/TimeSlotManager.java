@@ -22,7 +22,7 @@ public class TimeSlotManager {
     }
 
     public void insertTimeSlot(int id, String start_time, String end_time) {
-        timeSlotDao.insertTimeSlot(id, start_time, end_time);
+        timeSlotDao.insertTimeSlot(new TimeSlot(id, start_time, end_time));
     }
 
     public void deleteTimeSlot(int id) {
