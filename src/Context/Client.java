@@ -11,6 +11,12 @@ public class Client extends Person{
         this.wallet = wallet;
     }
 
+    public Client(int id, String name, String surname, String email, int telephoneNumber, int isPremium, int points) {
+        super(id, name, surname, email, telephoneNumber);
+        this.points = points;
+        this.isPremium = isPremium;
+    }
+
     // Constructor for database
     public Client(String name, String surname, String email, String password) {
         this.name = name;

@@ -17,9 +17,12 @@ public abstract class Person {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public Person(String email, String password) {
+    public Person(int id, String name, String surname, String email, int telephoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
         this.email = email;
-        this.password = password;
+        this.telephoneNumber = telephoneNumber;
     }
 
     public Person() {

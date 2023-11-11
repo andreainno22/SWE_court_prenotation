@@ -5,6 +5,8 @@ import Database.ClientDaoImpl;
 import Database.SuperUserDaoImpl;
 
 import java.sql.Date;
+import java.util.Formatter;
+import java.util.List;
 
 public class AccountManager {
     public Client client;
@@ -66,8 +68,16 @@ public class AccountManager {
     }
 
     public void printAllClients() {
-        clientDao.getAllClients();
+        List<Client> clients = clientDao.getAllClients();
+        if(clients == null)
+            return;
+        Formatter fmt = new Formatter();
+        fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
+        for(Client client : clients)
+            fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", client.getId(), client.getName(), client.getSurname(), client.getEmail(), client.getTelephoneNumber(), (client.getIsPremium() == 1), client.getPoints());
+        System.out.println(fmt);
     }
+
 }
 
 

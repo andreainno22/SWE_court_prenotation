@@ -4,6 +4,7 @@ import Context.Client;
 
 import java.sql.Date;
 import java.sql.Statement;
+import java.util.List;
 
 public interface ClientDao extends Dao {
     void deleteTestClient(String email);
@@ -13,5 +14,5 @@ public interface ClientDao extends Dao {
     void updatePoints(int points, Client client, Statement transactionStmt);
     boolean modifyPremiumExpiration(Client client);
     boolean modifyPremium(Client client);
-    boolean getAllClients();
+    List<Client> getAllClients();
 }

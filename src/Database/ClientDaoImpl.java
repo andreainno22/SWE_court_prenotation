@@ -3,9 +3,8 @@ package Database;
 import Context.Client;
 
 import java.sql.*;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.TimeZone;
+import java.sql.Date;
+import java.util.*;
 
 public class ClientDaoImpl implements ClientDao {
    // private final DatabaseManager db = new DatabaseManager();
@@ -168,22 +167,25 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public boolean getAllClients() {
+    public List<Client> getAllClients() {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select id, name, surname, email, telephone_number, is_premium, points from client");
-            Formatter fmt = new Formatter();
-            fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
+            List<Client> clients = new ArrayList<>();
+            //Formatter fmt = new Formatter();
+            //fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
             while (rs.next()) {
-                fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), (rs.getInt(6) == 1), rs.getInt(7));
+                Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
+                clients.add(client);
+                //fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), (rs.getInt(6) == 1), rs.getInt(7));
             }
-            System.out.println(fmt);
+            //System.out.println(fmt);
             rs.close();
-            return true;
+            return clients;
         } catch (SQLException e) {
             db.dbError(e);
-            return false;
+            return null;
         } finally {
             db.disconnect();
         }
