@@ -23,7 +23,6 @@ public class AccountManager {
     }
 
     public void updateClient() {
-        //Database_management db = new Database_management();
         client = clientDao.getClient(this.client.getEmail(), this.client.getPassword());
 
         if (client.getIsPremium() == 0) client.setReservationManager(new StandardClientReservationManager());
@@ -37,8 +36,6 @@ public class AccountManager {
     }
 
     public boolean setIsPremium() {
-        //Database_management db = new Database_management();
-
         if (walletManager.withdrawalWallet(20, client)) {
             client.setIsPremium(1);
             return clientDao.modifyPremium(client);
@@ -49,7 +46,6 @@ public class AccountManager {
     }
 
     public boolean renewPremium() {
-        //Database_management db = new Database_management();
         if (walletManager.withdrawalWallet(20, client)) return clientDao.modifyPremiumExpiration(client);
         else {
             System.err.println("Insufficient funds.");
@@ -58,7 +54,6 @@ public class AccountManager {
     }
 
     public void showPremiumExpiration() {
-        //Database_management db = new Database_management();
         Date isPremiumDate = clientDao.getPremiumExpiration(client);
         System.out.println("Your premium subscription will expire on: " + isPremiumDate);
     }
@@ -69,11 +64,11 @@ public class AccountManager {
 
     public void printAllClients() {
         List<Client> clients = clientDao.getAllClients();
-        if(clients == null)
+        if (clients == null)
             return;
         Formatter fmt = new Formatter();
         fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
-        for(Client client : clients)
+        for (Client client : clients)
             fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", client.getId(), client.getName(), client.getSurname(), client.getEmail(), client.getTelephoneNumber(), (client.getIsPremium() == 1), client.getPoints());
         System.out.println(fmt);
     }

@@ -43,7 +43,7 @@ public class Utils {
         Formatter fmt = new Formatter();
         fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID", "DATE", "COURT", "START TIME", "END TIME", "PRICE [€]", "NUMBER OF RENTING KITS");
         for (Reservation r : reservations)
-            fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", r.getId(), r.getDate(), r.getCourt().getType(), r.getTime_slot().getStart_hour(), r.getTime_slot().getFinish_hour(), r.getPrice(), r.getRentingKit().getNumOfRents());
+            fmt.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", r.getId(), r.getDate(), r.getCourt().getId(), r.getTime_slot().getStart_hour(), r.getTime_slot().getFinish_hour(), r.getPrice(), r.getRentingKit().getNumOfRents());
         return fmt;
     }
 }

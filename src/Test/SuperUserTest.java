@@ -1,11 +1,9 @@
 package Test;
 
 import ApplicationLayer.GraphicInterfaceManager;
-import Context.Client;
 import Context.SuperUser;
-import Database.ClientDaoImpl;
 import Database.CourtDaoImpl;
-import Database.ReservationDaoImpl;
+
 import Database.SuperUserDaoImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,9 +12,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junitpioneer.jupiter.DisableIfTestFails;
 
 import java.io.ByteArrayInputStream;
-import java.sql.Date;
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisableIfTestFails
@@ -69,6 +64,7 @@ public class SuperUserTest {
         simulatedUserInput = "1\na@b\nandre\n3\nclay\n" + price + "\n9\n3\n";
         assertion();
     }
+
     @Test
     public void TestEInsertTimeSlot() {
         simulatedUserInput = "1\na@b\nandre\n4\n20\n23\n24\n9\n3\n";
@@ -83,7 +79,7 @@ public class SuperUserTest {
 
     @AfterAll
     static void tearDown() {
-      superUserDao.deleteSuperUser("test@test");
+        superUserDao.deleteSuperUser("test@test");
     }
 
 }

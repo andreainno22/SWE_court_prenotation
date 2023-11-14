@@ -51,7 +51,5 @@ public abstract class Person {
     public int getTelephoneNumber() {
         return telephoneNumber;
     }
-    public boolean getIsSuperUser() {
-        return false;
-    }
+
 }

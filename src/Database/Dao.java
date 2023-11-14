@@ -1,5 +1,5 @@
 package Database;
 
-interface Dao<T, id> {
+interface Dao {
     DatabaseManager db = new DatabaseManager();
 }

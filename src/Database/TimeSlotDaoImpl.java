@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeSlotDaoImpl implements TimeSlotDao {
-    private final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
-
     @Override
     public List<TimeSlot> getTimeSlots(Date date, int court_id) {
         try {

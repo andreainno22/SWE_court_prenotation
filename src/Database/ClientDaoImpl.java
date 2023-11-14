@@ -173,14 +173,10 @@ public class ClientDaoImpl implements ClientDao {
             assert stmt != null;
             ResultSet rs = stmt.executeQuery("select id, name, surname, email, telephone_number, is_premium, points from client");
             List<Client> clients = new ArrayList<>();
-            //Formatter fmt = new Formatter();
-            //fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", "ID", "NAME", "SURNAME", "EMAIL", "TELEPHONE NUMBER", "IS PREMIUM", "POINTS");
             while (rs.next()) {
                 Client client = new Client(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
                 clients.add(client);
-                //fmt.format("%-15s%-15s%-15s%-30s%-20s%-15s%-15s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), (rs.getInt(6) == 1), rs.getInt(7));
             }
-            //System.out.println(fmt);
             rs.close();
             return clients;
         } catch (SQLException e) {

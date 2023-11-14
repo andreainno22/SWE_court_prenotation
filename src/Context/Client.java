@@ -25,36 +25,8 @@ public class Client extends Person{
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setTelephoneNumber(int telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
-    }
-
     public void setReservationManager(ClientReservationManager clientReservationManager) {
         this.clientReservationManager = clientReservationManager;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getTelephoneNumber() {
-        return telephoneNumber;
     }
 
     public int getId() {

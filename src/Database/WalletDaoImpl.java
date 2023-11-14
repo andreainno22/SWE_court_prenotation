@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 
-public class WalletDaoImpl implements WalletDao{
-    //private final DatabaseManager db = new DatabaseManager();
-
+public class WalletDaoImpl implements WalletDao {
     @Override
     public Wallet getWallet(int id, Statement stmt) {
         try {
@@ -46,7 +44,6 @@ public class WalletDaoImpl implements WalletDao{
         } catch (SQLException e) {
             db.dbError(e);
             db.disconnect();
-            //e.printStackTrace();
             return false;
         }
     }

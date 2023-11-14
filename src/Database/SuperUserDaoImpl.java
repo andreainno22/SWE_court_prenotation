@@ -1,7 +1,6 @@
 package Database;
 
 import Context.SuperUser;
-import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -12,10 +12,6 @@ public class SuperUser extends Person{
         this.password = password;
         this.telephoneNumber = telephoneNumber;
     }
-    private boolean isSuperUser = true;
+    private final boolean isSuperUser = true;
 
-    @Override
-    public boolean getIsSuperUser() {
-        return isSuperUser;
-    }
 }
