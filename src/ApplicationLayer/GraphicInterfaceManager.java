@@ -191,10 +191,8 @@ public class GraphicInterfaceManager {
             }
             // aggiunta di court a reservation
             accountManager.client.getReservationManager().setReservationCourt(court);
-            Formatter fmt2 = new Formatter();
-            accountManager.client.getReservationManager().getTimeSlots(fmt2, date, court);
             System.out.println("Available Time Slots: ");
-            System.out.println(fmt2);
+            accountManager.client.getReservationManager().printTimeSlots(date, court);
             System.out.println("Select an option:");
             System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
             while(true) {
@@ -587,7 +585,7 @@ public class GraphicInterfaceManager {
     }
 
     private void caseInsertTimeSlot() {
-        List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
+        List<TimeSlot> timeSlots = timeSlotManager.printAllTimeSlots();
         int start_hour = 0;
         int end_hour = 0;
         int id = 0;
@@ -647,7 +645,7 @@ public class GraphicInterfaceManager {
     }
 
     private void caseDeleteTimeSlot() {
-        List<TimeSlot> timeSlots = timeSlotManager.printTimeSlots();
+        List<TimeSlot> timeSlots = timeSlotManager.printAllTimeSlots();
         System.out.println("Insert time slot id: [insert a random letter to go back]");
         int id = 0;
         boolean found = false;

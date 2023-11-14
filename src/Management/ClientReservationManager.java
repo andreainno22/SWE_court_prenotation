@@ -3,6 +3,7 @@ package Management;
 import Context.*;
 import Context.TimeSlot;
 import Database.*;
+
 import java.util.*;
 import java.sql.Date;
 
@@ -16,63 +17,65 @@ public abstract class ClientReservationManager {
     private final CourtDaoImpl courtDao = new CourtDaoImpl();
     private final RentingKitDaoImpl rentingKitDao = new RentingKitDaoImpl();
     protected final ReservationDaoImpl reservationDao = new ReservationDaoImpl();
-    private  final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
+    private final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
 
     protected Reservation reservation;
+
     public abstract boolean makeReservation();
 
-    public void createReservation(Client client, Date date){
+    public void createReservation(Client client, Date date) {
         reservation = new Reservation(client, date);
     }
 
-    public void setReservationCourt(int courtId){
+    public void setReservationCourt(int courtId) {
         Court court = court_type_prices.get(courtId - 1);
         reservation.setCourt(court);
     }
 
-    public void setReservationTimeSlot(int timeSlot){
+    public void setReservationTimeSlot(int timeSlot) {
         TimeSlot ts = time_slots.get(timeSlot - 1);
         reservation.setTime_slot(ts);
     }
 
-    public RentingKit getRentingKit(){
+    public RentingKit getRentingKit() {
         return rentingKit;
     }
 
-    public Reservation getReservation(){
+    public Reservation getReservation() {
         return reservation;
     }
 
-    public void getRentingKitInfo(){
+    public void getRentingKitInfo() {
         rentingKit = rentingKitDao.getRentingKit(reservation.getCourt().getType());
     }
 
-    public void setReservationRentingKit(int numOfRentingKits){
-        if(numOfRentingKits == 0) {
+    public void setReservationRentingKit(int numOfRentingKits) {
+        if (numOfRentingKits == 0) {
             reservation.setRentingKit(null);
-        }else{
+        } else {
             rentingKit.setNumOfRents(numOfRentingKits);
             reservation.setRentingKit(rentingKit);
         }
-
     }
 
-    public void getTimeSlots(Formatter fmt, Date date, int court) {
+    public void printTimeSlots(Date date, int court) {
+        Formatter fmt = new Formatter();
         time_slots = timeSlotDao.getTimeSlots(date, court);
         fmt.format("%-15s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
         for (TimeSlot timeSlot : time_slots) {
             if (timeSlot != null)
                 timeSlot.printAllTimeSlots(fmt);
         }
+        System.out.println(fmt);
     }
 
-    public boolean verifyValidTimeSlot(int timeslot_id){
-        if(timeslot_id <= 0)
+    public boolean verifyValidTimeSlot(int timeslot_id) {
+        if (timeslot_id <= 0)
             return false;
         int[] timeslots_ids = new int[time_slots.size()];
         int scan = 0;
-        for(TimeSlot timeSlot : time_slots){
-            if(timeSlot != null)
+        for (TimeSlot timeSlot : time_slots) {
+            if (timeSlot != null)
                 timeslots_ids[scan] = timeSlot.getId();
             scan++;
         }
@@ -92,12 +95,12 @@ public abstract class ClientReservationManager {
         }
     }
 
-    public boolean verifyValidCourt(int court_id){
-        if(court_id <= 0)
+    public boolean verifyValidCourt(int court_id) {
+        if (court_id <= 0)
             return false;
         int[] court_ids = new int[court_type_prices.size()];
         int scan = 0;
-        for(Court court : court_type_prices){
+        for (Court court : court_type_prices) {
             court_ids[scan] = court.getId();
             scan++;
         }

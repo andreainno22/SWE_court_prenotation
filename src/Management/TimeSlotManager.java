@@ -4,18 +4,20 @@ import Context.Reservation;
 import Context.TimeSlot;
 import Database.TimeSlotDaoImpl;
 
+import java.sql.Date;
 import java.util.Formatter;
 import java.util.List;
 
 public class TimeSlotManager {
     private final TimeSlotDaoImpl timeSlotDao = new TimeSlotDaoImpl();
 
-    public List<TimeSlot> printTimeSlots() {
+    public List<TimeSlot> printAllTimeSlots() {
         List<TimeSlot> timeSlots = timeSlotDao.getAllTimeSlots();
         Formatter fmt = new Formatter();
         fmt.format("%-10s%-15s%-15s\n", "ID", "START HOUR", "END HOUR");
         for (TimeSlot timeSlot : timeSlots) {
-            timeSlot.printAllTimeSlots(fmt);
+            fmt.format("%-15d%-15s%-15s\n", timeSlot.getId(), timeSlot.getStart_hour(), timeSlot.getFinish_hour());
+            //timeSlot.printAllTimeSlots(fmt);
         }
         System.out.println(fmt);
         return timeSlots;
