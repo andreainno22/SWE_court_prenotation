@@ -36,7 +36,7 @@ public class AccountManager {
         superUser = superUserDao.getSuperUser(email, password);
     }
 
-    public boolean setIsPremium(Client client) {
+    public boolean setIsPremium() {
         //Database_management db = new Database_management();
 
         if (walletManager.withdrawalWallet(20, client)) {

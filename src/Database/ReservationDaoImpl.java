@@ -15,11 +15,11 @@ import java.util.List;
 public class ReservationDaoImpl implements ReservationDao {
 
     @Override
-    public List<Reservation> getAllClientReservations(int Client) {
+    public List<Reservation> getAllClientReservations(int client_id) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
-            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + Client + "'");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + client_id + "'");
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;
@@ -77,14 +77,14 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public List<Reservation> getAllClientFutureReservations(int Client) {
+    public List<Reservation> getAllClientFutureReservations(int client_id) {
         try {
             Statement stmt = db.connect();
             assert stmt != null;
             ZoneId italyZone = ZoneId.of("Europe/Rome");
             // Crea una data nel fuso orario italiano
             LocalDate today = LocalDate.now(italyZone);
-            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + Client + "' and date > '" + today + "'");
+            ResultSet rs = stmt.executeQuery("select reservation.id, reservation.date, court, start_hour, finish_hour, reservation.price, case when num_of_rents is null then '0' else num_of_rents end as num_of_rentingkit from (reservation join time_slots on reservation.time_slot = time_slots.id) left join rentingkit_reservation rr on rr.reservation = reservation.id where client = '" + client_id + "' and date > '" + today + "'");
             List<Reservation> reservations = makeReservationsList(rs);
             rs.close();
             return reservations;

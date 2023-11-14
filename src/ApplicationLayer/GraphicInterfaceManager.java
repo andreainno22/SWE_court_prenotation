@@ -333,7 +333,7 @@ public class GraphicInterfaceManager {
                     [y/N]""");
             String answer = sc.nextLine();
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
-                if (accountManager.setIsPremium(accountManager.client)) {
+                if (accountManager.setIsPremium()) {
                     System.out.println("Upgrade successful.");
                     Utils.sendEmail(accountManager.client.getEmail(), "Premium Subscription", "Your account has been upgraded to Premium.\nThank you for choosing us!");
                 } else {
