@@ -1,5 +1,5 @@
 import ApplicationLayer.GraphicInterfaceManager;
-import Management.GeneralLogging;
+import BusinessLogic.GeneralLogging;
 
 import java.io.IOException;
 
@@ -14,15 +14,6 @@ public class Main {
             System.err.println("App shutdown.");
         }
     }
-        /*try {
-            AccountManager am = new AccountManager();
-            am.startMenu();
-        } catch (Exception e){
-            GeneralLogging logger = new GeneralLogging();
-            logger.log(e);
-            System.err.println("App shutdown.");
-        }
-
         /*List<String> scanPackages = new ArrayList<>();
         scanPackages.add("Management");
         scanPackages.add("Context");

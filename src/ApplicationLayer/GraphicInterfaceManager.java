@@ -3,9 +3,9 @@ package ApplicationLayer;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import Management.*;
+import BusinessLogic.*;
 import de.jollyday.*;
-import Context.*;
+import DomainModel.*;
 import java.sql.Date;
 
 public class GraphicInterfaceManager {
@@ -80,7 +80,7 @@ public class GraphicInterfaceManager {
                     System.out.println("Type another email: [0 = Go Back]");
                     email = sc.nextLine();
                     if (email.equals("0")) break;
-                    //newClient.setEmail(email);
+                    //newCustomer.setEmail(email);
                 } else if (result == 0) {
                     valid = true;
                 } else {
@@ -108,11 +108,11 @@ public class GraphicInterfaceManager {
                 System.out.println("Password: ");
                 String password = sc.nextLine();
                 accountManager.login(email, password);
-                if (accountManager.client != null) {
+                if (accountManager.customer != null) {
                     logged = true;
                     System.out.println("Login successful.\n");
                     while (logged) {
-                        clientMenu();
+                        customerMenu();
                     }
                     startMenu = true;
                     return;
@@ -159,14 +159,14 @@ public class GraphicInterfaceManager {
                 return;
             }
             // aggiunta data a reservation
-            accountManager.client.getReservationManager().createReservation(accountManager.client, date);
+            accountManager.customer.getReservationManager().createReservation(accountManager.customer, date);
         } catch (IllegalArgumentException e) {
             System.err.println("Wrong date format.");
             return;
         }
         boolean court_selection = true;
         Formatter fmt = new Formatter();
-        accountManager.client.getReservationManager().getCourts(fmt);
+        accountManager.customer.getReservationManager().getCourts(fmt);
         while (court_selection) {
             System.out.println("Courts: ");
             System.out.println(fmt);
@@ -176,7 +176,7 @@ public class GraphicInterfaceManager {
                     court = sc.nextInt();
                     sc.nextLine();
                     if(court == 0) break;
-                    if (!accountManager.client.getReservationManager().verifyValidCourt(court)) {
+                    if (!accountManager.customer.getReservationManager().verifyValidCourt(court)) {
                         System.err.println("You selected a wrong Court. Retry.");
                     } else {
                         break;
@@ -190,9 +190,9 @@ public class GraphicInterfaceManager {
                 break;
             }
             // aggiunta di court a reservation
-            accountManager.client.getReservationManager().setReservationCourt(court);
+            accountManager.customer.getReservationManager().setReservationCourt(court);
             System.out.println("Available Time Slots: ");
-            accountManager.client.getReservationManager().printTimeSlots(date, court);
+            accountManager.customer.getReservationManager().printTimeSlots(date, court);
             System.out.println("Select an option:");
             System.out.println("1. Back to Court Selection\n2. Choose a time slot for this Court");
             while(true) {
@@ -216,7 +216,7 @@ public class GraphicInterfaceManager {
                             slot = sc.nextInt();
                             sc.nextLine();
                             if(slot == 0) break;
-                            while (!accountManager.client.getReservationManager().verifyValidTimeSlot(slot)) {
+                            while (!accountManager.customer.getReservationManager().verifyValidTimeSlot(slot)) {
                                 System.err.println("Given Time Slot is wrong or not available. Retry.");
                                 slot = sc.nextInt();
                                 sc.nextLine();
@@ -229,12 +229,12 @@ public class GraphicInterfaceManager {
                     }
                     if (slot == 0) break;
                     // aggiunta time slot a reservation
-                    accountManager.client.getReservationManager().setReservationTimeSlot(slot);
-                    accountManager.client.getReservationManager().getRentingKitInfo();
-                    if (accountManager.client.getIsPremium() == 0)
-                        System.out.println("How many " + accountManager.client.getReservationManager().getRentingKit().getType() + " kits do you want to rent? [Unit price = " + accountManager.client.getReservationManager().getRentingKit().getUnitPrice() + "€] [0 = None]");
+                    accountManager.customer.getReservationManager().setReservationTimeSlot(slot);
+                    accountManager.customer.getReservationManager().getRentingKitInfo();
+                    if (accountManager.customer.getIsPremium() == 0)
+                        System.out.println("How many " + accountManager.customer.getReservationManager().getRentingKit().getType() + " kits do you want to rent? [Unit price = " + accountManager.customer.getReservationManager().getRentingKit().getUnitPrice() + "€] [0 = None]");
                     else
-                        System.out.println("How many " + accountManager.client.getReservationManager().getRentingKit().getType() + " kits do you want to rent? [Unit price = " + accountManager.client.getReservationManager().getRentingKit().getUnitPrice() + "€. Your price (-10%) = " + accountManager.client.getReservationManager().getRentingKit().getUnitPrice() * 0.9 + "€] [0 = None]");
+                        System.out.println("How many " + accountManager.customer.getReservationManager().getRentingKit().getType() + " kits do you want to rent? [Unit price = " + accountManager.customer.getReservationManager().getRentingKit().getUnitPrice() + "€. Your price (-10%) = " + accountManager.customer.getReservationManager().getRentingKit().getUnitPrice() * 0.9 + "€] [0 = None]");
                     boolean rentIsValid = false;
                     while (!rentIsValid) {
                         try {
@@ -242,18 +242,18 @@ public class GraphicInterfaceManager {
                             sc.nextLine();
                             rentIsValid = true;
                             // aggiunta renting kit a reservation
-                            accountManager.client.getReservationManager().setReservationRentingKit(numOfRent);
+                            accountManager.customer.getReservationManager().setReservationRentingKit(numOfRent);
                         } catch (InputMismatchException e) {
                             System.err.println("Wrong input format. Retry");
                             sc.nextLine();
                         }
                     }
                     // aggiunta della prenotazione al database
-                    System.out.println("Subtotal price (no discounts): " + String.format("%.2f", accountManager.client.getReservationManager().getReservation().getPrice()) + "€");
+                    System.out.println("Subtotal price (no discounts): " + String.format("%.2f", accountManager.customer.getReservationManager().getReservation().getPrice()) + "€");
                     System.out.println("Making reservation...");
-                    if (accountManager.client.getReservationManager().makeReservation()) {
+                    if (accountManager.customer.getReservationManager().makeReservation()) {
                         System.out.println("Reservation successful.");
-                        Utils.sendEmail(accountManager.client.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate of reservation: " + accountManager.client.getReservationManager().getReservation().getDate() + "\nCourt: " + accountManager.client.getReservationManager().getReservation().getCourt().getId() + "\nTime slot: " + accountManager.client.getReservationManager().getReservation().getTime_slot().getStart_hour() + "-" + accountManager.client.getReservationManager().getReservation().getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
+                        Utils.sendEmail(accountManager.customer.getEmail(), "Confirmation of reservation", "Your reservation has been made.\nDate of reservation: " + accountManager.customer.getReservationManager().getReservation().getDate() + "\nCourt: " + accountManager.customer.getReservationManager().getReservation().getCourt().getId() + "\nTime slot: " + accountManager.customer.getReservationManager().getReservation().getTime_slot().getStart_hour() + "-" + accountManager.customer.getReservationManager().getReservation().getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
                     } else System.err.println("Reservation failed.");
                     court_selection = false;
                     System.out.println("Going back to Main Menu...\n");
@@ -267,7 +267,7 @@ public class GraphicInterfaceManager {
 
     private void caseDeleteReservation() {
         // gestione della cancellazione della prenotazione
-        accountManager.client.getReservationManager().printAllFutureReservations(accountManager.client);
+        accountManager.customer.getReservationManager().printAllFutureReservations(accountManager.customer);
         System.out.println("Note: you can delete your reservation by the day before the booking date!");
         System.out.println("ID of reservation to delete: [0 to go back] ");
         int reservation = 0;
@@ -281,7 +281,7 @@ public class GraphicInterfaceManager {
             sc.nextLine();
         }
         if (reservation == 0) return;
-        ArrayList<Integer> ids = accountManager.client.getReservationManager().getReservationsId(accountManager.client);
+        ArrayList<Integer> ids = accountManager.customer.getReservationManager().getReservationsId(accountManager.customer);
         boolean found = false;
         for (int j : ids)
             if (j == reservation) {
@@ -289,17 +289,17 @@ public class GraphicInterfaceManager {
                 break;
             }
         if (found) {
-            Reservation reserv = accountManager.client.getReservationManager().getReservationById(reservation);
-            if (accountManager.client.getReservationManager().deleteReservation(reserv, accountManager.client)) {
+            Reservation reserv = accountManager.customer.getReservationManager().getReservationById(reservation);
+            if (accountManager.customer.getReservationManager().deleteReservation(reserv, accountManager.customer)) {
                 System.out.println("Reservation deleted successfully.");
-                Utils.sendEmail(accountManager.client.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + "\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
+                Utils.sendEmail(accountManager.customer.getEmail(), "Cancellation of reservation", "Your reservation has been cancelled.\nDate and time of reservation: " + reserv.getDate() + "\nCourt: " + reserv.getCourt().getId() + "\nTime slot: " + reserv.getTime_slot().getStart_hour() + "-" + reserv.getTime_slot().getFinish_hour() + "\nThank you for choosing us!");
             } else System.err.println("Error during deletion.");
         } else System.err.println("Reservation not found or non-cancellable.");
     }
 
     private void caseWalletManagement() {
         // gestione del portafoglio
-        System.out.println("Your balance is: " + accountManager.client.getWallet().getBalance() + "€");
+        System.out.println("Your balance is: " + accountManager.customer.getWallet().getBalance() + "€");
         System.out.println("Do you want to add money? [y/N]");
         String choice2 = sc.nextLine();
         if (choice2.equalsIgnoreCase("y") || choice2.equalsIgnoreCase("yes")) {
@@ -312,10 +312,10 @@ public class GraphicInterfaceManager {
                 System.err.println("Wrong input format. Going back to Main Menu...");
                 return;
             }
-            if (walletManager.topUpWallet(money, accountManager.client)) {
+            if (walletManager.topUpWallet(money, accountManager.customer)) {
                 System.out.println("Money added successfully.");
                 String dateTime = Utils.getDateTimeUTC();
-                Utils.sendEmail(accountManager.client.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
+                Utils.sendEmail(accountManager.customer.getEmail(), "Confirmation of transaction", "Your wallet has been topped up.\nDate and time of transaction: " + dateTime + " (UTC).\nAmount: " + money + "€\nThank you for choosing us!");
             } else System.out.println("Transaction failed.");
         } else {
             System.out.println("Operation aborted.");
@@ -324,7 +324,7 @@ public class GraphicInterfaceManager {
     }
 
     private void casePremiumUpgradeRenewal() {
-        if (accountManager.client.getIsPremium() == 0) { // upgrade to premium
+        if (accountManager.customer.getIsPremium() == 0) { // upgrade to premium
             System.out.println("""
                     Do you want to upgrade to premium?\s
                     You will pay 20€ for one year and then you will have a
@@ -335,7 +335,7 @@ public class GraphicInterfaceManager {
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                 if (accountManager.setIsPremium()) {
                     System.out.println("Upgrade successful.");
-                    Utils.sendEmail(accountManager.client.getEmail(), "Premium Subscription", "Your account has been upgraded to Premium.\nThank you for choosing us!");
+                    Utils.sendEmail(accountManager.customer.getEmail(), "Premium Subscription", "Your account has been upgraded to Premium.\nThank you for choosing us!");
                 } else {
                     System.err.println("Upgrade failed.");
                 }
@@ -351,7 +351,7 @@ public class GraphicInterfaceManager {
             if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes")) {
                 if (accountManager.renewPremium()) {
                     System.out.println("Renewal successful.");
-                    Utils.sendEmail(accountManager.client.getEmail(), "Premium Subscription", "Your premium subscription has been renewed.\nThank you for choosing us!");
+                    Utils.sendEmail(accountManager.customer.getEmail(), "Premium Subscription", "Your premium subscription has been renewed.\nThank you for choosing us!");
                 } else {
                     System.err.println("Renewal failed.");
                 }
@@ -362,17 +362,17 @@ public class GraphicInterfaceManager {
         }
     }
 
-    private void clientMenu() {
-        accountManager.updateClient();
-        System.out.println("\nHello " + accountManager.client.getName() + " " + accountManager.client.getSurname() + "!");
-        if (accountManager.client.getIsPremium() == 0) {
+    private void customerMenu() {
+        accountManager.updateCustomer();
+        System.out.println("\nHello " + accountManager.customer.getName() + " " + accountManager.customer.getSurname() + "!");
+        if (accountManager.customer.getIsPremium() == 0) {
             System.out.println("You are not subscribed to Premium.\nPlease select an option:");
             System.out.println("""
                     1. Make a reservation
                     2. Delete a reservation
                     3. Show all reservations
                     4. Manage your wallet
-                    5. Upgrade as a premium client
+                    5. Upgrade as a premium customer
                     6. Your points
                     7. Logout""");
         } else {
@@ -403,12 +403,12 @@ public class GraphicInterfaceManager {
             case 2 -> caseDeleteReservation();
             case 3 ->
                 // stampa delle prenotazioni
-                    accountManager.client.getReservationManager().printAllReservations(accountManager.client);
+                    accountManager.customer.getReservationManager().printAllReservations(accountManager.customer);
             case 4 -> caseWalletManagement();
             case 5 -> casePremiumUpgradeRenewal();
             case 6 ->
                 // visualizzazione dei punti
-                    System.out.println("You have " + accountManager.client.getPoints() + " points.");
+                    System.out.println("You have " + accountManager.customer.getPoints() + " points.");
             case 7 -> {
                 logged = false;
                 System.out.println("Logout successful.\n");
@@ -428,7 +428,7 @@ public class GraphicInterfaceManager {
                 5. Delete a time slot
                 6. See all today reservations
                 7. See all future reservations
-                8. See all clients       
+                8. See all customers       
                 9. Logout""");
         int choice;
 
@@ -450,7 +450,7 @@ public class GraphicInterfaceManager {
             case 5 -> caseDeleteTimeSlot();
             case 6 -> superUserReservationManager.printAllTodayReservations();
             case 7 -> superUserReservationManager.printAllFutureReservations();
-            case 8 -> accountManager.printAllClients();
+            case 8 -> accountManager.printAllCustomers();
             case 9 -> {
                 logged = false;
                 System.out.println("Logout successful.\n");

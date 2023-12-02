@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 40s.h.filess.io:3307
--- Generation Time: Oct 25, 2023 at 11:11 AM
+-- Generation Time: Dec 01, 2023 at 04:22 PM
 -- Server version: 8.0.29-21
 -- PHP Version: 8.2.4
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `client`
+-- Table structure for table `customer`
 --
 
-CREATE TABLE `client` (
+CREATE TABLE `customer` (
   `id` int NOT NULL,
   `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
   `surname` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
@@ -40,13 +40,15 @@ CREATE TABLE `client` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `client`
+-- Dumping data for table `customer`
 --
 
-INSERT INTO `client` (`id`, `name`, `surname`, `email`, `password`, `telephone_number`, `is_premium`, `points`, `wallet`) VALUES
-(160, 'Andrea', 'Innocenti', 'Andreinno2218@gmail.com', 'andre', 0, 1, 30, 160),
-(180, 'Kevin', 'Madrigali', 'madrigali541@gmail.com', 'kevin', 0, 1, 10, 180),
-(207, 'Nome', 'Cognome', 'mail@email.com', 'mail', 0, 0, 0, 207);
+INSERT INTO `customer` (`id`, `name`, `surname`, `email`, `password`, `telephone_number`, `is_premium`, `points`, `wallet`) VALUES
+(160, 'Andrea', 'Innocenti', 'Andreinno2218@gmail.com', 'andre', 0, 1, 50, 160),
+(180, 'Kevin', 'Madrigali', 'madrigali541@gmail.com', 'kevin', 0, 1, 20, 180),
+(207, 'Nome', 'Cognome', 'mail@email.com', 'mail', 0, 0, 0, 207),
+(230, 'vittoria', 'petri', 'vittoria.petri@edu.unifi.it', 'vitto', 0, 1, 0, 230),
+(261, 'Name', 'Surname', 'test1@email', 'password', 123, 1, 30, 261);
 
 -- --------------------------------------------------------
 
@@ -64,6 +66,7 @@ CREATE TABLE `court` (
 --
 
 INSERT INTO `court` (`type`, `id`) VALUES
+(NULL, 0),
 (1, 1),
 (1, 2),
 (1, 3),
@@ -72,8 +75,7 @@ INSERT INTO `court` (`type`, `id`) VALUES
 (2, 6),
 (3, 7),
 (3, 8),
-(4, 9),
-(4, 10);
+(4, 9);
 
 -- --------------------------------------------------------
 
@@ -83,7 +85,7 @@ INSERT INTO `court` (`type`, `id`) VALUES
 
 CREATE TABLE `premium_subs` (
   `id` int NOT NULL,
-  `client` int NOT NULL,
+  `customer` int NOT NULL,
   `end_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -91,9 +93,11 @@ CREATE TABLE `premium_subs` (
 -- Dumping data for table `premium_subs`
 --
 
-INSERT INTO `premium_subs` (`id`, `client`, `end_date`) VALUES
+INSERT INTO `premium_subs` (`id`, `customer`, `end_date`) VALUES
 (18, 160, '2025-10-15'),
-(38, 180, '2024-10-23');
+(38, 180, '2024-10-23'),
+(50, 230, '2024-10-26'),
+(62, 261, '2024-12-02');
 
 -- --------------------------------------------------------
 
@@ -114,8 +118,13 @@ CREATE TABLE `rentingkit_reservation` (
 
 INSERT INTO `rentingkit_reservation` (`id`, `reservation`, `renting_kit`, `num_of_rents`) VALUES
 (65, 149, 1, 2),
-(66, 150, 1, 1),
-(75, 171, 2, 2);
+(79, 181, 1, 2),
+(80, 182, 1, 2),
+(81, 183, 1, 2),
+(86, 193, 1, 2),
+(98, 220, 1, 2),
+(111, 252, 1, 1),
+(112, 255, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -147,7 +156,7 @@ CREATE TABLE `reservation` (
   `id` int NOT NULL,
   `date` date DEFAULT NULL,
   `court` int DEFAULT NULL,
-  `client` int NOT NULL,
+  `customer` int NOT NULL,
   `time_slot` int NOT NULL,
   `price` float NOT NULL,
   `isPremium` tinyint NOT NULL DEFAULT '0'
@@ -157,10 +166,20 @@ CREATE TABLE `reservation` (
 -- Dumping data for table `reservation`
 --
 
-INSERT INTO `reservation` (`id`, `date`, `court`, `client`, `time_slot`, `price`, `isPremium`) VALUES
+INSERT INTO `reservation` (`id`, `date`, `court`, `customer`, `time_slot`, `price`, `isPremium`) VALUES
 (149, '2023-11-15', 6, 160, 9, 25.2, 1),
-(150, '2023-12-03', 6, 160, 9, 20.7, 1),
-(171, '2023-11-11', 9, 160, 10, 30.6, 1);
+(179, '2023-11-11', 8, 160, 3, 19.8, 1),
+(181, '2023-11-20', 5, 160, 5, 25.2, 1),
+(182, '2023-10-30', 1, 160, 6, 27, 1),
+(183, '2023-11-11', 4, 160, 6, 25.2, 1),
+(185, '2023-12-17', 7, 160, 13, 0, 1),
+(192, '2023-11-24', 7, 160, 4, 19.8, 1),
+(193, '2023-11-11', 4, 160, 5, 25.2, 1),
+(220, '2023-11-15', 1, 160, 5, 27, 1),
+(252, '2025-01-02', 2, 261, 3, 25, 0),
+(253, '2025-01-02', 1, 261, 2, 18, 1),
+(254, '2025-01-02', 1, 261, 7, 18, 1),
+(255, '2025-01-02', 3, 261, 3, 22.5, 1);
 
 -- --------------------------------------------------------
 
@@ -205,6 +224,8 @@ INSERT INTO `time_slots` (`id`, `start_hour`, `finish_hour`) VALUES
 (2, '9', '10'),
 (3, '10', '11'),
 (4, '11', '12'),
+(5, '12', '13'),
+(6, '13', '14'),
 (7, '14', '15'),
 (8, '15', '16'),
 (9, '16', '17'),
@@ -231,7 +252,7 @@ CREATE TABLE `type_of_court` (
 --
 
 INSERT INTO `type_of_court` (`id`, `type_of_court`, `price`) VALUES
-(1, 'clay', 0),
+(1, 'clay', 20),
 (2, 'hard', 18),
 (3, 'grass', 22),
 (4, 'padel', 20);
@@ -245,26 +266,28 @@ INSERT INTO `type_of_court` (`id`, `type_of_court`, `price`) VALUES
 CREATE TABLE `wallet` (
   `id` int NOT NULL,
   `balance` float DEFAULT NULL,
-  `client` int NOT NULL
+  `customer` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `wallet`
 --
 
-INSERT INTO `wallet` (`id`, `balance`, `client`) VALUES
-(160, 9954.1, 160),
-(180, 12.8, 180),
-(207, 0, 207);
+INSERT INTO `wallet` (`id`, `balance`, `customer`) VALUES
+(160, 10387, 160),
+(180, 112.8, 180),
+(207, 0, 207),
+(230, 80, 230),
+(261, 46.5, 261);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `client`
+-- Indexes for table `customer`
 --
-ALTER TABLE `client`
+ALTER TABLE `customer`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD KEY `wallet_idx` (`wallet`);
@@ -281,7 +304,7 @@ ALTER TABLE `court`
 --
 ALTER TABLE `premium_subs`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `sub_client` (`client`);
+  ADD KEY `sub_client` (`customer`);
 
 --
 -- Indexes for table `rentingkit_reservation`
@@ -302,7 +325,7 @@ ALTER TABLE `renting_kits`
 --
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `client_idx` (`client`),
+  ADD KEY `client_idx` (`customer`),
   ADD KEY `reservation_time_slot` (`time_slot`) USING BTREE,
   ADD KEY `reservation_court` (`court`);
 
@@ -330,29 +353,29 @@ ALTER TABLE `type_of_court`
 --
 ALTER TABLE `wallet`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `client_wallet` (`client`);
+  ADD KEY `client_wallet` (`customer`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `client`
+-- AUTO_INCREMENT for table `customer`
 --
-ALTER TABLE `client`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
+ALTER TABLE `customer`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
 
 --
 -- AUTO_INCREMENT for table `premium_subs`
 --
 ALTER TABLE `premium_subs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `rentingkit_reservation`
 --
 ALTER TABLE `rentingkit_reservation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `renting_kits`
@@ -364,7 +387,7 @@ ALTER TABLE `renting_kits`
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
 
 --
 -- AUTO_INCREMENT for table `super_user`
@@ -377,9 +400,9 @@ ALTER TABLE `super_user`
 --
 
 --
--- Constraints for table `client`
+-- Constraints for table `customer`
 --
-ALTER TABLE `client`
+ALTER TABLE `customer`
   ADD CONSTRAINT `wallet_idx` FOREIGN KEY (`wallet`) REFERENCES `wallet` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -392,7 +415,7 @@ ALTER TABLE `court`
 -- Constraints for table `premium_subs`
 --
 ALTER TABLE `premium_subs`
-  ADD CONSTRAINT `sub_client` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `sub_client` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `rentingkit_reservation`
@@ -405,7 +428,7 @@ ALTER TABLE `rentingkit_reservation`
 -- Constraints for table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD CONSTRAINT `client_idx` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `client_idx` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reservation_court` FOREIGN KEY (`court`) REFERENCES `court` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reservation_time_slot` FOREIGN KEY (`time_slot`) REFERENCES `time_slots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -413,7 +436,7 @@ ALTER TABLE `reservation`
 -- Constraints for table `wallet`
 --
 ALTER TABLE `wallet`
-  ADD CONSTRAINT `client_wallet` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `client_wallet` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 DELIMITER $$
 --
@@ -421,7 +444,7 @@ DELIMITER $$
 --
 CREATE DEFINER=`swecourtprentiondb_recordfell`@`%` EVENT `update_premium_subs` ON SCHEDULE EVERY 1 HOUR STARTS '2023-10-06 19:00:30' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     DELETE FROM premium_subs WHERE end_date < CURDATE();
-  UPDATE client SET is_premium = 0 WHERE ((is_premium = 1) AND (client.id NOT IN (SELECT client FROM premium_subs)));
+  UPDATE customer SET is_premium = 0 WHERE ((is_premium = 1) AND (customer.id NOT IN (SELECT customer FROM premium_subs)));
 END$$
 
 DELIMITER ;

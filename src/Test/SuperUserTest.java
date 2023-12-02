@@ -1,10 +1,10 @@
 package Test;
 
 import ApplicationLayer.GraphicInterfaceManager;
-import Context.SuperUser;
-import Database.CourtDaoImpl;
+import DomainModel.SuperUser;
+import DAOs.CourtDaoImpl;
 
-import Database.SuperUserDaoImpl;
+import DAOs.SuperUserDaoImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
