@@ -68,8 +68,8 @@ public class CourtDaoImpl implements CourtDao {
             rs.close();
             db.disconnect();
             Statement stmt1 = db.connectTransaction();
-            WalletDaoImpl walletDao = new WalletDaoImpl();
-            CustomerDaoImpl customerDao = new CustomerDaoImpl();
+            WalletDao walletDao = new WalletDaoImpl();
+            CustomerDao customerDao = new CustomerDaoImpl();
             for (Reservation r : reservations) {
                 if (r.getPrice() != 0)
                     walletDao.modifyBalance(r.getCustomer(), stmt1);

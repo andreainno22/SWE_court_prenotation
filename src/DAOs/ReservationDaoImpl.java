@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationDaoImpl implements ReservationDao {
-    private final CustomerDao customerDao = new CustomerDaoImpl();
-    private final WalletDao walletDao = new WalletDaoImpl();
 
     @Override
     public List<Reservation> getAllCustomerReservations(int customer_id) {
@@ -175,9 +173,11 @@ public class ReservationDaoImpl implements ReservationDao {
                 stmt.executeUpdate("INSERT INTO rentingkit_reservation (reservation, renting_kit, num_of_rents) VALUES ('" + rs.getInt(1) + "', '" + reservation.getRentingKit().getId() + "', '" + reservation.getRentingKit().getNumOfRents() + "')");
             rs.close();
             if (updatePoints) {
+                CustomerDao customerDao = new CustomerDaoImpl();
                 customerDao.updatePoints(reservation.getCustomer().getPoints(), reservation.getCustomer(), stmt);
             }
             if (updateWallet) {
+                WalletDao walletDao = new WalletDaoImpl();
                 walletDao.modifyBalance(reservation.getCustomer(), stmt);
             }
             return db.commitTransaction();
@@ -194,8 +194,10 @@ public class ReservationDaoImpl implements ReservationDao {
         try {
             Statement stmt = db.connectTransaction();
             assert stmt != null;
+            CustomerDao customerDao = new CustomerDaoImpl();
             customerDao.updatePoints(customer.getPoints(), customer, stmt);
             customer.getWallet().addMoney(reservation.getPrice());
+            WalletDao walletDao = new WalletDaoImpl();
             walletDao.modifyBalance(customer, stmt);
             stmt.executeUpdate("DELETE FROM reservation WHERE id = '" + reservation.getId() + "'");
             db.commitTransaction();
