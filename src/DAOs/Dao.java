@@ -1,5 +1,5 @@
 package DAOs;
 
 interface Dao {
-    DatabaseManager db = new DatabaseManager();
+   DatabaseManager db = new DatabaseManager();
 }

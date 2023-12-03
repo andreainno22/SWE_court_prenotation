@@ -9,7 +9,7 @@ import java.sql.*;
     private static final String PASS = "f47c79a3b3652a4dcaae3fcd5a2bd813b9fb4a5e";
     private static DatabaseLogging logging = null;
 
-    void dbError(Exception e) {
+    protected void dbError(Exception e) {
         if (logging == null) logging = new DatabaseLogging();
         System.err.println("Database responded with an error. See log file for more information.");
         logging.logger.severe("Exception: " + e);
@@ -17,7 +17,7 @@ import java.sql.*;
 
     Connection conn = null;
 
-    Statement connect() {
+    protected Statement connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -31,7 +31,7 @@ import java.sql.*;
         return null;
     }
 
-    Statement newStatement() {
+    protected Statement newStatement() {
         try {
             if (conn != null) return conn.createStatement();
         } catch (SQLException e) {
@@ -40,7 +40,7 @@ import java.sql.*;
         return null;
     }
 
-    Statement connectTransaction() {
+    protected Statement connectTransaction() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -56,7 +56,7 @@ import java.sql.*;
         return null;
     }
 
-    boolean commitTransaction() throws SQLException {
+    protected boolean commitTransaction() throws SQLException {
         try {
             conn.commit();
             return true;
@@ -67,7 +67,7 @@ import java.sql.*;
         }
     }
 
-    void disconnect() {
+    protected void disconnect() {
         try {
             if (conn != null) {
                 conn.close();
